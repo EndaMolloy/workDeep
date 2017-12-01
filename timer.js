@@ -1,4 +1,5 @@
-var hrs, sesHrs = 0;
+
+  var hrs, sesHrs = 0;
   var secs, sesSecs = 0;
   var mins, sesMins = 0;
   var hrsTen  = 0;
@@ -37,15 +38,18 @@ $("#button-start").click(function(){
 
     if(!hrs && !mins && !secs){
       alert("Please enter a time...")
-      return;
+
     }
+    else{
+      setDisplay();
+      swapContent('showTime')
 
-    setDisplay();
-    swapContent('showTime')
+       pause = false;
+       clearInterval(Interval);
+       Interval = setInterval(startTimer, 1000)
+     }
 
-     pause = false;
-     clearInterval(Interval);
-     Interval = setInterval(startTimer, 1000)
+
 
 })
 

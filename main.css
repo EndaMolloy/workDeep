@@ -1,6 +1,54 @@
-input{
-  width: 20px;
+
+.body{
+
+
 }
+h1{
+    padding-bottom: 2.5%;
+}
+
+.wrapper{
+  text-align: center;
+  padding-top: 15%;
+}
+
+.buttons{
+    margin: 20px;
+}
+
+input{
+  width: 45px;
+  height: 60px;
+  text-align: center;
+  border: none;
+  border-bottom: 1.5px solid black;
+}
+
+.timeBox{
+  font-size: 3.5em;
+  margin: 0;
+}
+
+.labels{
+  padding-top: 1%;
+  font-size: 0.75em;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+.labels span{
+ padding: 0px 99.5px
+}
+
 
 #showTime{
   display:none;

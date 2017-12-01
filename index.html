@@ -1,20 +1,52 @@
-<div class="wrapper">
-<h1>Countdown Timer</h1>
-  <div id ="main">
-    <input type="text" id="hoursTen" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/><span><input type="text" id="hoursOne" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/></span>:<input type="text" id="minutesTen"/><span><input type="text" id="minutesOne"/></span>:<input type="text" id="secondsTen"/><span><input type="text" id="secondsOne"/></span>
-  </div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+    <h1>Countdown Timer</h1>
+      <div id ="main">
+         <!-- need to find a way to move the oninput to css if possible -->
+        <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+        <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+        <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
+        <input class="timeBox" type="text" id="minutesOne" value="5"/>
+        <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
+        <input class="timeBox" type="text" id="secondsOne" value="0"/>
+      </div>
 
- <div id="inputTime">
-     <input type="text" id="hoursTen" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/><span><input type="text" id="hoursOne" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/></span>:<input type="text" id="minutesTen"/><span><input type="text" id="minutesOne"/></span>:<input type="text" id="secondsTen"/><span><input type="text" id="secondsOne"/></span>
+      <div class="labels">H <span>M </span> S </div>
 
-  </div>
- </div>
+     <div id="inputTime">
+       <input class="timeBox" type="text" id="hoursTen" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+       <input class="timeBox" type="text" id="hoursOne" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+       <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" />
+       <input class="timeBox" type="text" id="minutesOne" />
+       <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen"/>
+       <input class="timeBox" type="text" id="secondsOne"/>
+      </div>
 
-<button id="button-start">Start</button>
-<button id="button-done">Done</button>
-<button id="button-stop">Stop</button>
-<button id="button-reset">Reset</button>
-<button id="button-clear">Clear</button>
-</div>
+      <div class="buttons">
+        <button id="button-start">Start</button>
+        <button id="button-done">Done</button>
+        <button id="button-stop">Stop</button>
+        <button id="button-reset">Reset</button>
+        <button id="button-clear">Clear</button>
+      </div>
 
-<div id="showTime"><span id="showhrs">00</span>:<span id="showmins">00</span>:<span id="showsecs">00</span></div>
+
+
+     </div>
+
+
+
+    <div id="showTime"><span id="showhrs">00</span>:<span id="showmins">00</span>:<span id="showsecs">00</span></div>
+
+    <script type="text/javascript" src= "timer.js"></script>
+  </body>
+</html>
