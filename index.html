@@ -1,0 +1,20 @@
+<div class="wrapper">
+<h1>Countdown Timer</h1>
+  <div id ="main">
+    <input type="text" id="hoursTen" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/><span><input type="text" id="hoursOne" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/></span>:<input type="text" id="minutesTen"/><span><input type="text" id="minutesOne"/></span>:<input type="text" id="secondsTen"/><span><input type="text" id="secondsOne"/></span>
+  </div>
+
+ <div id="inputTime">
+     <input type="text" id="hoursTen" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/><span><input type="text" id="hoursOne" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/></span>:<input type="text" id="minutesTen"/><span><input type="text" id="minutesOne"/></span>:<input type="text" id="secondsTen"/><span><input type="text" id="secondsOne"/></span>
+
+  </div>
+ </div>
+
+<button id="button-start">Start</button>
+<button id="button-done">Done</button>
+<button id="button-stop">Stop</button>
+<button id="button-reset">Reset</button>
+<button id="button-clear">Clear</button>
+</div>
+
+<div id="showTime"><span id="showhrs">00</span>:<span id="showmins">00</span>:<span id="showsecs">00</span></div>
