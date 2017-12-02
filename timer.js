@@ -62,16 +62,28 @@ $("#button-start").click(function(){
 
       }
       else{
+
+          hrsTen = document.getElementById("hoursTen").value || '0'
+          hrsOne = document.getElementById("hoursOne").value || '0'
+          minsTen = document.getElementById("minutesTen").value || '0'
+          minsOne = document.getElementById("minutesOne").value || '0'
+          secsTen = document.getElementById("secondsTen").value || '0'
+          secsOne = document.getElementById("secondsOne").value || '0'
+
+          hrs =  parseInt(hrsTen+ hrsOne)
+          mins = parseInt(minsTen + minsOne)
+          secs = parseInt(secsTen + secsOne)
+
         isCounting = true;
 
         setDisplay();
-        swapContent('showTime')
 
         removeLabels('labels')
 
         document.getElementById('play').classList.remove('fa-play-circle')
         document.getElementById('play').classList.add('fa-pause-circle')
 
+        //console.log(hrs,mins,secs)
          //clearInterval(Interval);
          Interval = setInterval(startTimer, 1000)
        }
@@ -91,18 +103,6 @@ $("#button-start").click(function(){
       labelDiv.style.display = 'block';
   }
 
-  function swapContent(id) {
-
-      const main = document.getElementById('main');
-      const div = document.getElementById(id);
-      const clone = div.cloneNode(true);
-      clone.style.display = 'block'
-
-      while (main.firstChild) main.firstChild.remove();
-
-      main.appendChild(clone);
-
-  }
 
 
 
@@ -172,30 +172,76 @@ $("#button-clear").click(function(){
 
 function startTimer () {
 
+
     if(secs==00 && mins==00 && hrs==00){
       alert("Times up")
       clearInterval(Interval);
     }
-
     else{
-      if(secs>0){
-        secs --;
+      if(secsOne>0){
+        secsOne --;
       }
       else{
-        if(mins>0){
-          secs=59;
-          mins--;
+        if(secsTen>0){
+          secsOne=9;
+          secsTen--;
         }
         else{
-          if(hrs>0){
-            secs=59
-            mins=59
-            hrs--;
+          if(minsOne>0){
+            secsOne=9
+            secsTen=5;
+            minsOne--;
+          }
+          else{
+            if(minsTen>0){
+              secsOne=9
+              secsTen=5;
+              minsOne=9
+              minsTen--;
+            }
+            else{
+              if(hrsOne>0){
+                secsOne=9
+                secsTen=5;
+                minsOne=9
+                minsTen=5
+                hrsOne--;
+              }
+              else{
+                if(hrsTen>0){
+                  secsOne=9
+                  secsTen=5;
+                  minsOne=9
+                  minsTen=5
+                  hrsOne=9
+                  hrsTen--;
+                }
+              }
+            }
           }
         }
       }
-
     }
+
+    // else{
+    //   if(secs>0){
+    //     secs --;
+    //   }
+    //   else{
+    //     if(mins>0){
+    //       secs=59;
+    //       mins--;
+    //     }
+    //     else{
+    //       if(hrs>0){
+    //         secs=59
+    //         mins=59
+    //         hrs--;
+    //       }
+    //     }
+    //   }
+    //
+    // }
 
   setDisplay()
 
@@ -204,26 +250,29 @@ function startTimer () {
 
   function setDisplay(){
 
-    if(secs < 10){
-    document.getElementById('showsecs').innerHTML = "0" + secs
-  }
-  else{
-    document.getElementById('showsecs').innerHTML = secs
-  }
+    document.getElementById('secondsOne').value = secsOne;
+    document.getElementById('secondsTen').value = secsTen;
+    document.getElementById("minutesTen").value = minsTen;
+    document.getElementById("minutesOne").value = minsOne;
+    document.getElementById("hoursTen").value = hrsTen;
+    document.getElementById("hoursOne").value = hrsOne;
 
 
-  if(mins<10){
-    document.getElementById('showmins').innerHTML = "0"+ mins;
- }
- else{
-    document.getElementById('showmins').innerHTML = mins
-  }
 
-  if(hrs<10){
-    document.getElementById('showhrs').innerHTML = "0"+ hrs;
- }
- else{
-    document.getElementById('showhrs').innerHTML = hrs
-  }
+ //
+ //
+ //  if(mins<10){
+ //    document.getElementById('showmins').innerHTML = "0"+ mins;
+ // }
+ // else{
+ //    document.getElementById('showmins').innerHTML = mins
+ //  }
+ //
+ //  if(hrs<10){
+ //    document.getElementById('showhrs').innerHTML = "0"+ hrs;
+ // }
+ // else{
+ //    document.getElementById('showhrs').innerHTML = hrs
+ //  }
 
   }
