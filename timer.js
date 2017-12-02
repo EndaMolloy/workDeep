@@ -11,47 +11,85 @@
   var Interval
   var pause = false;
   var reset = false;
+  var isCounting = false;
   var inputTimeDiv = document.getElementById('inputTime');
+
+
+  hrsTen = document.getElementById("hoursTen").value || '0'
+  hrsOne = document.getElementById("hoursOne").value || '0'
+  minsTen = document.getElementById("minutesTen").value || '0'
+  minsOne = document.getElementById("minutesOne").value || '0'
+  secsTen = document.getElementById("secondsTen").value || '0'
+  secsOne = document.getElementById("secondsOne").value || '0'
+
+  sesHrs = parseInt(hrsTen+ hrsOne)
+  sesMins = parseInt(minsTen + minsOne)
+  sesSecs = parseInt(secsTen + secsOne)
+
+  hrs =  parseInt(hrsTen+ hrsOne)
+  mins = parseInt(minsTen + minsOne)
+  secs = parseInt(secsTen + secsOne)
 
 $("#button-start").click(function(){
 
-  if(!pause && !reset){
+  if(isCounting){
+    clearInterval(Interval);
+    isCounting = false;
+    document.getElementById('play').classList.remove('fa-pause-circle')
+    document.getElementById('play').classList.add('fa-play-circle')
+    console.log(mins);
+  }else{
 
-    //console.log(hrsTen, hrsOne)
-    hrsTen = document.getElementById("hoursTen").value || '0'
-    hrsOne = document.getElementById("hoursOne").value || '0'
-    minsTen = document.getElementById("minutesTen").value || '0'
-    minsOne = document.getElementById("minutesOne").value || '0'
-    secsTen = document.getElementById("secondsTen").value || '0'
-    secsOne = document.getElementById("secondsOne").value || '0'
+    if(reset){
 
-    sesHrs = parseInt(hrsTen+ hrsOne)
-    sesMins = parseInt(minsTen + minsOne)
-    sesSecs = parseInt(secsTen + secsOne)
-  }
+      hrsTen = document.getElementById("hoursTen").value || '0'
+      hrsOne = document.getElementById("hoursOne").value || '0'
+      minsTen = document.getElementById("minutesTen").value || '0'
+      minsOne = document.getElementById("minutesOne").value || '0'
+      secsTen = document.getElementById("secondsTen").value || '0'
+      secsOne = document.getElementById("secondsOne").value || '0'
 
-    //if no value entered alert user
-
-    hrs =  parseInt(hrsTen+ hrsOne)
-    mins = parseInt(minsTen + minsOne)
-    secs = parseInt(secsTen + secsOne)
-
-    if(!hrs && !mins && !secs){
-      alert("Please enter a time...")
+      sesHrs = parseInt(hrsTen+ hrsOne)
+      sesMins = parseInt(minsTen + minsOne)
+      sesSecs = parseInt(secsTen + secsOne)
+      //console.log(hrsTen, hrsOne)
 
     }
-    else{
-      setDisplay();
-      swapContent('showTime')
 
-       pause = false;
-       clearInterval(Interval);
-       Interval = setInterval(startTimer, 1000)
-     }
+      //if no value entered alert user
+      if(!hrs && !mins && !secs){
+        alert("Please enter a time...")
 
+      }
+      else{
+        isCounting = true;
+
+        setDisplay();
+        swapContent('showTime')
+
+        removeLabels('labels')
+
+        document.getElementById('play').classList.remove('fa-play-circle')
+        document.getElementById('play').classList.add('fa-pause-circle')
+
+         //clearInterval(Interval);
+         Interval = setInterval(startTimer, 1000)
+       }
+
+  }
 
 
 })
+
+  function removeLabels(labels){
+    const labelDiv = document.getElementById(labels)
+      labelDiv.style.display = 'none';
+  }
+
+  function addLabels(labels){
+    const labelDiv = document.getElementById(labels)
+      labelDiv.style.display = 'block';
+  }
 
   function swapContent(id) {
 
@@ -72,19 +110,34 @@ $("#button-start").click(function(){
 $("#button-stop").click(function(){
   clearInterval(Interval);
   pause = true;
+  console.log(pause)
 })
 
 $("#button-reset").click(function(){
   clearInterval(Interval);
   reset = true;
 
-   hrs = sesHrs
-   mins = sesMins
-   secs = sesSecs
+  hrs = sesHrs
+  mins = sesMins
+  secs = sesSecs
+
 
   setDisplay()
-
+  swapBack('inputTime')
+  addLabels('labels')
+//  swapContent('showTime','mainDiv')
 })
+
+function swapBack(id){
+  const main = document.getElementById('main');
+  const div = document.getElementById(id);
+  const clone = div.cloneNode(true);
+  clone.style.display = 'block'
+
+  while (main.firstChild) main.firstChild.remove();
+
+  main.appendChild(clone);
+}
 
 $("#button-done").click(function(){
   clearInterval(Interval);

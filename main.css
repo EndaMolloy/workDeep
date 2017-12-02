@@ -12,8 +12,18 @@ h1{
   padding-top: 15%;
 }
 
-.buttons{
-    margin: 20px;
+
+
+#buttons{
+  padding-top: 10%;
+}
+
+.start{
+  display: inline;
+}
+
+.pause{
+
 }
 
 input{
@@ -29,29 +39,20 @@ input{
   margin: 0;
 }
 
-.labels{
+#labels{
   padding-top: 1%;
   font-size: 0.75em;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
 
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
-
-.labels span{
+#labels span{
  padding: 0px 99.5px
 }
 
 
 #showTime{
   display:none;
+  font-size: 3.5em;
 }
 
 #inputTime{
