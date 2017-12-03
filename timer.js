@@ -8,12 +8,19 @@
   var minsOne = 0;
   var secsTen = 0;
   var secsOne = 0;
+  let sessHrsTen
+  let sessHrsOne
+  let sessMinsTen
+  let sessMinsOne
+  let sessSecsTen
+  let sessSecsOne
+
   var Interval
   var pause = false;
   var reset = false;
   var isCounting = false;
-  var inputTimeDiv = document.getElementById('inputTime');
-
+  const inputBoxes = document.getElementsByTagName('input')
+  const labelDiv = document.getElementById('labels')
 
   hrsTen = document.getElementById("hoursTen").value || '0'
   hrsOne = document.getElementById("hoursOne").value || '0'
@@ -22,7 +29,33 @@
   secsTen = document.getElementById("secondsTen").value || '0'
   secsOne = document.getElementById("secondsOne").value || '0'
 
-  sesHrs = parseInt(hrsTen+ hrsOne)
+  sessHrsTen  = hrsTen;
+  sessHrsOne  = hrsOne;
+  sessMinsTen = minsTen;
+  sessMinsOne = minsOne;
+  sessSecsTen = secsTen;
+  sessSecsOne = secsOne;
+
+
+  for(let i=0; i<inputBoxes.length; i++){
+    inputBoxes[i].addEventListener('change',(ev)=>{
+      hrsTen = document.getElementById("hoursTen").value || '0'
+      hrsOne = document.getElementById("hoursOne").value || '0'
+      minsTen = document.getElementById("minutesTen").value || '0'
+      minsOne = document.getElementById("minutesOne").value || '0'
+      secsTen = document.getElementById("secondsTen").value || '0'
+      secsOne = document.getElementById("secondsOne").value || '0'
+
+      sessHrsTen  = hrsTen;
+      sessHrsOne  = hrsOne;
+      sessMinsTen = minsTen;
+      sessMinsOne = minsOne;
+      sessSecsTen = secsTen;
+      sessSecsOne = secsOne;
+    })
+  }
+
+  sessHrs = parseInt(hrsTen+ hrsOne)
   sesMins = parseInt(minsTen + minsOne)
   sesSecs = parseInt(secsTen + secsOne)
 
@@ -32,30 +65,14 @@
 
 $("#button-start").click(function(){
 
+  console.log(sessMinsTen,sessMinsOne);
   if(isCounting){
     clearInterval(Interval);
     isCounting = false;
     document.getElementById('play').classList.remove('fa-pause-circle')
     document.getElementById('play').classList.add('fa-play-circle')
-    console.log(mins);
+
   }else{
-
-    if(reset){
-
-      hrsTen = document.getElementById("hoursTen").value || '0'
-      hrsOne = document.getElementById("hoursOne").value || '0'
-      minsTen = document.getElementById("minutesTen").value || '0'
-      minsOne = document.getElementById("minutesOne").value || '0'
-      secsTen = document.getElementById("secondsTen").value || '0'
-      secsOne = document.getElementById("secondsOne").value || '0'
-
-      sesHrs = parseInt(hrsTen+ hrsOne)
-      sesMins = parseInt(minsTen + minsOne)
-      sesSecs = parseInt(secsTen + secsOne)
-      //console.log(hrsTen, hrsOne)
-
-    }
-
       //if no value entered alert user
       if(!hrs && !mins && !secs){
         alert("Please enter a time...")
@@ -77,8 +94,8 @@ $("#button-start").click(function(){
         isCounting = true;
 
         setDisplay();
+        modifyInputField()
 
-        removeLabels('labels')
 
         document.getElementById('play').classList.remove('fa-play-circle')
         document.getElementById('play').classList.add('fa-pause-circle')
@@ -93,51 +110,51 @@ $("#button-start").click(function(){
 
 })
 
-  function removeLabels(labels){
-    const labelDiv = document.getElementById(labels)
-      labelDiv.style.display = 'none';
+
+
+  function modifyInputField(){
+
+    if(reset){
+      labelDiv.style.color = 'black';
+
+      for(let i=0; i<inputBoxes.length; i++){
+        inputBoxes[i].style['border-bottom']='1.5px solid black';
+        inputBoxes[i].disabled = false;
+      }
+    }
+    else{
+      labelDiv.style.color = 'white';
+
+      for(let i=0; i<inputBoxes.length; i++){
+        inputBoxes[i].style['border-bottom']='none';
+        inputBoxes[i].disabled = true;
+      }
+    }
   }
 
-  function addLabels(labels){
-    const labelDiv = document.getElementById(labels)
-      labelDiv.style.display = 'block';
+  function addLabels(){
+      labelDiv.style.color = 'black';
   }
 
+  function resetValues(){
+    hrsTen = sessHrsTen
+    hrsOne =  sessHrsOne
+    minsTen = sessMinsTen
+    minsOne = sessMinsOne
+    secsTen = sessSecsTen
+    secsOne = sessSecsOne
+  }
 
-
-
-
-$("#button-stop").click(function(){
-  clearInterval(Interval);
-  pause = true;
-  console.log(pause)
-})
 
 $("#button-reset").click(function(){
-  clearInterval(Interval);
   reset = true;
-
-  hrs = sesHrs
-  mins = sesMins
-  secs = sesSecs
-
-
+  clearInterval(Interval);
+  resetValues()
   setDisplay()
-  swapBack('inputTime')
-  addLabels('labels')
-//  swapContent('showTime','mainDiv')
+
 })
 
-function swapBack(id){
-  const main = document.getElementById('main');
-  const div = document.getElementById(id);
-  const clone = div.cloneNode(true);
-  clone.style.display = 'block'
 
-  while (main.firstChild) main.firstChild.remove();
-
-  main.appendChild(clone);
-}
 
 $("#button-done").click(function(){
   clearInterval(Interval);
@@ -157,21 +174,19 @@ function convertToMins(hrs,mins,secs){
 }
 
 $("#button-clear").click(function(){
-  pause = false;
-  reset = false;
-  clearInterval(Interval);
-  hrs =  0
-  mins = 0
-  secs = 0
-  setDisplay()
 
-  if (inputTimeDiv.style.display === 'none') {
-        inputTimeDiv.style.display = 'block';
-    }
+  reset = true;
+  clearInterval(Interval);
+
+  resetValues()
+  setDisplay()
+  addLabels()
+  modifyInputField()
+  reset = false;
+
 })
 
 function startTimer () {
-
 
     if(secs==00 && mins==00 && hrs==00){
       alert("Times up")
@@ -223,26 +238,6 @@ function startTimer () {
       }
     }
 
-    // else{
-    //   if(secs>0){
-    //     secs --;
-    //   }
-    //   else{
-    //     if(mins>0){
-    //       secs=59;
-    //       mins--;
-    //     }
-    //     else{
-    //       if(hrs>0){
-    //         secs=59
-    //         mins=59
-    //         hrs--;
-    //       }
-    //     }
-    //   }
-    //
-    // }
-
   setDisplay()
 
 }
@@ -257,22 +252,5 @@ function startTimer () {
     document.getElementById("hoursTen").value = hrsTen;
     document.getElementById("hoursOne").value = hrsOne;
 
-
-
- //
- //
- //  if(mins<10){
- //    document.getElementById('showmins').innerHTML = "0"+ mins;
- // }
- // else{
- //    document.getElementById('showmins').innerHTML = mins
- //  }
- //
- //  if(hrs<10){
- //    document.getElementById('showhrs').innerHTML = "0"+ hrs;
- // }
- // else{
- //    document.getElementById('showhrs').innerHTML = hrs
- //  }
 
   }
