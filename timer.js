@@ -49,8 +49,8 @@ $("#button-start").on('click',()=>{
   if(isCounting){
     clearInterval(Interval);
     isCounting = false;
-    document.getElementById('play').classList.remove('fa-pause-circle')
-    document.getElementById('play').classList.add('fa-play-circle')
+    document.getElementById('play').classList.remove('fa-pause')
+    document.getElementById('play').classList.add('fa-play')
 
   }
   else{
@@ -61,8 +61,8 @@ $("#button-start").on('click',()=>{
     }
     else{
       isCounting = true;
-      document.getElementById('play').classList.remove('fa-play-circle')
-      document.getElementById('play').classList.add('fa-pause-circle')
+      document.getElementById('play').classList.remove('fa-play')
+      document.getElementById('play').classList.add('fa-pause')
 
       getTimeValues()
       parseTimeValues()
