@@ -3,46 +3,65 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="main.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <link rel="stylesheet" href="main.css">
   </head>
   <body>
+
+
     <div class="wrapper">
-    <h1>Countdown Timer</h1>
-      <div id ="main">
-         <!-- need to find a way to move the oninput to css if possible -->
-          <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-          <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-          <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
-          <input class="timeBox" type="text" id="minutesOne" value="5"/>
-          <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
-          <input class="timeBox" type="text" id="secondsOne" value="0"/>
 
+      <div id="greeting">
+        <h1>Hey <span id='userName'>Enda</span>, <span id=motivation>let's get it done!</span></h1>
+      </div>
+      <div id="inputContainer">
+        <input id ="taskInput" type="text">
       </div>
 
-      <div id="labels">H <span>M </span> S </div>
+      <div class ="row">
+          <div class ="col-md-4 col-xs-12"></div>
+          <div class ="col-md-4 col-xs-12">
+            <div id ="main">
+               <!-- need to find a way to move the oninput to css if possible -->
+                <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
+                <input class="timeBox" type="text" id="minutesOne" value="5"/>
+                <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
+                <input class="timeBox" type="text" id="secondsOne" value="0"/>
 
-      <div id="buttons">
+            </div>
 
-        <!-- <button id="button-done">Done</button> -->
+            <div id="labels">H <span>M </span> S </div>
 
-        <button id="button-reset">Reset</button>
-        <button id="button-start">
-          <i id="play" class="fa fa-play-circle" aria-hidden="true"></i>
-        </button>
-        <button id="button-clear">Clear</button>
-      </div>
+            <div id="buttons">
+
+              <!-- <button id="button-done">Done</button> -->
+
+              <button id="button-reset">Reset</button>
+              <button id="button-start">
+                <i id="play" class="fa fa-play-circle" aria-hidden="true"></i>
+              </button>
+              <button id="button-clear">Clear</button>
+            </div>
+
+            <div class="quote">
+              <h5>"We do not rise to the level of our expectations, we fall to the level of our training" - Archilochus</h5>
+            </div>
+
+          </div>
+        <div class ="col-md-4 col-xs-12">
+            <h4>Today I did</h4>
+            <ul id="myCompletedTask">
+            </ul>
+        </div>
+        </div>
+    </div>
 
 
-
-     </div>
-
-
-
-
-
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script type="text/javascript" src= "timer.js"></script>
   </body>
 </html>

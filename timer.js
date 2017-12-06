@@ -19,7 +19,7 @@
   var pause = false;
   var reset = false;
   var isCounting = false;
-  const inputBoxes = document.getElementsByTagName('input')
+  const inputBoxes = document.getElementById('main').getElementsByTagName('input')
   const labelDiv = document.getElementById('labels')
 
 
@@ -140,15 +140,15 @@ function parseTimeValues(){
 function modifyInputField(){
 
   if(reset){
-    labelDiv.style.color = 'black';
+    labelDiv.style.color = 'white';
 
     for(let i=0; i<inputBoxes.length; i++){
-      inputBoxes[i].style['border-bottom']='1.5px solid black';
+      inputBoxes[i].style['border-bottom']='1.5px solid white';
       inputBoxes[i].disabled = false;
     }
   }
   else{
-    labelDiv.style.color = 'white';
+    labelDiv.style.color = ' #333';
 
     for(let i=0; i<inputBoxes.length; i++){
       inputBoxes[i].style['border-bottom']='none';
@@ -158,7 +158,7 @@ function modifyInputField(){
 }
 
 function addLabels(){
-    labelDiv.style.color = 'black';
+    labelDiv.style.color = 'white';
 }
 
 function resetValues(){

@@ -1,49 +1,77 @@
 
-.body{
-
-
+body{
+  background-color: #333;
+	text-align: center;
+	color: white;
 }
-h1{
-    padding-bottom: 2.5%;
+
+#greeting h1{
+  font-size: 3.5em;
 }
 
 .wrapper{
   text-align: center;
-  padding-top: 15%;
+  padding-top: 7%;
 }
 
 
 
 #buttons{
-  padding-top: 10%;
+  padding-top: 70px;
+  color: black;
+}
+
+#button-start{
+  margin: 0 7%;
 }
 
 .start{
   display: inline;
 }
 
-.pause{
 
+#inputContainer input[type=text] {
+    background: transparent;
+		width: 24em;
+    border: none;
+    border-bottom: 1.5px solid white;
+		padding-left: 5px;
+		padding-right: 5px;
+		color: inherit;
+		text-align: center;
+		padding-top: 1.5%;
+		/*-webkit-transition: width .35s ease-in-out;
+  transition: width .35s ease-in-out;*/
 }
 
-input{
-  width: 45px;
+
+#main input{
+  width: 35px;
   height: 60px;
+  background: transparent;
   text-align: center  ;
   border: none;
-  border-bottom: 1.5px solid black;
+  border-bottom: 1.5px solid white;
   transition: all 0.6s;
 }
 
-input[disabled]{
+#main input[disabled]{
   background-color: inherit;
 }
 
+
 .timeBox{
-  font-size: 3.5em;
+  font-size: 4.0em;
   padding: 0;
   margin: 0;
+}
 
+span.timeBox  {
+  margin-right: 3.5px;
+}
+
+#main{
+  padding-top: 80px;
 }
 
 #labels{
@@ -53,7 +81,8 @@ input[disabled]{
 
 
 #labels span{
- padding: 0px 99.5px
+ padding: 0px 83px;
+ margin-right: 2px;
 }
 
 
@@ -64,4 +93,14 @@ input[disabled]{
 
 #inputTime{
   display:none;
+}
+
+.quote{
+  margin-top: 60px;
+}
+
+{
+ background: #000 !important;
+ color: #0f0 !important;
+ outline: solid #f00 1px !important;
 }
