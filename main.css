@@ -32,7 +32,7 @@ input{
   text-align: center  ;
   border: none;
   border-bottom: 1.5px solid black;
-  transition: all 0.3s;
+  transition: all 0.6s;
 }
 
 input[disabled]{

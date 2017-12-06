@@ -1,13 +1,13 @@
 
-  var hrs, sesHrs = 0;
-  var secs, sesSecs = 0;
-  var mins, sesMins = 0;
-  var hrsTen  = 0;
-  var hrsOne  = 0;
-  var minsTen = 0;
-  var minsOne = 0;
-  var secsTen = 0;
-  var secsOne = 0;
+  let hrs = 0
+  let mins=0
+  let secs =0
+  let hrsTen  = 0;
+  let hrsOne  = 0;
+  let minsOne = 0;
+  let minsTen = 0;
+  let secsTen = 0;
+  let secsOne = 0;
   let sessHrsTen
   let sessHrsOne
   let sessMinsTen
@@ -22,131 +22,61 @@
   const inputBoxes = document.getElementsByTagName('input')
   const labelDiv = document.getElementById('labels')
 
-  hrsTen = document.getElementById("hoursTen").value || '0'
-  hrsOne = document.getElementById("hoursOne").value || '0'
-  minsTen = document.getElementById("minutesTen").value || '0'
-  minsOne = document.getElementById("minutesOne").value || '0'
-  secsTen = document.getElementById("secondsTen").value || '0'
-  secsOne = document.getElementById("secondsOne").value || '0'
 
-  sessHrsTen  = hrsTen;
-  sessHrsOne  = hrsOne;
-  sessMinsTen = minsTen;
-  sessMinsOne = minsOne;
-  sessSecsTen = secsTen;
-  sessSecsOne = secsOne;
+  //get inital time values from html input
+  getTimeValues()
+
+  //store the values in session variables
+  saveSessionLength();
+
+  //shorthand values
+  parseTimeValues()
 
 
+  //listen for user inputs to change countdown timer value
   for(let i=0; i<inputBoxes.length; i++){
     inputBoxes[i].addEventListener('change',(ev)=>{
-      hrsTen = document.getElementById("hoursTen").value || '0'
-      hrsOne = document.getElementById("hoursOne").value || '0'
-      minsTen = document.getElementById("minutesTen").value || '0'
-      minsOne = document.getElementById("minutesOne").value || '0'
-      secsTen = document.getElementById("secondsTen").value || '0'
-      secsOne = document.getElementById("secondsOne").value || '0'
+      getTimeValues()
+      saveSessionLength()
+      parseTimeValues()
 
-      sessHrsTen  = hrsTen;
-      sessHrsOne  = hrsOne;
-      sessMinsTen = minsTen;
-      sessMinsOne = minsOne;
-      sessSecsTen = secsTen;
-      sessSecsOne = secsOne;
     })
   }
 
-  sessHrs = parseInt(hrsTen+ hrsOne)
-  sesMins = parseInt(minsTen + minsOne)
-  sesSecs = parseInt(secsTen + secsOne)
 
-  hrs =  parseInt(hrsTen+ hrsOne)
-  mins = parseInt(minsTen + minsOne)
-  secs = parseInt(secsTen + secsOne)
+$("#button-start").on('click',()=>{
 
-$("#button-start").click(function(){
-
-  console.log(sessMinsTen,sessMinsOne);
   if(isCounting){
     clearInterval(Interval);
     isCounting = false;
     document.getElementById('play').classList.remove('fa-pause-circle')
     document.getElementById('play').classList.add('fa-play-circle')
 
-  }else{
-      //if no value entered alert user
-      if(!hrs && !mins && !secs){
-        alert("Please enter a time...")
+  }
+  else{
+        //if no value entered alert user
+    if(!hrs && !mins && !secs){
+      alert("Please enter a time...")
 
-      }
-      else{
+    }
+    else{
+      isCounting = true;
+      document.getElementById('play').classList.remove('fa-play-circle')
+      document.getElementById('play').classList.add('fa-pause-circle')
 
-          hrsTen = document.getElementById("hoursTen").value || '0'
-          hrsOne = document.getElementById("hoursOne").value || '0'
-          minsTen = document.getElementById("minutesTen").value || '0'
-          minsOne = document.getElementById("minutesOne").value || '0'
-          secsTen = document.getElementById("secondsTen").value || '0'
-          secsOne = document.getElementById("secondsOne").value || '0'
+      getTimeValues()
+      parseTimeValues()
+      setDisplay()
+      modifyInputField()
 
-          hrs =  parseInt(hrsTen+ hrsOne)
-          mins = parseInt(minsTen + minsOne)
-          secs = parseInt(secsTen + secsOne)
-
-        isCounting = true;
-
-        setDisplay();
-        modifyInputField()
-
-
-        document.getElementById('play').classList.remove('fa-play-circle')
-        document.getElementById('play').classList.add('fa-pause-circle')
-
-        //console.log(hrs,mins,secs)
-         //clearInterval(Interval);
-         Interval = setInterval(startTimer, 1000)
-       }
+      Interval = setInterval(startTimer, 1000)
+    }
 
   }
-
 
 })
 
-
-
-  function modifyInputField(){
-
-    if(reset){
-      labelDiv.style.color = 'black';
-
-      for(let i=0; i<inputBoxes.length; i++){
-        inputBoxes[i].style['border-bottom']='1.5px solid black';
-        inputBoxes[i].disabled = false;
-      }
-    }
-    else{
-      labelDiv.style.color = 'white';
-
-      for(let i=0; i<inputBoxes.length; i++){
-        inputBoxes[i].style['border-bottom']='none';
-        inputBoxes[i].disabled = true;
-      }
-    }
-  }
-
-  function addLabels(){
-      labelDiv.style.color = 'black';
-  }
-
-  function resetValues(){
-    hrsTen = sessHrsTen
-    hrsOne =  sessHrsOne
-    minsTen = sessMinsTen
-    minsOne = sessMinsOne
-    secsTen = sessSecsTen
-    secsOne = sessSecsOne
-  }
-
-
-$("#button-reset").click(function(){
+$("#button-reset").on('click',()=>{
   reset = true;
   clearInterval(Interval);
   resetValues()
@@ -154,26 +84,7 @@ $("#button-reset").click(function(){
 
 })
 
-
-
-$("#button-done").click(function(){
-  clearInterval(Interval);
-  pause = true;
-
-  //get values in seconds
-  let diffHrs = (sesHrs - hrs)*60*60;
-  let diffMins= (sesMins - mins)*60;
-  let diffSecs = sesSecs - secs;
-  convertToMins(diffHrs,diffMins,diffSecs)
-
-})
-
-function convertToMins(hrs,mins,secs){
-  let totalSecs = hrs+mins+secs
-  console.log(Math.floor(totalSecs/60))
-}
-
-$("#button-clear").click(function(){
+$("#button-clear").on('click',()=>{
 
   reset = true;
   clearInterval(Interval);
@@ -186,12 +97,95 @@ $("#button-clear").click(function(){
 
 })
 
+$("#button-done").on('click',()=>{
+  clearInterval(Interval);
+  parseTimeValues();
+  pause = true;
+
+  //get values in seconds
+  let diffHrs = (sesHrs - hrs)*60*60;
+  let diffMins= (sesMins - mins)*60;
+  let diffSecs = sesSecs - secs;
+  convertToMins(diffHrs,diffMins,diffSecs)
+
+})
+
+
+function getTimeValues(){
+  hrsTen = document.getElementById("hoursTen").value || '0'
+  hrsOne = document.getElementById("hoursOne").value || '0'
+  minsTen = document.getElementById("minutesTen").value || '0'
+  minsOne = document.getElementById("minutesOne").value || '0'
+  secsTen = document.getElementById("secondsTen").value || '0'
+  secsOne = document.getElementById("secondsOne").value || '0'
+
+}
+
+function saveSessionLength(){
+  sessHrsTen  = hrsTen;
+  sessHrsOne  = hrsOne;
+  sessMinsTen = minsTen;
+  sessMinsOne = minsOne;
+  sessSecsTen = secsTen;
+  sessSecsOne = secsOne;
+}
+
+function parseTimeValues(){
+   hrs =  Number(hrsTen+ hrsOne)
+   mins = Number(minsTen + minsOne)
+   secs = Number(secsTen + secsOne)
+}
+
+
+function modifyInputField(){
+
+  if(reset){
+    labelDiv.style.color = 'black';
+
+    for(let i=0; i<inputBoxes.length; i++){
+      inputBoxes[i].style['border-bottom']='1.5px solid black';
+      inputBoxes[i].disabled = false;
+    }
+  }
+  else{
+    labelDiv.style.color = 'white';
+
+    for(let i=0; i<inputBoxes.length; i++){
+      inputBoxes[i].style['border-bottom']='none';
+      inputBoxes[i].disabled = true;
+    }
+  }
+}
+
+function addLabels(){
+    labelDiv.style.color = 'black';
+}
+
+function resetValues(){
+  hrsTen = sessHrsTen
+  hrsOne =  sessHrsOne
+  minsTen = sessMinsTen
+  minsOne = sessMinsOne
+  secsTen = sessSecsTen
+  secsOne = sessSecsOne
+}
+
+
+function convertToMins(hrs,mins,secs){
+  let totalSecs = hrs+mins+secs
+  console.log(Math.floor(totalSecs/60))
+}
+
+
 function startTimer () {
+
+    parseTimeValues();
 
     if(secs==00 && mins==00 && hrs==00){
       alert("Times up")
       clearInterval(Interval);
     }
+
     else{
       if(secsOne>0){
         secsOne --;
@@ -251,6 +245,5 @@ function startTimer () {
     document.getElementById("minutesOne").value = minsOne;
     document.getElementById("hoursTen").value = hrsTen;
     document.getElementById("hoursOne").value = hrsOne;
-
 
   }
