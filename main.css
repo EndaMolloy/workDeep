@@ -3,6 +3,13 @@ body{
   background-color: #333;
 	text-align: center;
 	color: white;
+  /*background: url(https://s17.postimg.org/9vcwy27un/patrick-hendry-181408.jpg)
+    no-repeat
+    center;
+  background-size: cover;
+
+  width: 100vw;*/
+  overflow-x: hidden;
 }
 
 #greeting h1{
@@ -11,9 +18,8 @@ body{
 
 .wrapper{
   text-align: center;
-  padding-top: 7%;
+  padding-top: 4%;
 }
-
 
 
 #buttons{
@@ -43,6 +49,9 @@ body{
   transition: width .35s ease-in-out;*/
 }
 
+textarea:focus, input:focus{
+    outline: none;
+}
 
 #main input{
   width: 35px;
@@ -101,25 +110,96 @@ span.timeBox  {
 .custom-icon {
   background: inherit;
   border-radius: 100%;
-  border: 1px solid #333;
   color: white;
   display: table-cell;
   font-size: 15px;
   height: 35px;
   width: 35px;
   text-align: center;
-  transition: .5s;
+  transition: 2s;
   vertical-align: middle;
 
 }
 .custom-icon:hover {
-  border: 0.75px solid white ;
+  border: 0.75px solid white;
 }
 .fix-editor {
   display: none;
 }
 .icon-wrapper {
   display: inline-block;
+}
+
+/*NAV BAR */
+
+.navbar-default {
+    background-color: transparent;
+    border-color: #E7E7E7;
+    border: none;
+}
+/* Title */
+.navbar-default .navbar-brand {
+    color: #777;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #FFF;
+}
+/* Link */
+.navbar-default .navbar-nav > li > a {
+    color: #777;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: white;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: #E7E7E7;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+/* Caret */
+/*.navbar-default .navbar-nav > .dropdown > a .caret {
+    border-top-color: #777;
+    border-bottom-color: #777;
+}
+.navbar-default .navbar-nav > .dropdown > a:hover .caret,
+.navbar-default .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #333;
+    border-bottom-color: #333;
+}
+.navbar-default .navbar-nav > .open > a .caret,
+.navbar-default .navbar-nav > .open > a:hover .caret,
+.navbar-default .navbar-nav > .open > a:focus .caret {
+    border-top-color: #555;
+    border-bottom-color: #555;
+}*/
+/* Mobile version */
+.navbar-default .navbar-toggle {
+    border: none;
+}
+ .navbar-default .navbar-toggle:hover,
+ .navbar-default .navbar-toggle:focus {
+    border: 1px solid #DDD;
+
+}
+
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+          color: #333;
+    }
 }
 
 
