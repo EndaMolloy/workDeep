@@ -1,0 +1,35 @@
+{
+  "name": "deepwork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "timer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EndaMolloy/deepWork.git"
+  },
+  "author": "enda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EndaMolloy/deepWork/issues"
+  },
+  "homepage": "https://github.com/EndaMolloy/deepWork#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.17.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.15.2",
+    "joi": "^13.0.2",
+    "mongoose": "^4.10.8",
+    "morgan": "^1.8.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0"
+  }
+}

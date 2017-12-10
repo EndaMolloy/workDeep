@@ -1,0 +1,230 @@
+
+body{
+  background-color: #333;
+	text-align: center;
+	color: white;
+  /*background: url(https://s17.postimg.org/9vcwy27un/patrick-hendry-181408.jpg)
+    no-repeat
+    center;
+  background-size: cover;
+
+  width: 100vw;*/
+  overflow-x: hidden;
+}
+
+#greeting h1{
+  font-size: 3.5em;
+}
+
+.wrapper{
+  text-align: center;
+  padding-top: 4%;
+}
+
+
+#buttons{
+  padding-top: 70px;
+}
+
+#button-start{
+  margin: 0 7%;
+}
+
+.start{
+  display: inline;
+}
+
+
+#inputContainer input[type=text] {
+    background: transparent;
+		width: 24em;
+    border: none;
+    border-bottom: 1.5px solid white;
+		padding-left: 5px;
+		padding-right: 5px;
+		color: inherit;
+		text-align: center;
+		padding-top: 1.5%;
+		/*-webkit-transition: width .35s ease-in-out;
+  transition: width .35s ease-in-out;*/
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+#main input{
+  width: 35px;
+  height: 60px;
+  background: transparent;
+  text-align: center  ;
+  border: none;
+  border-bottom: 1.5px solid white;
+  transition: all 0.6s;
+}
+
+#main input[disabled]{
+  background-color: inherit;
+}
+
+
+.timeBox{
+  font-size: 4.0em;
+  padding: 0;
+  margin: 0;
+}
+
+span.timeBox  {
+  margin-right: 3.5px;
+}
+
+#main{
+  padding-top: 80px;
+}
+
+#labels{
+  padding-top: 1%;
+  font-size: 0.75em;
+}
+
+
+#labels span{
+ padding: 0px 83px;
+ margin-right: 2px;
+}
+
+
+#showTime{
+  display:block;
+  font-size: 3.5em;
+}
+
+#inputTime{
+  display:none;
+}
+
+.quote{
+  margin-top: 60px;
+}
+
+.custom-icon {
+  background: inherit;
+  border-radius: 100%;
+  color: white;
+  display: table-cell;
+  font-size: 15px;
+  height: 35px;
+  width: 35px;
+  text-align: center;
+  transition: 2s;
+  vertical-align: middle;
+
+}
+.custom-icon:hover {
+  border: 0.75px solid white;
+}
+.fix-editor {
+  display: none;
+}
+.icon-wrapper {
+  display: inline-block;
+}
+
+/*NAV BAR */
+
+.navbar-default {
+    background-color: transparent;
+    border-color: #E7E7E7;
+    border: none;
+}
+/* Title */
+.navbar-default .navbar-brand {
+    color: #777;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #FFF;
+}
+/* Link */
+.navbar-default .navbar-nav > li > a {
+    color: #777;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: white;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: #E7E7E7;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+
+/* Mobile version */
+.navbar-default .navbar-toggle {
+    border: none;
+}
+ .navbar-default .navbar-toggle:hover,
+ .navbar-default .navbar-toggle:focus {
+    border: 1px solid #DDD;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+          color: #333;
+    }
+}
+
+
+
+{
+ background: #000 !important;
+ color: #0f0 !important;
+ outline: solid #f00 1px !important;
+}
