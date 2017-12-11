@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
+const dotenv = require('dotenv').config()
 require('./config/passport');
 
 mongoose.promise = global.Promise;
@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   cookie: { maxAge: 60000 },
-  secret: 'someSecret',
+  secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false
 }));
@@ -53,5 +53,5 @@ app.use('/users', require('./routes/users'));
 app.use((req, res, next) => {
   res.render('notFound');
 });
-
-app.listen(5000, () => console.log('Server started listening on port 5000!'));
+const port = process.env.PORT || 5000
+app.listen(port, () => console.log(`Server started listening on port ${port}!`));

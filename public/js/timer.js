@@ -1,11 +1,13 @@
 
-	$(".scroll").click(function(event){
-    console.log(event);
-		event.preventDefault();
-		$("html,body").animate({scrollTop:$(this.hash).offset().top}, 500);
-		// $('.navbar-default a').removeClass('selected');
-		// $(this).addClass('selected');
-    	});
+  //doesn't work with login/signup yet
+
+  // $(".scroll").click(function(event){
+  //   console.log(event);
+	// 	event.preventDefault();
+	// 	$("html,body").animate({scrollTop:$(this.hash).offset().top}, 500);
+	// 	// $('.navbar-default a').removeClass('selected');
+	// 	// $(this).addClass('selected');
+  //   	});
 
 
 
