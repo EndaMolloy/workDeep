@@ -1,6 +1,6 @@
 
 body{
-  background-color: #333;
+  background-color: #21272d;
 	text-align: center;
 	color: white;
   /*background: url(https://s17.postimg.org/9vcwy27un/patrick-hendry-181408.jpg)
@@ -19,7 +19,9 @@ body{
 .wrapper{
   text-align: center;
   padding-top: 4%;
+  min-height: 100vh;
 }
+
 
 
 #buttons{
@@ -174,6 +176,23 @@ span.timeBox  {
  .navbar-default .navbar-toggle:focus {
     border: 1px solid #DDD;
 }
+
+/* ----- DASHBOARD ----- */
+.dashboard-section {
+  min-height: 100vh;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  background-color: white;
+  color: #21272d;
+}
+
+.dashboard-section h3 {
+  text-align: left;
+  padding-left: 15px;
+  margin: 0;
+}
+
+/* ----- BOOTSTRAP LOGIN FORM ----- */
 
 .form-signin {
   max-width: 330px;

@@ -1,5 +1,6 @@
-<div class="wrapper">
+<!----------------------- TIMER -------------------------->
 
+<div class="wrapper">
   <div id="greeting">
     <h1>Hey <span id='userName'>{{username}}</span>, <span id=motivation>let's get it done!</span></h1>
   </div>
@@ -8,9 +9,9 @@
   </div>
 
   <div class ="row">
-      <div class ="col-md-4 col-xs-12"></div>
-      <div class ="col-md-4 col-xs-12">
-        <div id ="main">
+    <div class ="col-md-4 col-xs-12"></div>
+    <div class ="col-md-4 col-xs-12">
+      <div id ="main">
            <!-- need to find a way to move the oninput to css if possible -->
             <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
             <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
@@ -19,35 +20,33 @@
             <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
             <input class="timeBox" type="text" id="secondsOne" value="0"/>
 
-        </div>
-
-        <div id="labels">H <span>M </span> S </div>
-
-        <div id="buttons">
-
-          <!-- <button id="button-done">Done</button> -->
-
-          <div class="icon-wrapper" id="button-reset">
-            <i class="fa fa-undo custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-          </div>
-          <div class="icon-wrapper" id="button-start">
-            <i id='play' class="fa fa-play custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-          </div>
-
-          <div class="icon-wrapper" id="button-clear">
-            <i class="fa fa-trash custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-          </div>
-        </div>
-
-        <div class="quote">
-          <h5>"We do not rise to the level of our expectations, we fall to the level of our training" - Archilochus</h5>
-        </div>
-
       </div>
+
+      <div id="labels">H <span>M </span> S </div>
+
+      <div id="buttons">
+          <!-- <button id="button-done">Done</button> -->
+        <div class="icon-wrapper" id="button-reset">
+          <i class="fa fa-undo custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+        </div>
+        <div class="icon-wrapper" id="button-start">
+          <i id='play' class="fa fa-play custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+        </div>
+
+        <div class="icon-wrapper" id="button-clear">
+          <i class="fa fa-trash custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+        </div>
+      </div>
+
+      <div class="quote">
+        <h5>"We do not rise to the level of our expectations, we fall to the level of our training" - Archilochus</h5>
+      </div>
+
+    </div>
+
     <div class ="col-md-4 col-xs-12">
         <h4>Today I did</h4>
-        <ul id="myCompletedTask">
-        </ul>
+        <ul id="myCompletedTask"></ul>
     </div>
-    </div>
+  </div>
 </div>
