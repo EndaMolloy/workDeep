@@ -192,8 +192,7 @@ span.timeBox  {
 
 .content-section h3 {
   text-align: left;
-  padding-left: 15px;
-  padding-bottom: 40px;
+  padding-bottom: 20px;
   margin: 0;
 }
 
@@ -217,6 +216,7 @@ span.timeBox  {
 
 table{
   width: 100%;
+  font-size: 10px;
 }
 
 td{
