@@ -178,7 +178,11 @@ span.timeBox  {
 }
 
 /* ----- DASHBOARD ----- */
-.dashboard-section {
+#dash{
+  background-color: white;
+}
+
+.content-section {
   min-height: 100vh;
   padding-top: 20px;
   padding-bottom: 0px;
@@ -186,11 +190,59 @@ span.timeBox  {
   color: #21272d;
 }
 
-.dashboard-section h3 {
+.content-section h3 {
   text-align: left;
   padding-left: 15px;
+  padding-bottom: 40px;
   margin: 0;
 }
+
+.dash-section{
+  padding: 15px;
+}
+
+.dash-stage{
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+.dash-title{
+  padding: 8px;
+  border-bottom: inherit;
+  text-align: left;
+  text-transform: uppercase;
+  border: 1px solid #dddddd;
+  border-bottom: 0;
+}
+
+table{
+  width: 100%;
+}
+
+td{
+  padding: 8px;
+}
+
+tr:nth-child(even){
+  background-color: #dddddd;
+}
+
+#statistics{
+
+}
+
+
+#cal-heatmap{
+  max-height: 218px;
+  height: 218px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+
 
 /* ----- BOOTSTRAP LOGIN FORM ----- */
 

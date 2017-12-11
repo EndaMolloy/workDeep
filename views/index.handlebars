@@ -1,4 +1,6 @@
 <!----------------------- TIMER -------------------------->
+<div class="container">
+
 
 <div class="wrapper">
 
@@ -50,22 +52,69 @@
     <div class ="col-md-4 col-xs-12"></div>
  </div>
 </div>
+</div>
 
 <!----------------------- Dashboard -------------------------->
 
-<div id="dash" class="dashboard-section">
-  <div class="row">
-    <div class="col-sm-12">
-      <h3>Dashboard / {{username}}</h3>
-      <div class="container">
-        <div class="row">
-          <div class="stats col-md-3 col-xs-12">
-            <h4>Current streak : 14 days</h4>
-            <h4>Total hours : 1234 hrs</h4>
-            <h4>Completed Projects : 4</h4>
-          </div>
-          <div class="col-md-9 col-xs-12">
-            <h1>Insert Chart here</h1>
+<div id="dash" class="content-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>Dashboard / {{username}}</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3 col-xs-12 dash-section">
+              <div id="statistics">
+                <div class="stats-table">
+                  <div class="dash-title">statistics</div>
+                  <div class="dash-stage">
+                    <table>
+                      <tr>
+                        <td>Current Streak</td>
+                        <td><strong>14</strong></td>
+                        <td>days</td>
+                      </tr>
+                      <tr>
+                        <td>This week</td>
+                        <td><strong>23</strong></td>
+                        <td>hours</td>
+                      </tr>
+                      <tr>
+                        <td>Last Week</td>
+                        <td><strong>12</strong></td>
+                        <td>hours</td>
+                      </tr>
+                      <tr>
+                        <td>Average Week</td>
+                        <td><strong>13</strong></td>
+                        <td>hours</td>
+                      </tr>
+                      <tr>
+                        <td>Total Hours</td>
+                        <td><strong>1224</strong></td>
+                        <td>hours</td>
+                      </tr>
+                      <tr>
+                        <td>Completed</td>
+                        <td><strong>5</strong></td>
+                        <td>projects</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9 col-xs-12 dash-section">
+              <div id="chart-1">
+                <div class="cal-heatmap">
+                    <div class="dash-title"> Contributions over the last </div>
+                    <div class="dash-stage" id="cal-heatmap"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+
+            </div>
           </div>
         </div>
       </div>
