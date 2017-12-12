@@ -203,6 +203,7 @@ span.timeBox  {
 .dash-stage{
   text-align: left;
   border: 1px solid #dddddd;
+  font-size: 12px;
 }
 
 .dash-title{
@@ -233,17 +234,30 @@ tr:nth-child(even){
 
 
 #cal-heatmap{
-  max-height: 218px;
-  height: 218px;
-  display: flex;
+  /*max-height: 218px;
+  height: 218px;*/
+  /*display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center;*/
 
 }
 
+#streak-num{
+  font-size: 60px;
+}
+
+.streak{
+  font-size: 20px;
+  text-align: center;
+  padding: 10px 0;
+}
 
 
-
+.stats{
+  font-size: 15px;
+  text-align: center;
+  padding: 10px 0;
+}
 /* ----- BOOTSTRAP LOGIN FORM ----- */
 
 .form-signin {
