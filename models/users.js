@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
+
+
 const userSchema = new Schema({
   method :{
     type: String,
@@ -11,12 +13,20 @@ const userSchema = new Schema({
   local: {
     email: String,
     username: String,
-    password: String
+    password: String,
+    projects: String
   },
   google: {
     googleId: String,
     email: String,
     username: String,
+    projects: [
+      {
+        projectName: String,
+        sessionLength: Number,
+        timestamp: Date
+      }
+    ]
   }
 },{
   timestamps: {
@@ -24,6 +34,9 @@ const userSchema = new Schema({
     updatedAt: 'updatedAt'
   }
 });
+
+
+
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;

@@ -9,7 +9,10 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const dotenv = require('dotenv').config()
+
 require('./config/passport');
+
+
 
 mongoose.promise = global.Promise;
 mongoose.connect('mongodb://localhost/deepworkauth');

@@ -9,6 +9,26 @@
 	// 	// $(this).addClass('selected');
   //   	});
 
+  let projectinfo = {
+      projectName: "French",
+      sessionLength: 2,
+      timestamp: Date.now()
+    };
+
+
+
+  $("#data").on('click',()=>{
+
+
+    $.post('http://localhost:5000/users/post',projectinfo,(data)=>{
+      if(data.error){
+        console.log(data.error);
+      }else{
+
+      }
+    });
+
+  });
 
 
 
