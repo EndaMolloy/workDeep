@@ -73,12 +73,11 @@ passport.use('google', new GoogleStrategy({
 
         newUser.save((err)=>{
           if(err){
-            done(null, newUser, err.message)
+            done(err, false, err.message)
           }
-
-          done(null, newUser)
-      })
-    };
-  });
- }
+            done(null, newUser)
+        })
+      };
+    });
+  }
 ));

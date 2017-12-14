@@ -14,7 +14,13 @@ const userSchema = new Schema({
     email: String,
     username: String,
     password: String,
-    projects: String
+    projects: [
+      {
+        projectName: String,
+        sessionLength: Number,
+        timestamp: Date
+      }
+    ]
   },
   google: {
     googleId: String,

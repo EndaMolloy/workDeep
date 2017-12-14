@@ -4,7 +4,6 @@ const Joi = require('joi');
 const passport = require('passport');
 
 const User  = require('../models/users');
- const Project = require('../models/projects')
 
 const userSchema = Joi.object().keys({
   username: Joi.string().min(3).max(20).required(),
@@ -73,7 +72,7 @@ router.route('/register')
                 throw new Error("Something bad happened, please try again")
               }
               req.flash('success', 'You may now login.')
-              res.redirect('/users/login')
+              res.redirect('/login')
             });
 
         })
@@ -87,13 +86,22 @@ router.route('/login')
   .get(isNotAuthenticated,(req, res) => {
     res.render('login');
   })
-  .post(passport.authenticate('local', {
-    successRedirect: '/users/galaxy',
-    failureRedirect: '/users/login',
+  .post(passport.authenticate('local',{
+    failureRedirect: '/login',
     failureFlash: true
-  }));
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id)
+  });
+  // .post(passport.authenticate('local', {
+  //   successRedirect: '/users/galaxy',
+  //   failureRedirect: '/users/login',
+  //   failureFlash: true
+  // }));
 
-router.route('/galaxy')
+
+
+
+router.route('/:id')
   .get(isAuthenticated,(req,res)=>{
     if(req.user.method === 'local'){
       res.render('galaxy',{
@@ -122,10 +130,11 @@ router.route('/auth/google')
 
 router.route('/auth/google/callback')
   .get(passport.authenticate('google', {
-    successRedirect : '/users/galaxy',
     failureRedirect : '/users/login',
     failureFlash: true
-  }));
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id)
+  });
 
 router.route('/post')
   .post((req,res,next)=> {
@@ -158,7 +167,7 @@ router.route('/post')
 
 
 
-    res.redirect('/users/galaxy')
+    res.redirect('/users/'+req.user._id)
   })
 
 module.exports = router;
