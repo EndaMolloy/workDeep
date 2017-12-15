@@ -16,19 +16,19 @@
     };
 
 
-
-  $("#data").on('click',()=>{
-
-
-    $.post('http://localhost:5000/users/post',projectinfo,(data)=>{
-      if(data.error){
-        console.log(data.error);
-      }else{
-
-      }
-    });
-
-  });
+  //
+  // $("#data").on('click',()=>{
+  //
+  //
+  //   $.post('http://localhost:5000/users/post',projectinfo,(data)=>{
+  //     if(data.error){
+  //       console.log(data.error);
+  //     }else{
+  //
+  //     }
+  //   });
+  //
+  // });
 
 
 

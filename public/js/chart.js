@@ -7,31 +7,48 @@
 //   };
 // });
 
-var chartData = [
-  {
-    date: new Date(),
-    count: 3
-  },
-  {
-    date: new Date(),
-    count: 4
-  },
-  {
-    date: new Date(),
-    count: 5
-  }
-]
+// var chartData = [
+//   {
+//     date: new Date(),
+//     count: 3
+//   },
+//   {
+//     date: new Date(),
+//     count: 4
+//   },
+//   {
+//     date: new Date(),
+//     count: 5
+//   }
+// ]
+
+ $("#data").on('click',()=>{
+
+  $.get('http://localhost:5000/users/getData',(chartData)=> {
+    var heatmap = calendarHeatmap()
+                    .data(chartData)
+                    .selector('#cal-heatmap')
+                    .tooltipEnabled(true)
+                    .colorRange(['#f4f7f7', '#79a8a9'])
+                    .onClick(function (data) {
+                      console.log('data', data);
+                    });
+    heatmap();  // render the chart
+
+  });
+
+ });
 
 
-var heatmap = calendarHeatmap()
-                .data(chartData)
-                .selector('#cal-heatmap')
-                .tooltipEnabled(true)
-                .colorRange(['#f4f7f7', '#79a8a9'])
-                .onClick(function (data) {
-                  console.log('data', data);
-                });
-heatmap();  // render the chart
+// var heatmap = calendarHeatmap()
+//                 .data(chartData)
+//                 .selector('#cal-heatmap')
+//                 .tooltipEnabled(true)
+//                 .colorRange(['#f4f7f7', '#79a8a9'])
+//                 .onClick(function (data) {
+//                   console.log('data', data);
+//                 });
+// heatmap();  // render the chart
 
 
 

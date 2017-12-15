@@ -99,7 +99,19 @@ router.route('/login')
   // }));
 
 
+router.route('/getData')
+  .get(isAuthenticated,(req,res)=>{
 
+    const projects = req.user.google.projects;
+    const chartData = projects.map((project)=> {
+      return {
+        date: project.timestamp,
+        count: project.sessionLength
+      }
+    })
+    
+    res.json(chartData);
+  });
 
 router.route('/:id')
   .get(isAuthenticated,(req,res)=>{
@@ -114,7 +126,6 @@ router.route('/:id')
         username: req.user.google.username
       });
     }
-
 
   })
 
