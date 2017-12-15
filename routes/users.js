@@ -4,6 +4,7 @@ const Joi = require('joi');
 const passport = require('passport');
 
 const User  = require('../models/users');
+const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
   username: Joi.string().min(3).max(20).required(),
@@ -102,15 +103,54 @@ router.route('/login')
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
 
-    const projects = req.user.google.projects;
-    const chartData = projects.map((project)=> {
-      return {
-        date: project.timestamp,
-        count: project.sessionLength
-      }
-    })
-    
-    res.json(chartData);
+    seedDB(req.user, () => {
+
+      User.aggregate([
+        {
+          $match: {
+            _id:req.user._id
+          }
+        },{
+          $unwind: "$google.projects"
+        },
+        { $group: {
+          _id: "$google.projects.timestamp",
+          total: { $sum: "$google.projects.sessionLength"  }
+      }}
+      ], (err,result)=> {
+        if(err){
+          console.log(err);
+        }
+        console.log("days: ",result);
+
+        // const avgWeek = result.reduce((acc,obj)=> {return acc + obj.total},0)/result.length;
+        // console.log(avgWeek);
+
+        const chartData = result.map((day)=> {
+          return {
+            date: day._id,
+            count: day.total
+          }
+        });
+        console.log(JSON.stringify(chartData));
+
+        const allChartsData = {
+          heatmap: chartData,
+          otherChart: {
+            x: 34,
+            y: 36
+          }
+        }
+
+        res.json(allChartsData);
+      })
+
+
+
+
+    });
+    //HEATMAP
+
   });
 
 router.route('/:id')

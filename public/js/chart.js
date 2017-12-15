@@ -26,7 +26,7 @@
 
   $.get('http://localhost:5000/users/getData',(chartData)=> {
     var heatmap = calendarHeatmap()
-                    .data(chartData)
+                    .data(chartData.heatmap)
                     .selector('#cal-heatmap')
                     .tooltipEnabled(true)
                     .colorRange(['#f4f7f7', '#79a8a9'])

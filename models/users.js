@@ -34,11 +34,6 @@ const userSchema = new Schema({
       }
     ]
   }
-},{
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  }
 });
 
 
