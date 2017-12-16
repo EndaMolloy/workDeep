@@ -22,83 +22,118 @@
 //   }
 // ]
 
- $("#data").on('click',()=>{
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawCharts);
+
+
+$("#data").on('click',()=>{
 
   $.get('http://localhost:5000/users/getData',(chartData)=> {
-    var heatmap = calendarHeatmap()
-                    .data(chartData.heatmap)
-                    .selector('#cal-heatmap')
-                    .tooltipEnabled(true)
-                    .colorRange(['#f4f7f7', '#79a8a9'])
-                    .onClick(function (data) {
-                      console.log('data', data);
-                    });
-    heatmap();  // render the chart
+    // var heatmap = calendarHeatmap()
+    //                 .data(chartData.heatmap)
+    //                 .selector('#cal-heatmap')
+    //                 .tooltipEnabled(true)
+    //                 .colorRange(['#f4f7f7', '#79a8a9'])
+    //                 .onClick(function (data) {
+    //                   console.log('data', data);
+    //                 });
+    // heatmap();  // render the chart
+    console.log(chartData);
+
+    drawCharts();
+
+    function drawCharts() {
+
+      // pie chart data
+      var pieData = google.visualization.arrayToDataTable(chartData);
+      // pie chart options
+      var pieOptions = {
+        backgroundColor: 'transparent',
+        pieHole: 0.4,
+        colors: [ "cornflowerblue",
+                  "olivedrab",
+                  "orange",
+                  "tomato",
+                  "crimson",
+                  "purple",
+                  "turquoise",
+                  "forestgreen",
+                  "navy",
+                  "gray"],
+        pieSliceText: 'value',
+        tooltip: {
+          text: 'percentage'
+        },
+        fontName: 'Open Sans',
+        chartArea: {
+          width: '100%',
+          height: '94%'
+        },
+        legend: {
+          textStyle: {
+            fontSize: 13
+          }
+        }
+      };
+      // draw pie chart
+      var pieChart = new google.visualization.PieChart(document.getElementById('google-pie'));
+      pieChart.draw(pieData, pieOptions);
+
+    }
+
+
 
   });
 
- });
-
-
-// var heatmap = calendarHeatmap()
-//                 .data(chartData)
-//                 .selector('#cal-heatmap')
-//                 .tooltipEnabled(true)
-//                 .colorRange(['#f4f7f7', '#79a8a9'])
-//                 .onClick(function (data) {
-//                   console.log('data', data);
-//                 });
-// heatmap();  // render the chart
+});
 
 
 
 
 
-google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(drawCharts);
 function drawCharts() {
 
   // pie chart data
-  var pieData = google.visualization.arrayToDataTable([
-    ['Country', 'Page Hits'],
-    ['USA',      7242],
-    ['Canada',   4563],
-    ['Mexico',   1345],
-    ['Sweden',    946],
-    ['Germany',  2150]
-  ]);
-  // pie chart options
-  var pieOptions = {
-    backgroundColor: 'transparent',
-    pieHole: 0.4,
-    colors: [ "cornflowerblue",
-              "olivedrab",
-              "orange",
-              "tomato",
-              "crimson",
-              "purple",
-              "turquoise",
-              "forestgreen",
-              "navy",
-              "gray"],
-    pieSliceText: 'value',
-    tooltip: {
-      text: 'percentage'
-    },
-    fontName: 'Open Sans',
-    chartArea: {
-      width: '100%',
-      height: '94%'
-    },
-    legend: {
-      textStyle: {
-        fontSize: 13
-      }
-    }
-  };
-  // draw pie chart
-  var pieChart = new google.visualization.PieChart(document.getElementById('google-pie'));
-  pieChart.draw(pieData, pieOptions);
+  // var pieData = google.visualization.arrayToDataTable([
+  //   ['Country', 'Page Hits'],
+  //   ['USA',      7242],
+  //   ['Canada',   4563],
+  //   ['Mexico',   1345],
+  //   ['Sweden',    946],
+  //   ['Germany',  2150]
+  // ]);
+  // // pie chart options
+  // var pieOptions = {
+  //   backgroundColor: 'transparent',
+  //   pieHole: 0.4,
+  //   colors: [ "cornflowerblue",
+  //             "olivedrab",
+  //             "orange",
+  //             "tomato",
+  //             "crimson",
+  //             "purple",
+  //             "turquoise",
+  //             "forestgreen",
+  //             "navy",
+  //             "gray"],
+  //   pieSliceText: 'value',
+  //   tooltip: {
+  //     text: 'percentage'
+  //   },
+  //   fontName: 'Open Sans',
+  //   chartArea: {
+  //     width: '100%',
+  //     height: '94%'
+  //   },
+  //   legend: {
+  //     textStyle: {
+  //       fontSize: 13
+  //     }
+  //   }
+  // };
+  // // draw pie chart
+  // var pieChart = new google.visualization.PieChart(document.getElementById('google-pie'));
+  // pieChart.draw(pieData, pieOptions);
 
    // BEGIN BAR CHART
    var barData = google.visualization.arrayToDataTable([
