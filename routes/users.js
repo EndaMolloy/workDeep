@@ -136,7 +136,7 @@ router.route('/getData')
         sortedResult = result.sort((a,b)=> {
           return b._id - a._id;
         });
-        console.log(sortedResult);
+        //console.log(sortedResult);
 
         const longestStreak = getLongestStreak(sortedResult);
         const currentStreak = getCurrentStreak(sortedResult);
@@ -278,12 +278,43 @@ router.route('/getData')
                 const last2Weeks = sortedResult.slice(0,14);
                 console.log(last2Weeks);
 
-                 let lastWeekArr = last2Weeks.map((day)=> {
-                   console.log(moment(day._id).week())
+                let lastWeekArr = last2Weeks.filter((day)=> moment(day._id).week()===lastWeek);
+                let iso2Day = lastWeekArr.map((day)=> {
+                  let dayWord;
+                  switch(moment(day._id).weekday()){
+                    case 0:
+                      dayWord = "Sun";
+                      break;
+                    case 1:
+                      dayWord = "Mon"
+                      break;
+                    case 2:
+                      dayWord = "Tue"
+                      break;
+                    case 3:
+                      dayWord = "Wed"
+                      break;
+                    case 4:
+                      dayWord = "Thu"
+                      break;
+                    case 5:
+                      dayWord = "Fri"
+                      break;
+                    case 6:
+                      dayWord = "Sat"
+                  }
+                   return {
+                     "day": dayWord,
+                     "hours": day.total
+                   };
+               });
 
-                 })
+              let barChartData = iso2Day.map((day)=>Object.values(day));
+              console.log(barChartData);
 
-                // console.log(lastWeekArr);
+
+
+
 
                 //res.json(pieData);
               }
