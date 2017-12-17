@@ -132,9 +132,9 @@ router.route('/getData')
         //console.log("days: ",result);
 
 
-        //sort dates newest to oldest
+        //sort dates oldest to newest
         sortedResult = result.sort((a,b)=> {
-          return a._id - b._id;
+          return b._id - a._id;
         });
         console.log(sortedResult);
 
@@ -143,7 +143,7 @@ router.route('/getData')
         console.log("Longest Streak: ",longestStreak);
         console.log("Current Streak: ",currentStreak);
 
-        dBtime = moment(sortedResult[sortedResult.length-1]._id);
+        dBtime = moment(sortedResult[0]._id);
         currWeek = moment().startOf('week');
 
         console.log("diff in weeks: ",currWeek.diff(dBtime,'weeks'));
@@ -152,8 +152,8 @@ router.route('/getData')
 
           let consecArr = [];
           let count = 0;
-          for(let i =1; i< sortedResult.length; i++){
-            if(sortedResult[i]._id - sortedResult[i-1]._id === 86400000){
+          for(let i =0; i< sortedResult.length-1; i++){
+            if(sortedResult[i]._id - sortedResult[i+1]._id === 86400000){
               count++;
             }else{
               consecArr.push(count);
@@ -169,7 +169,7 @@ router.route('/getData')
             let yesterday = new Date(new Date().setHours(0,0,0,0));
             yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
 
-            const lastEntry = sortedResult[sortedResult.length-1]._id.toISOString();
+            const lastEntry = sortedResult[0]._id.toISOString();
 
             //if not today or yesterday then streak = 0
             if(lastEntry !==today && lastEntry !== yesterday){
@@ -177,8 +177,8 @@ router.route('/getData')
             }else{
               //else subtract days and count until not equal to 86400000
               let count = 1;
-              for(let i=sortedResult.length-1; i<sortedResult.length; i--){
-                if(sortedResult[i]._id - sortedResult[i-1]._id === 86400000){
+              for(let i=0; i<sortedResult.length-1; i++){
+                if(sortedResult[i]._id - sortedResult[i+1]._id === 86400000){
                   count++;
                 }else{
                   return count;
@@ -275,7 +275,7 @@ router.route('/getData')
                 console.log("This weeks hours: ",thisWeekHrs);
                 console.log("Last weeks hours: ",lastWeekHrs);
 
-                const last2Weeks = sortedResult.slice(0,13);
+                const last2Weeks = sortedResult.slice(0,14);
                 console.log(last2Weeks);
 
                  let lastWeekArr = last2Weeks.map((day)=> {
