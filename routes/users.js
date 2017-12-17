@@ -132,7 +132,7 @@ router.route('/getData')
         //console.log("days: ",result);
 
 
-        //sort dates oldest to newest
+        //sort dates newest to oldest
         sortedResult = result.sort((a,b)=> {
           return a._id - b._id;
         });
@@ -275,6 +275,15 @@ router.route('/getData')
                 console.log("This weeks hours: ",thisWeekHrs);
                 console.log("Last weeks hours: ",lastWeekHrs);
 
+                const last2Weeks = sortedResult.slice(0,13);
+                console.log(last2Weeks);
+
+                 let lastWeekArr = last2Weeks.map((day)=> {
+                   console.log(moment(day._id).week())
+
+                 })
+
+                // console.log(lastWeekArr);
 
                 //res.json(pieData);
               }
