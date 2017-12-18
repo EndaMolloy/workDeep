@@ -252,8 +252,8 @@ router.route('/getData')
                 console.log(err);
               }else{
 
-                const avgWeek = Math.round(result.reduce((acc,obj)=> {return acc + obj.total},0)/(result.length + diffWeek));
-                console.log("Average Week(hrs): ",avgWeek);
+                const avgWeekHrs = Math.round(result.reduce((acc,obj)=> {return acc + obj.total},0)/(result.length + diffWeek));
+
 
                 //This week
                 const thisWeek = moment().week();
@@ -262,61 +262,99 @@ router.route('/getData')
                 const nxtNewDbWeek = result[1]._id;
 
                 let thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
-                let lastWeekHrs = 0;
+                let lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek)
 
-                if (lastWeek === newestDbWeek){
-                  lastWeekHrs = result[0].total;
-                }else if (lastWeek === nxtNewDbWeek) {
-                  lastWeekHrs = result[1].total;
-                }else{
-                  lastWeekHrs = 0;
+                function getLastWeekHrs(newestDbWeek,nxtNewDbWeek){
+                    let hrs=0;
+                    if(lastWeek === newestDbWeek){
+                      hrs = result[0].total;
+                    }else if (lastWeek === nxtNewDbWeek) {
+                      hrs = result[1].total;
+                    }else{
+                      hrs = 0;
+                    }
+                    return hrs;
                 }
 
-                console.log("This weeks hours: ",thisWeekHrs);
-                console.log("Last weeks hours: ",lastWeekHrs);
+
+                console.log("This weeks (hrs): ",thisWeekHrs);
+                console.log("Last weeks (hrs): ",lastWeekHrs);
+                console.log("Average Week (hrs): ",avgWeekHrs);
 
                 const last2Weeks = sortedResult.slice(0,14);
-                console.log(last2Weeks);
+                //console.log(last2Weeks);
 
-                let lastWeekArr = last2Weeks.filter((day)=> moment(day._id).week()===lastWeek);
-                let iso2Day = lastWeekArr.map((day)=> {
-                  let dayWord;
-                  switch(moment(day._id).weekday()){
-                    case 0:
-                      dayWord = "Sun";
-                      break;
-                    case 1:
-                      dayWord = "Mon"
-                      break;
-                    case 2:
-                      dayWord = "Tue"
-                      break;
-                    case 3:
-                      dayWord = "Wed"
-                      break;
-                    case 4:
-                      dayWord = "Thu"
-                      break;
-                    case 5:
-                      dayWord = "Fri"
-                      break;
-                    case 6:
-                      dayWord = "Sat"
+                let barChartData = [["Sun"],["Mon"],["Tue"],["Wed"],["Thu"],["Fri"],["Sat"]];
+
+                const lastWeekArr = getWeeks(last2Weeks,lastWeek);
+                const thisWeekArr = getWeeks(last2Weeks,thisWeek);
+                barChartData = updateChartData(barChartData,lastWeekArr,thisWeekArr);
+
+
+
+                function getWeeks(weeksArr, week){
+                  const lastWeekArr = weeksArr.filter((day)=> moment(day._id).week()=== week);
+                  const iso2Day = lastWeekArr.map((day)=> {
+                    let dayWord;
+                    switch(moment(day._id).weekday()){
+                      case 0:
+                        dayWord = "Sun";
+                        break;
+                      case 1:
+                        dayWord = "Mon";
+                        break;
+                      case 2:
+                        dayWord = "Tue";
+                        break;
+                      case 3:
+                        dayWord = "Wed";
+                        break;
+                      case 4:
+                        dayWord = "Thu";
+                        break;
+                      case 5:
+                        dayWord = "Fri";
+                        break;
+                      case 6:
+                        dayWord = "Sat";
+                    }
+                     return {
+                       "day": dayWord,
+                       "hours": day.total
+                     };
+                  });
+                  //Convert object to array of object values
+                  return iso2Day.map((day)=>Object.values(day));
+                }
+
+                function updateChartData(barChartData,lastWeekArr,thisWeekArr){
+
+                  for(let i=0; i<barChartData.length; i++){
+                    for(let j=0; j<thisWeekArr.length; j++){
+                      if(barChartData[i][0] === thisWeekArr[j][0]){
+                        barChartData[i].push(thisWeekArr[j][1]);
+                      }
+                    }
                   }
-                   return {
-                     "day": dayWord,
-                     "hours": day.total
-                   };
-               });
 
-              let barChartData = iso2Day.map((day)=>Object.values(day));
-              console.log(barChartData);
+                  for(let i=0; i<barChartData.length; i++){
+                    for(let j=0; j<lastWeekArr.length; j++){
+                      if(barChartData[i][0] === lastWeekArr[j][0]){
+                        barChartData[i].push(lastWeekArr[j][1]);
+                      }
+                    }
+                  }
 
+                  for(let i=0; i<barChartData.length; i++){
+                    while(barChartData[i].length < 3)
+                      barChartData[i].push(0);
+                  }
 
+                  return barChartData;
+                }
+                console.log(barChartData);
 
-
-
-                //res.json(pieData);
+                  //res.json(pieData);
               }
             });
 
