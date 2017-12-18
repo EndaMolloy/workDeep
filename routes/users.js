@@ -284,7 +284,7 @@ router.route('/getData')
                 const last2Weeks = sortedResult.slice(0,14);
                 //console.log(last2Weeks);
 
-                let barChartData = [["Sun"],["Mon"],["Tue"],["Wed"],["Thu"],["Fri"],["Sat"]];
+                let barChartData = [['Day', 'This Week', 'Last Week'],["Sun"],["Mon"],["Tue"],["Wed"],["Thu"],["Fri"],["Sat"]];
 
                 const lastWeekArr = getWeeks(last2Weeks,lastWeek);
                 const thisWeekArr = getWeeks(last2Weeks,thisWeek);
@@ -329,7 +329,7 @@ router.route('/getData')
 
                 function updateChartData(barChartData,lastWeekArr,thisWeekArr){
 
-                  for(let i=0; i<barChartData.length; i++){
+                  for(let i=1; i<barChartData.length; i++){
                     for(let j=0; j<thisWeekArr.length; j++){
                       if(barChartData[i][0] === thisWeekArr[j][0]){
                         barChartData[i].push(thisWeekArr[j][1]);
@@ -337,7 +337,7 @@ router.route('/getData')
                     }
                   }
 
-                  for(let i=0; i<barChartData.length; i++){
+                  for(let i=1; i<barChartData.length; i++){
                     for(let j=0; j<lastWeekArr.length; j++){
                       if(barChartData[i][0] === lastWeekArr[j][0]){
                         barChartData[i].push(lastWeekArr[j][1]);
@@ -354,7 +354,7 @@ router.route('/getData')
                 }
                 console.log(barChartData);
 
-                  //res.json(pieData);
+                  res.json(barChartData);
               }
             });
 
