@@ -268,9 +268,9 @@ function calendarHeatmap() {
       return weekDay;
     }
 
-    var daysOfChart = chart.data().map(function (day) {
-      return day.date.toDateString();
-    });
+    // var daysOfChart = chart.data().map(function (day) {
+    //   return day.date.toDateString();
+    // });
 
   }
 
