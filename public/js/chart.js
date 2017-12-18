@@ -63,7 +63,7 @@ google.load("visualization", "1", {packages:["corechart"]});
       //             "purple",
       //             "turquoise",
       //             "forestgreen",
-      //             "navy",
+      //             "navy",/5a3522d151fd00669556665f#
       //             "gray"],
       //   pieSliceText: 'value',
       //   tooltip: {
@@ -85,8 +85,8 @@ google.load("visualization", "1", {packages:["corechart"]});
       // pieChart.draw(pieData, pieOptions);
 
       // BEGIN BAR CHART
-      var barData = google.visualization.arrayToDataTable(chartData);
-    // set bar chart optionsusers/5a3522d151fd00669556665f#
+      var barData = google.visualization.arrayToDataTable(chartData.barChart);
+    // set bar chart optionsusers
     var barOptions = {
       focusTarget: 'category',
       backgroundColor: 'transparent',
