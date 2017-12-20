@@ -9,6 +9,7 @@ body{
   background-size: cover;
 
   width: 100vw;*/
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
@@ -18,8 +19,7 @@ body{
 
 .wrapper{
   text-align: center;
-  padding-top: 4%;
-  min-height: 100vh;
+
 }
 
 
@@ -37,16 +37,15 @@ body{
 }
 
 
-#inputContainer input[type=text] {
+#taskInput {
     background: transparent;
-		width: 24em;
+    font-size: 3em;
     border: none;
-    border-bottom: 1.5px solid white;
-		padding-left: 5px;
-		padding-right: 5px;
 		color: inherit;
 		text-align: center;
-		padding-top: 1.5%;
+		padding-top: 3%;
+    text-transform:uppercase;
+
 		/*-webkit-transition: width .35s ease-in-out;
   transition: width .35s ease-in-out;*/
 }
@@ -233,14 +232,6 @@ tr:nth-child(even){
 }
 
 
-#cal-heatmap{
-  /*max-height: 218px;
-  height: 218px;*/
-  /*display: flex;
-  align-items: center;
-  justify-content: center;*/
-
-}
 
 #streak-num{
   font-size: 60px;
@@ -295,10 +286,9 @@ tr:nth-child(even){
 }
 
 #projects{
-  width: 250px;
-}
-
-.projects{
+  padding-top: 160px;
+  width: 220px;
+  margin-left: 0;
   text-align: left;
 }
 
@@ -312,6 +302,23 @@ tr:nth-child(even){
   height: 40px;
   line-height: 40px;
 }
+
+.projects .newProject{
+  height: 40px;
+  line-height: 40px;
+}
+
+.projects .complete{
+  margin: 0;
+  float: right;
+}
+
+.projects .delete{
+  padding-right: 20px;
+  float: right;
+}
+
+
 
 .projects span{
   margin-right: 15px;

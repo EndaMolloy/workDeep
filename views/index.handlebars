@@ -8,7 +8,7 @@
     <h1>Hey <span id='userName'>{{username}}</span>, <span id=motivation>let's get it done!</span></h1>
   </div>
   <div id="inputContainer">
-    <input id ="taskInput" type="text">
+    <div id ="taskInput">Book</div>
   </div>
 
   <div class ="row">
@@ -16,11 +16,13 @@
         <div id="projects" class="container">
           <h4>Live Projects</h4>
           <ul>
-            <li><span><i class="fa fa-circle-thin" aria-hidden="true"></i></span>Javascript <span>X</span></li>
-            <li><span><i class="fa fa-circle-thin" aria-hidden="true"></i></span>Blog Posts <span>X</span></li>
-            <li><span><i class="fa fa-circle" aria-hidden="true"></i></span>Book <span>X</span></li>
+            <li><span><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">Javascript </span><span class="complete">$</span><span class="delete">X</span></li>
+            <li><span><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">Blog Posts </span><span class="complete">$</span><span class="delete">X</span></li>
+            <li><span><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">Book </span><span class="complete">$</span><span class="delete">X</span></li>
           </ul>
-          <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
+          <div class="newProject">
+            <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
+          </div>
         </div>
       </div>
       <div class ="col-md-4 col-xs-12">
