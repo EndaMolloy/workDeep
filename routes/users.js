@@ -410,37 +410,37 @@ router.route('/auth/google/callback')
   });
 
 router.route('/post')
-  .post((req,res,next)=> {
-
+  .post(isAuthenticated,(req,res,next)=> {
+    console.log(req.body);
     req.user.google.projects.push(req.body);
+
     req.user.save((err)=> {
       if(err){
         console.log(err);
-      }else{
-        User.aggregate([
-          {
-            $match: {
-              _id:req.user._id
-            }
-          },{
-            $unwind: "$google.projects"
-          },
-          { $group: {
-            _id: "$google.projects.projectName",
-            total: { $sum: "$google.projects.sessionLength"  }
-        }}
-        ], (err,result)=> {
-          if(err){
-            console.log(err);
-          }
-          console.log("Total hours: ",result);
-        })
       }
+      // else{
+      //   User.aggregate([
+      //     {
+      //       $match: {
+      //         _id:req.user._id
+      //       }
+      //     },{
+      //       $unwind: "$google.projects"
+      //     },
+      //     { $group: {
+      //       _id: "$google.projects.projectName",
+      //       total: { $sum: "$google.projects.sessionLength"  }
+      //   }}
+      //   ], (err,result)=> {
+      //     if(err){
+      //       console.log(err);
+      //     }
+      //     console.log("Total hours: ",result);
+      //   })
+      // }
     });
 
-
-
-    res.redirect('/users/'+req.user._id)
+    //res.redirect('/users/'+req.user._id)
   })
 
 module.exports = router;

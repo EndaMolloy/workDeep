@@ -9,12 +9,43 @@
 	// 	// $(this).addClass('selected');
   //   	});
 
-  let projectinfo = {
-      projectName: "French",
-      sessionLength: 2,
-      timestamp: Date.now()
-    };
+  // let projectinfo = {
+  //     projectName: "French",
+  //     sessionLength: 2,
+  //     timestamp: Date.now()
+  //   };
 
+  function sendDataToDb(){
+
+    const sessHrsTen2Mins = Number(sessHrsTen)*60;
+    const sessHrsOne2Mins = Number(sessHrsOne)*60;
+
+    const totalSessMins = sessHrsTen2Mins+sessHrsOne2Mins+Number(sessMinsTen)+Number(sessMinsOne);
+    const totalSessHrs = totalSessMins/60;
+
+    const projectName = document.getElementById('taskInput').textContent
+
+    const test = 1;
+
+    const projectData = {
+      projectName: projectName,
+      sessionLength: 4,
+      timestamp: Date.now()
+    }
+
+    console.log(projectData);
+
+
+    $.ajax({
+      type: "POST",
+      url: 'http://localhost:5000/users/post',
+      data: projectData,
+      success: function() {
+          alert('It worked');
+      }
+    });
+
+  }
 
   //
   // $("#data").on('click',()=>{
@@ -130,18 +161,18 @@ $("#button-clear").on('click',()=>{
 
 })
 
-$("#button-done").on('click',()=>{
-  clearInterval(Interval);
-  parseTimeValues();
-  pause = true;
-
-  //get values in seconds
-  let diffHrs = (sesHrs - hrs)*60*60;
-  let diffMins= (sesMins - mins)*60;
-  let diffSecs = sesSecs - secs;
-  convertToMins(diffHrs,diffMins,diffSecs)
-
-})
+// $("#button-done").on('click',()=>{
+//   clearInterval(Interval);
+//   parseTimeValues();
+//   pause = true;
+//
+//   //get values in seconds
+//   let diffHrs = (sesHrs - hrs)*60*60;
+//   let diffMins= (sesMins - mins)*60;
+//   let diffSecs = sesSecs - secs;
+//   convertToMins(diffHrs,diffMins,diffSecs)
+//
+// })
 
 
 function getTimeValues(){
@@ -217,6 +248,8 @@ function startTimer () {
     if(secs==00 && mins==00 && hrs==00){
       alert("Times up")
       clearInterval(Interval);
+
+      sendDataToDb();
     }
 
     else{
