@@ -32,6 +32,14 @@ body{
   margin: 0 7%;
 }
 
+#button-reset{
+  display: none;
+}
+
+#button-clear{
+  display: none;
+}
+
 .start{
   display: inline;
 }
@@ -286,10 +294,12 @@ tr:nth-child(even){
 }
 
 #projects{
-  padding-top: 160px;
+  padding-top: 100px;
   width: 220px;
+  height: 300px;
   margin-left: 0;
   text-align: left;
+  overflow: hidden;
 }
 
 .projects ul{

@@ -96,6 +96,7 @@
   saveSessionLength();
 
   //shorthand values
+  //e.g hrs = 5 mins=13 secs=42
   parseTimeValues()
 
 
@@ -117,6 +118,9 @@ $("#button-start").on('click',()=>{
     isCounting = false;
     document.getElementById('play').classList.remove('fa-pause')
     document.getElementById('play').classList.add('fa-play')
+    document.getElementById('button-reset').style.display = 'inline-block';
+    document.getElementById('button-clear').style.display = 'inline-block';
+
 
   }
   else{
@@ -129,6 +133,9 @@ $("#button-start").on('click',()=>{
       isCounting = true;
       document.getElementById('play').classList.remove('fa-play')
       document.getElementById('play').classList.add('fa-pause')
+      document.getElementById('button-reset').style.display = 'none';
+      document.getElementById('button-clear').style.display = 'none';
+      document.getElementById('projects').style.display = 'none';
 
       getTimeValues()
       parseTimeValues()
@@ -147,7 +154,7 @@ $("#button-reset").on('click',()=>{
   clearInterval(Interval);
   resetValues()
   setDisplay()
-
+  document.getElementById('projects').style.display = 'block';
 })
 
 $("#button-clear").on('click',()=>{
@@ -160,6 +167,7 @@ $("#button-clear").on('click',()=>{
   addLabels()
   modifyInputField()
   reset = false;
+  document.getElementById('projects').style.display = 'block';
 
 })
 
@@ -214,7 +222,7 @@ function modifyInputField(){
     }
   }
   else{
-    labelDiv.style.color = ' #333';
+    labelDiv.style.color = '#21272d';
 
     for(let i=0; i<inputBoxes.length; i++){
       inputBoxes[i].style['border-bottom']='none';
