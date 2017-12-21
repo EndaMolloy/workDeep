@@ -25,11 +25,13 @@
 
     const projectName = document.getElementById('taskInput').textContent
 
+    const userUrl = window.location.pathname;
+    console.log(userUrl);
     const test = 1;
 
     const projectData = {
       projectName: projectName,
-      sessionLength: 4,
+      sessionLength: totalSessMins,
       timestamp: Date.now()
     }
 
@@ -38,7 +40,7 @@
 
     $.ajax({
       type: "POST",
-      url: 'http://localhost:5000/users/post',
+      url: userUrl,
       data: projectData,
       success: function() {
           alert('It worked');
