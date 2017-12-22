@@ -132,6 +132,9 @@ span.timeBox  {
 .custom-icon:hover {
   border: 0.75px solid white;
 }
+
+
+
 .fix-editor {
   display: none;
 }
@@ -294,7 +297,7 @@ tr:nth-child(even){
 }
 
 #projects{
-  padding-top: 100px;
+  padding-top: 30px;
   width: 220px;
   height: 300px;
   margin-left: 0;
@@ -313,6 +316,14 @@ tr:nth-child(even){
   line-height: 40px;
 }
 
+.projects li:hover .complete{
+  display: inline-block;
+}
+
+.projects li:hover .delete{
+  display: inline-block;
+}
+
 .projects .newProject{
   height: 40px;
   line-height: 40px;
@@ -321,14 +332,17 @@ tr:nth-child(even){
 .projects .complete{
   margin: 0;
   float: right;
+  display: none;
 }
 
 .projects .delete{
-  padding-right: 20px;
   float: right;
+  display: none;
 }
 
-
+.projects li:hover .projectName{
+  text-decoration: underline;
+}
 
 .projects span{
   margin-right: 15px;
@@ -338,6 +352,28 @@ tr:nth-child(even){
   background-color: inherit;
   border: none;
 }
+
+.custom-icon-list {
+  background: inherit;
+  border-radius: 100%;
+  color: white;
+  display: table-cell;
+  font-size: 15px;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  transition: 2s linear;
+  vertical-align: middle;
+}
+.custom-icon-list:hover {
+  border: 0.75px solid white;
+}
+
+.icon-wrapper-list {
+  padding-top: 5px;
+  display: inline-block;
+}
+
 
 @media (max-width: 767px) {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
