@@ -59,7 +59,7 @@ function deleteThisproject(project){
 
   let arrIndex = projectList.indexOf(project);
 
-  if(inFocusProject > arrIndex)
+  if(inFocusProject >= arrIndex)
     inFocusProject--;
 
   projectList.splice(arrIndex,1);
@@ -83,9 +83,9 @@ function addtoLiveProjects(projectName){
 function updateListView(){
   $(".projects ul").empty();
   projectList.forEach((project, index) => {
-    if(!inFocusProject){
-      inFocusProject = 0;
-    }
+    // if(!inFocusProject){
+    //   inFocusProject = 0;
+    // }
 
     if(inFocusProject === index){
       $(".projects ul").append("<li><span id='bullet'><i class='fa fa-circle' aria-hidden='true'></i></span><span class='projectName'>"+project+ "</span><span class='complete icon-wrapper-list'><i class='fa fa-check custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span><span class='delete icon-wrapper-list'><i class='fa fa-times custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span></li>");
@@ -94,8 +94,8 @@ function updateListView(){
     }else{
       $(".projects ul").append("<li><span id='bullet'><i class='fa fa-circle-thin' aria-hidden='true'></i></span><span class='projectName'>"+project+ "</span><span class='complete icon-wrapper-list'><i class='fa fa-check custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span><span class='delete icon-wrapper-list'><i class='fa fa-times custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span></li>");
     }
-    //console.log(inFocusProject);
   });
+  console.log(inFocusProject);
 }
 
 function checkDuplicate(name){
