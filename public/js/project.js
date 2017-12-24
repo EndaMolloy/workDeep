@@ -6,9 +6,19 @@ let project = "";
 $("ul").on('click','.delete', function(event){
   $(this).parent().fadeOut(500, function(){
     let project = $(this).text().trim();
-    $(this).remove();
-    deleteThisproject(project);
 
+    const actionUrl = 'http://localhost:5000/users' + $(this).attr('action');
+    const $itemToDelete = $(this).parent('.list-project');
+    console.log($itemToDelete);
+    $.ajax({
+      url: actionUrl,
+      type: 'DELETE',
+      itemToDelete: $itemToDelete,
+      success: function success(project){
+        console.log(project);
+        //this.itemToDelete.remove();
+      }
+    })
   });
   event.stopPropagation();
 });
@@ -32,24 +42,34 @@ $(".projects ul").on('click','li', function(event){
   $("#bullet i",this).removeClass('fa-circle-thin').addClass('fa-circle');
   document.getElementById('taskInput').textContent = $(".projectName",this).text();
 
-  inFocusProject = projectList.indexOf($(".projectName",this).text());
+  //inFocusProject = projectList.indexOf($(".projectName",this).text());
   //console.log(inFocusProject);
 });
 
 $(".projects input[type='text']").keypress(function(event){
 
-  if((event.which === 13)&&($(this).val().length>0)){
-    addtoLiveProjects($(this).val().trim());
+  let userInput = $(this).val().trim();
+
+  if((event.which === 13)&&(userInput.length>0)){
+
+    $.post('http://localhost:5000/users/liveprojects',{projectName:userInput}, function(projectObj){
+      if(!project.error){
+
+        addtoLiveProjects(projectObj);
+      }else{
+        console.log('Something is wrong');
+      }
+    });
+
+    //addtoLiveProjects(userInput);
     $(this).val("");
-    //console.log(projectList.length);
+    console.log("List length:", projectList.length);
   }
 
-  if(projectList.length === 5){
-    $(".newProject").hide();
-  }
+
 
   if(projectList.length === 1){
-    document.getElementById('taskInput').textContent = projectList[0];
+    document.getElementById('taskInput').textContent = projectList[0]['projectName'];
     inFocusProject = 0;
   }
 
@@ -69,13 +89,16 @@ function deleteThisproject(project){
   updateListView();
 }
 
-function addtoLiveProjects(projectName){
-  if(checkDuplicate(projectName)){
-    alert("A project with this name already exist. But you already knew that!");
-    return;
-  }
+function addtoLiveProjects(projectObj){
+  // if(checkDuplicate(projectName)){
+  //   alert("A project with this name already exist. But you already knew that!");
+  //   return;
+  // }
 
-  projectList.push(projectName);
+  projectList.push(projectObj);
+  if(projectList.length === 5){
+    $(".newProject").hide();
+  }
 
   updateListView()
 }
@@ -83,19 +106,16 @@ function addtoLiveProjects(projectName){
 function updateListView(){
   $(".projects ul").empty();
   projectList.forEach((project, index) => {
-    // if(!inFocusProject){
-    //   inFocusProject = 0;
-    // }
 
     if(inFocusProject === index){
-      $(".projects ul").append("<li><span id='bullet'><i class='fa fa-circle' aria-hidden='true'></i></span><span class='projectName'>"+project+ "</span><span class='complete icon-wrapper-list'><i class='fa fa-check custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span><span class='delete icon-wrapper-list'><i class='fa fa-times custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span></li>");
-      document.getElementById('taskInput').textContent = project;
+      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+      document.getElementById('taskInput').textContent = project.projectName;
 
     }else{
-      $(".projects ul").append("<li><span id='bullet'><i class='fa fa-circle-thin' aria-hidden='true'></i></span><span class='projectName'>"+project+ "</span><span class='complete icon-wrapper-list'><i class='fa fa-check custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span><span class='delete icon-wrapper-list'><i class='fa fa-times custom-icon-list' aria-hidden='true'><span class='fix-editor'>&nbsp;</span></i></span></li>");
+      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
     }
   });
-  console.log(inFocusProject);
+  //console.log(inFocusProject);
 }
 
 function checkDuplicate(name){

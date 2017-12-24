@@ -335,6 +335,10 @@ tr:nth-child(even){
   display: none;
 }
 
+.project-list-form{
+  display: inline;
+}
+
 .projects .delete{
   float: right;
   display: none;

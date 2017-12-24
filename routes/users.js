@@ -5,7 +5,9 @@ const passport = require('passport');
 const moment = require('moment');
 
 
+
 const User  = require('../models/users');
+const LiveProject = require('../models/liveprojects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
@@ -95,12 +97,60 @@ router.route('/login')
   }), (req,res)=> {
     res.redirect('/users/'+req.user._id)
   });
-  // .post(passport.authenticate('local', {
-  //   successRedirect: '/users/galaxy',
-  //   failureRedirect: '/users/login',
-  //   failureFlash: true
-  // }));
 
+
+//GET and ADD LiveProjects
+router.route('/liveprojects')
+  .get(isAuthenticated,(req,res)=>{
+    req.user.google.liveProjects.find({},(err,projects)=>{
+      if(err){
+        console.log(err);
+      }else{
+        res.json(projects);
+      }
+    });
+  })
+  .post((req,res)=>{
+    const newProject = req.body;
+    const liveProjectsArr = req.user.google.liveProjects;
+    //console.log(newProject);
+    LiveProject.create(newProject,(err,project)=>{
+      if(err){
+        console.log(err);
+      }else {
+        liveProjectsArr.push(project);
+        req.user.save((err)=>{
+          if(err)
+            console.log(err);
+          else {
+            const projectID = liveProjectsArr[liveProjectsArr.length-1];
+            LiveProject.findById(projectID).populate('liveProjects').exec((err,savedProject)=>{
+              if(err){
+                console.log(err);
+              }else{
+                console.log(savedProject);
+                res.json(savedProject)
+              }
+            });
+          }
+        });
+      }
+    });
+  })
+
+//DELETE LiveProjects
+router.route('/liveprojects/:id')
+  .delete((req,res)=>{
+    const liveProjectsArr = req.user.google.liveProjects;
+    LiveProject.findByIdAndRemove(req.params.id,(err, deletedProject)=>{
+      if(err){
+        console.log(err);
+      }else{
+        console.log(deletedProject);
+        res.json(deletedProject)
+      }
+    });
+  });
 
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
