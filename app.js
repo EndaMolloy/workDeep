@@ -12,7 +12,17 @@ const dotenv = require('dotenv').config()
 
 require('./config/passport');
 
-
+const handlebars = expressHandlebars.create({
+  defaultLayout: 'layout',
+  extname: '.handlebars',
+  helpers: {
+    section: function(name, options) {
+      if (!this._sections) this._sections = {};
+        this._sections[name] = options.fn(this);
+        return null;
+      }
+  }
+});
 
 mongoose.promise = global.Promise;
 mongoose.connect('mongodb://localhost/deepworkauth');
@@ -22,7 +32,7 @@ app.use(morgan('dev'));
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', expressHandlebars({ defaultLayout: 'layout' }));
+app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
 app.use(bodyParser.json());
