@@ -4,12 +4,19 @@ let projectList = [];
 let completedList = [];
 let inFocusProject = 0;
 const userUrl = window.location.pathname;
-console.log(userUrl);
 
 //GET LIVE PROJECTS FROM THE DATABASE
   $.get('http://localhost:5000'+userUrl+'/liveprojects', function(projects){
-    projects.forEach(project=> {
-       addtoLiveProjects(project);
+    projects.forEach((project,index)=> {
+
+      if(inFocusProject === index){
+        $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+        document.getElementById('taskInput').textContent = project.projectName;
+
+      }else{
+        $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+      }
+      projectList.push(project);
     });
 
   });
@@ -20,15 +27,16 @@ $("ul").on('click','.delete', function(event){
 
     const actionUrl = 'http://localhost:5000'+userUrl + $(this).attr('action');
     const $itemToDelete = $(this).parent('.list-project');
+    const prevProject = $itemToDelete.prev();
     //console.log($itemToDelete);
     $.ajax({
       url: actionUrl,
       type: 'DELETE',
       itemToDelete: $itemToDelete,
       success: function success(project){
-        console.log(project);
+        //console.log(project);
         this.itemToDelete.remove();
-        deleteThisproject(project);
+        deleteFromProjectList(project,prevProject);
       }
     })
   });
@@ -53,37 +61,30 @@ $(".projects ul").on('click','li', function(event){
   if($("#bullet i").hasClass('fa-circle')){
     $("#bullet i").removeClass('fa-circle').addClass('fa-circle-thin');
   }
-
   $("#bullet i",this).removeClass('fa-circle-thin').addClass('fa-circle');
   document.getElementById('taskInput').textContent = $(".projectName",this).text();
 
-  //inFocusProject = projectList.indexOf($(".projectName",this).text());
+  inFocusProject = projectList.findIndex(x => x.projectName === $(".projectName",this).text());
   //console.log(inFocusProject);
 });
 
 //ADD NEW LIVE PROJECT
 $(".projects input[type='text']").keypress(function(event){
 
+//TODO Check if project with duplicate name exists in user database
+
   let userInput = $(this).val().trim();
-
   if((event.which === 13)&&(userInput.length>0)){
-
-    $.post('http://localhost:5000'+userUrl+'/liveprojects',{projectName:userInput}, function(projectObj){
-      if(!projectObj.error){
-
-        addtoLiveProjects(projectObj);
-
+    $.post('http://localhost:5000'+userUrl+'/liveprojects',{projectName:userInput}, function(project){
+      if(project.error){
+        console.log('Something bad happened');
       }else{
-        console.log('Something is wrong');
+        $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
       }
+      addToLiveProjects(project);
     });
-
-    //addtoLiveProjects(userInput);
     $(this).val("");
-    console.log("List length:", projectList.length);
   }
-
-
 
   if(projectList.length === 1){
     document.getElementById('taskInput').textContent = projectList[0]['projectName'];
@@ -92,64 +93,29 @@ $(".projects input[type='text']").keypress(function(event){
 
 });
 
-//DELETE PROJECT FROM PROJECTS ARRAY
-function deleteThisproject(project){
 
+function deleteFromProjectList(project, prevProject){
   let arrIndex = projectList.findIndex(x => x._id === project._id);
 
-  if(inFocusProject >= arrIndex)
+  if(inFocusProject == arrIndex){
+    $("#bullet i",prevProject).removeClass('fa-circle-thin').addClass('fa-circle');
+    document.getElementById('taskInput').textContent = $(".projectName",prevProject).text();
     inFocusProject--;
+  }
+
+  if(inFocusProject > arrIndex)
+    inFocusProject --;
 
   projectList.splice(arrIndex,1);
   if(projectList.length < 5)
     $(".newProject").show();
-
-  updateListView();
 }
 
-function addtoLiveProjects(projectObj){
-  // if(checkDuplicate(projectName)){
-  //   alert("A project with this name already exist. But you already knew that!");
-  //   return;
-  // }
-
-  projectList.push(projectObj);
+function addToLiveProjects(project){
+  projectList.push(project);
   if(projectList.length === 5){
     $(".newProject").hide();
   }
-
-  updateListView()
-}
-
-function updateListView(){
-  $(".projects ul").empty();
-  projectList.forEach((project, index) => {
-
-    if(inFocusProject === index){
-      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
-      document.getElementById('taskInput').textContent = project.projectName;
-
-    }else{
-      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
-    }
-  });
-  //console.log(inFocusProject);
-}
-
-function checkDuplicate(name){
-  let matchFound = false;
-
-  projectList.forEach((project)=>{
-    if(project === name)
-      matchFound = true;
-  });
-
-  completedList.forEach((project)=>{
-    if(project === name)
-      matchFound = true;
-  });
-
-  return matchFound;
 }
 
 function addtoCompletedProjects(project){

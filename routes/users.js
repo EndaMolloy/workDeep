@@ -41,6 +41,7 @@ const isNotAuthenticated = (req, res, next)=> {
     }
 };
 
+//REGISTER A NEW USER
 router.route('/register')
   .get(isNotAuthenticated,(req, res) => {
     res.render('register');
@@ -105,16 +106,12 @@ router.route('/login')
 //GET and ADD LiveProjects
 router.route('/:id/liveProjects')
   .get(isAuthenticated,(req,res)=>{
-    const liveProjectsArr = req.user.google.liveProjects;
-    let tempArr = [];
-
     User.findById(req.params.id)
       .populate('google.liveProjects')
       .exec((err,user)=>{
         res.send(user.google.liveProjects)
-      })
+    })
   })
-
   .post((req,res)=>{
     const newProject = req.body;
     const liveProjectsArr = req.user.google.liveProjects;
@@ -156,6 +153,8 @@ router.route('/:id/liveprojects/:project_id')
       }
     });
   });
+
+//TODO ROUTES TO HANDLE COMPLETED PROJECTS
 
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
