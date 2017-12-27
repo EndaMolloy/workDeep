@@ -95,13 +95,16 @@ router.route('/login')
   }), (req,res)=> {
     res.redirect('/users/'+req.user._id)
   });
-  // .post(passport.authenticate('local', {
-  //   successRedirect: '/users/galaxy',
-  //   failureRedirect: '/users/login',
-  //   failureFlash: true
-  // }));
+
+router.route('/logout')
+  .get(isAuthenticated,(req,res)=>{
+    req.logout();
+    req.flash('success', 'Logged out successfully')
+    res.redirect('/');
+  });
 
 
+//GET CHART DATA
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
 
@@ -397,13 +400,7 @@ router.route('/:id')
     req.user.save();
   });
 
-router.route('/logout')
-  .get(isAuthenticated,(req,res)=>{
-    req.logout();
-    req.flash('success', 'Logged out successfully')
-    res.redirect('/');
-  });
-
+//GOOGLE AUTH ROUTES
 router.route('/auth/google')
   .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
 
