@@ -1,38 +1,53 @@
+//  $(document).ready(function () {});
+
 let projectList = [];
 let completedList = [];
 let inFocusProject = 0;
-let project = "";
+const userUrl = window.location.pathname;
+console.log(userUrl);
 
+//GET LIVE PROJECTS FROM THE DATABASE
+  $.get('http://localhost:5000'+userUrl+'/liveprojects', function(projects){
+    projects.forEach(project=> {
+       addtoLiveProjects(project);
+    });
+
+  });
+
+//DELETE A LIVE PROJECT
 $("ul").on('click','.delete', function(event){
   $(this).parent().fadeOut(500, function(){
-    let project = $(this).text().trim();
 
-    const actionUrl = 'http://localhost:5000/users' + $(this).attr('action');
+    const actionUrl = 'http://localhost:5000'+userUrl + $(this).attr('action');
     const $itemToDelete = $(this).parent('.list-project');
-    console.log($itemToDelete);
+    //console.log($itemToDelete);
     $.ajax({
       url: actionUrl,
       type: 'DELETE',
       itemToDelete: $itemToDelete,
       success: function success(project){
         console.log(project);
-        //this.itemToDelete.remove();
+        this.itemToDelete.remove();
+        deleteThisproject(project);
       }
     })
   });
   event.stopPropagation();
 });
 
+//REMOVE A PROJECT FROM LIVE PROJECT LIST AND ADD TO COMPLETED PROJECTS
 $("ul").on('click','.complete', function(event){
   $(this).parent().fadeOut(500, function(){
     let project = $(this).text();
     //$(this).remove();
     addtoCompletedProjects(project)
+    getAllProjects();
 
   });
   event.stopPropagation();
 });
 
+//ADD THE SELECTOR TO SELECTED PROJECT
 $(".projects ul").on('click','li', function(event){
 
   if($("#bullet i").hasClass('fa-circle')){
@@ -46,16 +61,18 @@ $(".projects ul").on('click','li', function(event){
   //console.log(inFocusProject);
 });
 
+//ADD NEW LIVE PROJECT
 $(".projects input[type='text']").keypress(function(event){
 
   let userInput = $(this).val().trim();
 
   if((event.which === 13)&&(userInput.length>0)){
 
-    $.post('http://localhost:5000/users/liveprojects',{projectName:userInput}, function(projectObj){
-      if(!project.error){
+    $.post('http://localhost:5000'+userUrl+'/liveprojects',{projectName:userInput}, function(projectObj){
+      if(!projectObj.error){
 
         addtoLiveProjects(projectObj);
+
       }else{
         console.log('Something is wrong');
       }
@@ -75,9 +92,10 @@ $(".projects input[type='text']").keypress(function(event){
 
 });
 
+//DELETE PROJECT FROM PROJECTS ARRAY
 function deleteThisproject(project){
 
-  let arrIndex = projectList.indexOf(project);
+  let arrIndex = projectList.findIndex(x => x._id === project._id);
 
   if(inFocusProject >= arrIndex)
     inFocusProject--;

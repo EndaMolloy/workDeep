@@ -3,11 +3,14 @@ const router = express.Router();
 const Joi = require('joi');
 const passport = require('passport');
 const moment = require('moment');
-
+const mongoose = require('mongoose')
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 
 const User  = require('../models/users');
-const LiveProject = require('../models/liveprojects');
+
+
+const liveProject = require('../models/liveprojects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
@@ -100,21 +103,23 @@ router.route('/login')
 
 
 //GET and ADD LiveProjects
-router.route('/liveprojects')
+router.route('/:id/liveProjects')
   .get(isAuthenticated,(req,res)=>{
-    req.user.google.liveProjects.find({},(err,projects)=>{
-      if(err){
-        console.log(err);
-      }else{
-        res.json(projects);
-      }
-    });
+    const liveProjectsArr = req.user.google.liveProjects;
+    let tempArr = [];
+
+    User.findById(req.params.id)
+      .populate('google.liveProjects')
+      .exec((err,user)=>{
+        res.send(user.google.liveProjects)
+      })
   })
+
   .post((req,res)=>{
     const newProject = req.body;
     const liveProjectsArr = req.user.google.liveProjects;
     //console.log(newProject);
-    LiveProject.create(newProject,(err,project)=>{
+    liveProject.create(newProject,(err,project)=>{
       if(err){
         console.log(err);
       }else {
@@ -124,7 +129,7 @@ router.route('/liveprojects')
             console.log(err);
           else {
             const projectID = liveProjectsArr[liveProjectsArr.length-1];
-            LiveProject.findById(projectID).populate('liveProjects').exec((err,savedProject)=>{
+            liveProject.findById(projectID,(err,savedProject)=>{
               if(err){
                 console.log(err);
               }else{
@@ -139,10 +144,10 @@ router.route('/liveprojects')
   })
 
 //DELETE LiveProjects
-router.route('/liveprojects/:id')
+router.route('/:id/liveprojects/:project_id')
   .delete((req,res)=>{
     const liveProjectsArr = req.user.google.liveProjects;
-    LiveProject.findByIdAndRemove(req.params.id,(err, deletedProject)=>{
+    liveProject.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
       if(err){
         console.log(err);
       }else{

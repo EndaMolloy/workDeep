@@ -6,5 +6,5 @@ const liveProjectSchema = new Schema({
   projectName: String
 });
 
-const LiveProject = mongoose.model('liveProject', liveProjectSchema);
-module.exports = LiveProject;
+const liveProject = mongoose.model('liveProject', liveProjectSchema);
+module.exports = liveProject;
