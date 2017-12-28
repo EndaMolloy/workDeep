@@ -6,7 +6,7 @@ const User = require('./models/users');
 
 function seedDB(profile, cb){
   const now = moment().endOf('day').toDate();
-  const yearAgo = moment().startOf('day').subtract(1, 'month').toDate();
+  const yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
 
   const chartData = d3.timeDays(yearAgo, now).map( (dateElement)=> {
     const projects = ['deepSea','deepSpace','deepEarth'];

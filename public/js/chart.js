@@ -1,67 +1,77 @@
+// $(document).ready(function () {
 
 google.load("visualization", "1", {packages:["corechart"]});
 //google.setOnLoadCallback(drawCharts);
 
 
- $("#data").on('click',()=>{
+$("#data").on('click',()=>{
 
   $.get('http://localhost:5000/users/getData',(chartData)=> {
 
     drawCharts(chartData);
+    document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
+    document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
+    document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
+    document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
+    document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
 
+    //TODO document.getElementById('compProj').textContent = chartData.completedProjs
+    //console.log(chartData);
   });
 
 });
 
-    function drawCharts(chartData) {
+// });
 
-      var heatmap = calendarHeatmap()
-                      .data(chartData.heatmap)
-                      .selector('#cal-heatmap')
-                      .tooltipEnabled(true)
-                      .colorRange(['#f4f7f7', '#79a8a9'])
-                      .onClick(function (data) {
-                        console.log('data', data);
-                      });
-      heatmap();  // render the chart
+  function drawCharts(chartData) {
 
-      // pie chart data
-      var pieData = google.visualization.arrayToDataTable(chartData.pieChart);
-      // pie chart options
-      var pieOptions = {
-        backgroundColor: 'transparent',
-        pieHole: 0.4,
-        colors: [ "cornflowerblue",
-                  "olivedrab",
-                  "orange",
-                  "tomato",
-                  "crimson",
-                  "purple",
-                  "turquoise",
-                  "forestgreen",
-                  "navy",
-                  "gray"],
-        pieSliceText: 'value',
-        tooltip: {
-          text: 'percentage'
-        },
-        fontName: 'Open Sans',
-        chartArea: {
-          width: '100%',
-          height: '94%'
-        },
-        legend: {
-          textStyle: {
-            fontSize: 13
-          }
+    var heatmap = calendarHeatmap()
+                    .data(chartData.dailyData.heatmap)
+                    .selector('#cal-heatmap')
+                    .tooltipEnabled(true)
+                    .colorRange(['#f4f7f7', '#79a8a9'])
+                    .onClick(function (data) {
+                      console.log('data', data);
+                    });
+    heatmap();  // render the chart
+
+    // pie chart data
+    var pieData = google.visualization.arrayToDataTable(chartData.pieData);
+    // pie chart options
+    var pieOptions = {
+      backgroundColor: 'transparent',
+      pieHole: 0.4,
+      colors: [ "cornflowerblue",
+                "olivedrab",
+                "orange",
+                "tomato",
+                "crimson",
+                "purple",
+                "turquoise",
+                "forestgreen",
+                "navy",
+                "gray"],
+      pieSliceText: 'value',
+      tooltip: {
+        text: 'percentage'
+      },
+      fontName: 'Open Sans',
+      chartArea: {
+        width: '100%',
+        height: '94%'
+      },
+      legend: {
+        textStyle: {
+          fontSize: 13
         }
-      };
-      // draw pie chart
-      var pieChart = new google.visualization.PieChart(document.getElementById('google-pie'));
-      pieChart.draw(pieData, pieOptions);
+      }
+    };
+    // draw pie chart
+    var pieChart = new google.visualization.PieChart(document.getElementById('google-pie'));
+    pieChart.draw(pieData, pieOptions);
 
-      // BEGIN BAR CHART
-      var barData = google.visualization.arrayToDataTable(chartData.barChart);
+    // BEGIN BAR CHART
+    var barData = google.visualization.arrayToDataTable(chartData.weeklyData.barChartData);
     // set bar chart optionsusers
     var barOptions = {
       focusTarget: 'category',
@@ -83,7 +93,10 @@ google.load("visualization", "1", {packages:["corechart"]});
         }
       },
       vAxis: {
-        minValue: 0,
+        viewWindowMode:'explicit',
+        viewWindow: {
+            min: 0
+        },
         baselineColor: '#DDD',
         gridlines: {
           color: '#DDD',
