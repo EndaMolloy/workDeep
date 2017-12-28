@@ -3,9 +3,14 @@ const router = express.Router();
 const Joi = require('joi');
 const passport = require('passport');
 const moment = require('moment');
+const mongoose = require('mongoose')
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 
 const User  = require('../models/users');
+
+
+const liveProject = require('../models/liveprojects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
@@ -36,6 +41,7 @@ const isNotAuthenticated = (req, res, next)=> {
     }
 };
 
+//REGISTER A NEW USER
 router.route('/register')
   .get(isNotAuthenticated,(req, res) => {
     res.render('register');
@@ -96,12 +102,67 @@ router.route('/login')
     res.redirect('/users/'+req.user._id)
   });
 
+
 router.route('/logout')
   .get(isAuthenticated,(req,res)=>{
     req.logout();
     req.flash('success', 'Logged out successfully')
     res.redirect('/');
   });
+
+
+//GET and ADD LiveProjects
+router.route('/:id/liveProjects')
+  .get(isAuthenticated,(req,res)=>{
+    User.findById(req.params.id)
+      .populate('google.liveProjects')
+      .exec((err,user)=>{
+        res.send(user.google.liveProjects)
+    })
+  })
+  .post((req,res)=>{
+    const newProject = req.body;
+    const liveProjectsArr = req.user.google.liveProjects;
+    //console.log(newProject);
+    liveProject.create(newProject,(err,project)=>{
+      if(err){
+        console.log(err);
+      }else {
+        liveProjectsArr.push(project);
+        req.user.save((err)=>{
+          if(err)
+            console.log(err);
+          else {
+            const projectID = liveProjectsArr[liveProjectsArr.length-1];
+            liveProject.findById(projectID,(err,savedProject)=>{
+              if(err){
+                console.log(err);
+              }else{
+                console.log(savedProject);
+                res.json(savedProject)
+              }
+            });
+          }
+        });
+      }
+    });
+  })
+
+//DELETE LiveProjects
+router.route('/:id/liveprojects/:project_id')
+  .delete((req,res)=>{
+    const liveProjectsArr = req.user.google.liveProjects;
+    liveProject.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
+      if(err){
+        console.log(err);
+      }else{
+        console.log(deletedProject);
+        res.json(deletedProject)
+      }
+    });
+  });
+
+//TODO ROUTES TO HANDLE COMPLETED PROJECTS
 
 
 //GET CHART DATA

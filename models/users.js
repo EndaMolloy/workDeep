@@ -14,6 +14,7 @@ const userSchema = new Schema({
     email: String,
     username: String,
     password: String,
+    liveProjects: [],
     projects: [
       {
         projectName: String,
@@ -21,11 +22,16 @@ const userSchema = new Schema({
         timestamp: Date
       }
     ]
+
   },
   google: {
     googleId: String,
     email: String,
     username: String,
+    liveProjects: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'liveProject'
+    }],
     projects: [
       {
         projectName: String,
