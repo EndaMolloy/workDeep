@@ -1,0 +1,144 @@
+body{
+  background: url(https://media.contentapi.ea.com/content/dam/masseffect/en-us/common/final-assets-space-background.jpg.adapt.320w.jpg);
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+html{
+  height: 100%;
+}
+
+#content{
+  text-align: center;
+  padding-top: 15%;
+}
+
+#content .buttons #signup {
+  background-color: #de4f4f;
+  color: #fff;
+  float: left;
+  border: none;
+  width: 150px;
+  line-height: 50px;
+  transition: all 0.2s linear;
+}
+
+#content .buttons #learn {
+  margin: 0;
+  transition: all 0.2s linear;
+}
+
+
+#content .buttons .btn-custom {
+  width: 150px;
+  z-index: 9;
+  display: inline-block;
+  text-align: center;
+  font-size: 13px;
+  font-family: 'ProximaNova-Bold';
+  text-decoration: none;
+  color: #fff;
+  text-transform: uppercase;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #fff;
+  margin-right: 20px;
+}
+
+.btn-custom{
+  width: 150px;
+  z-index: 9;
+  display: inline-block;
+  text-align: center;
+  font-size: 13px;
+  font-family: 'ProximaNova-Light';
+  text-decoration: none;
+  color: #de4f4f;
+  text-transform: uppercase;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #de4f4f;
+}
+
+.buttons{
+  display: block;
+  max-width: 330px;
+  width: 100%;
+  margin: 25px auto;
+}
+
+#content .buttons #signup:hover {
+  color: #fff;
+  background-color: #a83636;
+  border-color: #a83636;
+}
+
+#content .buttons #learn:hover {
+  color: #fff;
+  background-color: #a83636;
+  border-color: #a83636;
+}
+
+
+a{
+    background: transparent;
+}
+
+h1{
+  font-weight: 600;
+  letter-spacing: 2px;
+  font-size: 3em;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+
+
+/*@media (max-width: 480px)*/
+
+
+/*NAV BAR */
+
+.navbar-default {
+    background-color: transparent;
+    border-color: #E7E7E7;
+    border: none;
+}
+/* Title */
+.navbar-default .navbar-brand {
+    color: #777;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #FFF;
+}
+/* Link */
+.navbar-default .navbar-nav > li > a {
+    color: #777;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: white;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: #E7E7E7;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+
+/* Mobile version */
+.navbar-default .navbar-toggle {
+    border: none;
+}
+ .navbar-default .navbar-toggle:hover,
+ .navbar-default .navbar-toggle:focus {
+    border: 1px solid #DDD;
+}

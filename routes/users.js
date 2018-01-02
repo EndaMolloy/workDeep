@@ -169,204 +169,11 @@ router.route('/:id/liveprojects/:project_id')
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
 
-    let sortedResult = [];
-    let dBtime = {};
-    let currWeek={};
-    let diffWeek = 0;
-    let heatmapData =[];
-    let barChartData=[];
-    let longestStreak = 0;
-    let currentStreak = 0;
-
-
       //seedDB(req.user, () => {
 
     getUserChartData(req.user, (chartData)=>{
       res.send(chartData);
     })
-
-
-
-      // //PIE CHART
-      // User.aggregate([
-      //   {
-      //     $match: {
-      //       _id:req.user._id
-      //     }
-      //   },{
-      //     $unwind: "$google.projects"
-      //   },
-      //   { $group: {
-      //     _id: "$google.projects.projectName",
-      //     total: { $sum: "$google.projects.sessionLength"  }
-      // }}
-      // ], (err,result)=> {
-      //       if(err){
-      //         console.log(err);
-      //       }else{
-      //         pieChartData = result.map((project)=>{
-      //           return Object.values(project);
-      //         })
-      //
-      //         //PIECHART
-      //         pieChartData.unshift(['Project','Hours']);
-      //         //console.log(pieChartData);
-      //
-      //       }
-      //     });
-      //
-      // //AGGREGATION FOR WEEKLY DATA - BAR CHART
-      // User.aggregate([
-      //   {
-      //     $match: {
-      //       _id:req.user._id
-      //     }
-      //   },{
-      //     $unwind: "$google.projects"
-      //   },
-      //   { $group: {
-      //     _id: {year:{$year: "$google.projects.timestamp"},week:{$week: "$google.projects.timestamp"}},
-      //     total: { $sum: "$google.projects.sessionLength"}
-      // }}
-      // ], (err,result)=> {
-      //       if(err){
-      //         console.log(err);
-      //       }else{
-      //
-      //         const avgWeekHrs = Math.round(result.reduce((acc,obj)=> {return acc + obj.total},0)/(result.length + diffWeek));
-      //         const selectedYear = 2017;
-      //
-      //         const selectedYearArr = result.filter(x=>{
-      //           return x._id.year === selectedYear
-      //         })
-      //         .sort((a,b)=> {
-      //           return b._id.week - a._id.week;
-      //         });
-      //
-      //         //console.log("selected Array : ",selectedYearArr);
-      //
-      //         //This week
-      //         const thisWeek = moment().week();
-      //         const lastWeek = moment().subtract(1,'week').week();
-      //         const newestDbWeek = selectedYearArr[0]._id.week;
-      //         const nxtNewDbWeek = selectedYearArr[1]._id.week;
-      //
-      //         let thisWeekHrs = thisWeek === newestDbWeek ? selectedYearArr[0].total : 0;
-      //         let lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek)
-      //
-      //         function getLastWeekHrs(newestDbWeek,nxtNewDbWeek){
-      //             let hrs=0;
-      //             if(lastWeek === newestDbWeek){
-      //               hrs = selectedYearArr[0].total;
-      //             }else if (lastWeek === nxtNewDbWeek) {
-      //               hrs = selectedYearArr[1].total;
-      //             }else{
-      //               hrs = 0;
-      //             }
-      //             return hrs;
-      //         }
-      //
-      //
-      //         console.log("This weeks (hrs): ",thisWeekHrs);
-      //         console.log("Last weeks (hrs): ",lastWeekHrs);
-      //         console.log("Average Week (hrs): ",avgWeekHrs);
-      //
-      //         const last2Weeks = sortedResult.slice(0,14);
-      //         //console.log(last2Weeks);
-      //
-      //         let barChartData = [['Day', 'This Week', 'Last Week'],["Sun"],["Mon"],["Tue"],["Wed"],["Thu"],["Fri"],["Sat"]];
-      //
-      //         const lastWeekArr = getWeeks(last2Weeks,lastWeek);
-      //         const thisWeekArr = getWeeks(last2Weeks,thisWeek);
-      //
-      //         //FINAL BAR CHART DATA
-      //         barChartData = updateChartData(barChartData,lastWeekArr,thisWeekArr);
-      //
-      //
-      //
-      //         function getWeeks(weeksArr, week){
-      //           const lastWeekArr = weeksArr.filter((day)=> moment(day._id).week()=== week);
-      //           const iso2Day = lastWeekArr.map((day)=> {
-      //             let dayWord;
-      //             switch(moment(day._id).weekday()){
-      //               case 0:
-      //                 dayWord = "Sun";
-      //                 break;
-      //               case 1:
-      //                 dayWord = "Mon";
-      //                 break;
-      //               case 2:
-      //                 dayWord = "Tue";
-      //                 break;
-      //               case 3:
-      //                 dayWord = "Wed";
-      //                 break;
-      //               case 4:
-      //                 dayWord = "Thu";
-      //                 break;
-      //               case 5:
-      //                 dayWord = "Fri";
-      //                 break;
-      //               case 6:
-      //                 dayWord = "Sat";
-      //             }
-      //              return {
-      //                "day": dayWord,
-      //                "hours": day.total
-      //              };
-      //           });
-      //           //Convert object to array of object values
-      //           return iso2Day.map((day)=>Object.values(day));
-      //         }
-      //
-      //         function updateChartData(barChartData,lastWeekArr,thisWeekArr){
-      //
-      //           for(let i=1; i<barChartData.length; i++){
-      //             for(let j=0; j<thisWeekArr.length; j++){
-      //               if(barChartData[i][0] === thisWeekArr[j][0]){
-      //                 barChartData[i].push(thisWeekArr[j][1]);
-      //               }
-      //             }
-      //           }
-      //
-      //           for(let i=0; i<barChartData.length; i++){
-      //              while (barChartData[i].length<2)
-      //                barChartData[i].push(0);
-      //           }
-      //
-      //           for(let i=1; i<barChartData.length; i++){
-      //             for(let j=0; j<lastWeekArr.length; j++){
-      //               if(barChartData[i][0] === lastWeekArr[j][0]){
-      //                 barChartData[i].push(lastWeekArr[j][1]);
-      //               }
-      //             }
-      //           }
-      //
-      //           for(let i=0; i<barChartData.length; i++){
-      //             while(barChartData[i].length < 3)
-      //               barChartData[i].push(0);
-      //           }
-      //
-      //           return barChartData;
-      //         }
-      //         //console.log(barChartData);
-      //
-      //         const allChartsData = {
-      //           thisWeekHrs: thisWeekHrs,
-      //           lastWeekHrs: lastWeekHrs,
-      //           avgWeekHrs: avgWeekHrs,
-      //           longestStreak: longestStreak,
-      //           currentStreak: currentStreak,
-      //           heatmap: heatmapData,
-      //           pieChart: pieChartData,
-      //           barChart: barChartData
-      //         }
-      //
-      //         res.json(allChartsData);
-      //
-      //       }
-      //     });
-      //
 
       //}); //Seed end
 
@@ -395,6 +202,11 @@ router.route('/:id')
     req.user.save();
   });
 
+router.route('/:id/dash')
+  .get(isAuthenticated,(req,res)=>{
+
+  })
+
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
   .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
@@ -412,11 +224,11 @@ function getUserChartData(user, cb){
 
   const chartData = {};
 
-  getDailyData(user, (dailyData)=>{
+  getDailyData(user, (dailyData, diffWeek)=>{
     chartData.dailyData = dailyData;
     getPieData(user, (pieData)=>{
       chartData.pieData = pieData;
-      getWeeklyData(user, (weeklyData)=>{
+      getWeeklyData(user,diffWeek, (weeklyData)=>{
         chartData.weeklyData = weeklyData;
         cb(chartData);
       });
@@ -455,10 +267,11 @@ function getDailyData(user, cb){
       dailyData.longestStreak = longestStreak;
       dailyData.currentStreak = currentStreak;
 
-      dBtime = moment(sortedResult[0]._id);
-      currWeek = moment().startOf('week');
-
-      diffWeek = currWeek.diff(dBtime,'weeks');
+      //get the difference between the current week and the week of the
+      //last user's entry to the database
+      const dBtime = moment(sortedResult[0]._id);
+      const currWeek = moment().startOf('week');
+      const diffWeek = currWeek.diff(dBtime,'weeks');
 
       function getLongestStreak(sortedResult){
 
@@ -480,28 +293,27 @@ function getDailyData(user, cb){
 
       function getCurrentStreak(sortedResult){
 
-          const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
-          let yesterday = new Date(new Date().setHours(0,0,0,0));
-          yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
+        const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
+        let yesterday = new Date(new Date().setHours(0,0,0,0));
+        yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
 
-          const lastEntry = sortedResult[0]._id.toISOString();
+        const lastEntry = sortedResult[0]._id.toISOString();
 
-          //if not today or yesterday then streak = 0
-          if(lastEntry !==today && lastEntry !== yesterday){
-            return 0;
-          }else{
-            //else subtract days and count until not equal to 90000000
-            let count = 0;
-            for(let i=0; i<sortedResult.length-1; i++){
-              if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
-                count++;
-              }else{
-                return count;
-              }
+        //if not today or yesterday then streak = 0
+        if(lastEntry !==today && lastEntry !== yesterday){
+          return 0;
+        }else{
+          //else subtract days and count until not equal to 90000000
+          let count = 0;
+          for(let i=0; i<sortedResult.length-1; i++){
+            if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
+              count++;
+            }else{
+              return count;
             }
-            return count;
           }
-
+          return count;
+        }
       }
 
       //FINAL HEATMAP DATA
@@ -513,7 +325,7 @@ function getDailyData(user, cb){
       });
       dailyData.heatmap = heatmapData;
 
-      cb(dailyData);
+      cb(dailyData,diffWeek);
     });
 };
 
@@ -550,7 +362,7 @@ function getPieData(user, cb){
   });
 }
 
-function getWeeklyData(user, cb){
+function getWeeklyData(user, diffWeek, cb){
 
   const weeklyData = {}
   //AGGREGATION FOR WEEKLY DATA - BAR CHART
@@ -572,32 +384,29 @@ function getWeeklyData(user, cb){
         }else{
 
           const avgWeekHrs = Math.round(result.reduce((acc,obj)=> {return acc + obj.total},0)/(result.length + diffWeek));
-          const selectedYear = 2017;
 
-          const selectedYearArr = result.filter(x=>{
-            return x._id.year === selectedYear
+          //Sort by year then by week
+          result.sort((a,b)=> {
+            return b._id.year - a._id.year || b._id.week - a._id.week;
           })
-          .sort((a,b)=> {
-            return b._id.week - a._id.week;
-          });
 
-          //console.log("selected Array : ",selectedYearArr);
+          console.log("selected Array : ",result);
 
-          //This week
           const thisWeek = moment().week();
           const lastWeek = moment().subtract(1,'week').week();
-          const newestDbWeek = selectedYearArr[0]._id.week;
-          const nxtNewDbWeek = selectedYearArr[1]._id.week;
+          const newestDbWeek = result[0]._id.week;
+          const nxtNewDbWeek = result[1]._id.week;
 
-          let thisWeekHrs = thisWeek === newestDbWeek ? selectedYearArr[0].total : 0;
+
+          let thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
           let lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek)
 
           function getLastWeekHrs(newestDbWeek,nxtNewDbWeek){
               let hrs=0;
               if(lastWeek === newestDbWeek){
-                hrs = selectedYearArr[0].total;
+                hrs = result[0].total;
               }else if (lastWeek === nxtNewDbWeek) {
-                hrs = selectedYearArr[1].total;
+                hrs = result[1].total;
               }else{
                 hrs = 0;
               }
