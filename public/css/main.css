@@ -192,6 +192,19 @@ span.timeBox  {
   background-color: white;
 }
 
+#chartArea{
+  display: none;
+}
+
+#loader{
+  min-height: 80vh;
+  padding-top: 20%;
+}
+
+#loader-msg{
+  padding-top: 3%;
+}
+
 .content-section {
   min-height: 100vh;
   padding-top: 20px;
@@ -224,24 +237,6 @@ span.timeBox  {
   border: 1px solid #dddddd;
   border-bottom: 0;
 }
-
-table{
-  width: 100%;
-  font-size: 10px;
-}
-
-td{
-  padding: 8px;
-}
-
-tr:nth-child(even){
-  background-color: #dddddd;
-}
-
-#statistics{
-
-}
-
 
 
 #streak-num{

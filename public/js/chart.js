@@ -1,27 +1,43 @@
 // $(document).ready(function () {
-
+let loaded;
 google.load("visualization", "1", {packages:["corechart"]});
-//google.setOnLoadCallback(drawCharts);
 
+$(document).scroll(function(e){
 
-$("#data").on('click',()=>{
+  if(loaded)
+    return false;
 
-  $.get('http://localhost:5000/users/getData',(chartData)=> {
+    // grab the scroll amount and the window height
+    var scrollAmount = $(window).scrollTop();
+    var documentHeight = $(document).height();
 
-    drawCharts(chartData);
-    document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
-    document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
-    document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
-    document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
-    document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
+    // calculate the percentage the user has scrolled down the page
+    var scrollPercent = (scrollAmount / documentHeight) * 100;
 
-    //TODO document.getElementById('compProj').textContent = chartData.completedProjs
-    //console.log(chartData);
-  });
+    // do something when a user gets 50% of the way down my page
+    if(scrollPercent > 50) {
+      loaded = true;
+        // run a function called doSomething
+      $.get('http://localhost:5000/users/getData',(chartData)=> {
+
+        $('#loader').hide();
+        $('#chartArea').show();
+        drawCharts(chartData);
+
+        document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
+        document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
+        document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
+        document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
+        document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
+
+        //TODO document.getElementById('compProj').textContent = chartData.completedProjs
+        //console.log(chartData);
+      });
+    }
 
 });
 
-// });
+
 
   function drawCharts(chartData) {
 
