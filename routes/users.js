@@ -202,10 +202,7 @@ router.route('/:id')
     req.user.save();
   });
 
-router.route('/:id/dash')
-  .get(isAuthenticated,(req,res)=>{
 
-  })
 
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
@@ -390,7 +387,7 @@ function getWeeklyData(user, diffWeek, cb){
             return b._id.year - a._id.year || b._id.week - a._id.week;
           })
 
-          console.log("selected Array : ",result);
+          //console.log("selected Array : ",result);
 
           const thisWeek = moment().week();
           const lastWeek = moment().subtract(1,'week').week();
