@@ -229,6 +229,16 @@ span.timeBox  {
   font-size: 12px;
 }
 
+#proj-table {
+  height: 200px;
+}
+
+.google-visualization-table-td {
+  text-align: left !important;
+}
+
+
+
 .dash-title{
   padding: 8px;
   border-bottom: inherit;

@@ -1,3 +1,7 @@
+#cal-heatmap{
+  text-align: center;
+}
+
 text.month-name,
 text.calendar-heatmap-legend-text,
 text.day-initial {

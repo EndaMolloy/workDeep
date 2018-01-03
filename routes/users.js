@@ -180,6 +180,7 @@ router.route('/getData')
 
   });
 
+//LOAD USER'S HOMEPAGE
 router.route('/:id')
   .get(isAuthenticated,(req,res)=>{
     if(req.user.method === 'local'){
