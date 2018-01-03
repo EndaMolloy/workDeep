@@ -8,9 +8,9 @@ const deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 
 const User  = require('../models/users');
+const Project = require('../models/projects');
 
 
-const liveProject = require('../models/liveprojects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
@@ -112,18 +112,66 @@ router.route('/logout')
 
 
 //GET and ADD LiveProjects
-router.route('/:id/liveProjects')
-  .get(isAuthenticated,(req,res)=>{
-    User.findById(req.params.id)
-      .populate('google.liveProjects')
-      .exec((err,user)=>{
-        res.send(user.google.liveProjects)
-    })
+// router.route('/:id/liveProjects')
+//   .get(isAuthenticated,(req,res)=>{
+//     User.findById(req.params.id,(err,user)=>{
+//       if(err){
+//         console.log("'can't find user");
+//       }else{
+//         console.log(user);
+//       }
+//
+//     })
+//       // .populate('google.projects')
+//       // .exec((err,user)=>{
+//
+//         //res.send(user.google.projects)
+//   })
+//   .post((req,res)=>{
+//     const newProject = req.body;
+//     const liveProjectsArr = req.user.google.liveProjects;
+//     //console.log(newProject);
+//     liveProject.create(newProject,(err,project)=>{
+//       if(err){
+//         console.log(err);
+//       }else {
+//         liveProjectsArr.push(project);
+//         req.user.save((err)=>{
+//           if(err)
+//             console.log(err);
+//           else {
+//             const projectID = liveProjectsArr[liveProjectsArr.length-1];
+//             liveProject.findById(projectID,(err,savedProject)=>{
+//               if(err){
+//                 console.log(err);
+//               }else{
+//                 console.log(savedProject);
+//                 res.json(savedProject)
+//               }
+//             });
+//           }
+//         });
+//       }
+//     });
+//   })
+
+//DELETE LiveProjects
+router.route('/:id/liveprojects/:project_id')
+  .delete((req,res)=>{
+    const liveProjectsArr = req.user.google.liveProjects;
+    liveProject.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
+      if(err){
+        console.log(err);
+      }else{
+        console.log(deletedProject);
+        res.json(deletedProject)
+      }
+    });
   })
   .post((req,res)=>{
-    const newProject = req.body;
-    const liveProjectsArr = req.user.google.liveProjects;
-    //console.log(newProject);
+    const compProject = req.body;
+    const compProjectsArr = req.user.google.completedProjs;
+
     liveProject.create(newProject,(err,project)=>{
       if(err){
         console.log(err);
@@ -146,36 +194,22 @@ router.route('/:id/liveProjects')
         });
       }
     });
+
   })
 
-//DELETE LiveProjects
-router.route('/:id/liveprojects/:project_id')
-  .delete((req,res)=>{
-    const liveProjectsArr = req.user.google.liveProjects;
-    liveProject.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
-      if(err){
-        console.log(err);
-      }else{
-        console.log(deletedProject);
-        res.json(deletedProject)
-      }
-    });
-  });
-
-//TODO ROUTES TO HANDLE COMPLETED PROJECTS
 
 
 //GET CHART DATA
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
 
-      //seedDB(req.user, () => {
+       seedDB(req.user, (msg)=>{
+         console.log(msg);
+       });
 
-    getUserChartData(req.user, (chartData)=>{
-      res.send(chartData);
-    })
-
-      //}); //Seed end
+    // getUserChartData(req.user, (chartData)=>{
+    //   res.send(chartData);
+    // })
 
 
   });

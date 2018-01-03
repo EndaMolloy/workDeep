@@ -28,17 +28,10 @@ const userSchema = new Schema({
     googleId: String,
     email: String,
     username: String,
-    liveProjects: [{
+    projects: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'liveProject'
-    }],
-    projects: [
-      {
-        projectName: String,
-        sessionLength: Number,
-        timestamp: Date
-      }
-    ]
+      ref: 'Project'
+    }]
   }
 });
 
