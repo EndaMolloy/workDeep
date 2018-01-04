@@ -176,12 +176,9 @@ router.route('/:id/chartData')
       //  seedDB(req.user, (msg)=>{
       //    res.json(msg);
       //  });
-  User.findById(req.params.id)
-    .populate('google.projects')
-    .exec((err,user)=>{
-      getUserChartData(user, (chartData)=>{
+
+      getUserChartData(req.user, (chartData)=>{
         res.send(chartData);
-      })
     });
   });
 
@@ -433,7 +430,7 @@ function getWeeklyData(user, diffWeek, cb){
             return b._id.year - a._id.year || b._id.week - a._id.week;
           })
 
-          console.log("selected Array : ",result);
+          //console.log("selected Array : ",result);
 
           const thisWeek = moment().isoWeek();;
           const lastWeek = moment().subtract(1,'week').isoWeek();
@@ -552,40 +549,66 @@ function getWeeklyData(user, diffWeek, cb){
 }
 
 function getTableData(user, cb){
-  User.aggregate([
-    {
-      $match: {
-        _id: user._id
-      }
-    },{
-      $unwind: "$google.projects"
-    },{
-      $lookup: {
-        from: "projects",
-        localField: "google.projects",
-        foreignField: "_id",
-        as: "project_docs"
-      }
-    },{
-      $unwind: "$project_docs"
-    },{
-      $unwind: "$project_docs.time"
-    },{
-      $group: {
-      _id: "$project_docs.projectName",
-      total: { $sum: "$project_docs.time.sessionLength"  }
-        }
-      }
-  ],
-  (err,result)=> {
-    if(err){
-      console.log(err);
-    }else{
+  User.findById(user._id)
+    .populate('google.projects')
+    .exec((err,user)=>{
+      //console.log(JSON.stringify(user.google.projects));
+      getUsefuldata(user.google.projects);
 
-      console.log(result);
+    });
 
-      //cb(pieChartData)
+    function getUsefuldata(projects){
+      const tableDataArr = [];
+      projects.forEach(project=>{
+        tableDataArr.push({
+          projectName: project.projectName,
+          startDate: project.startDate,
+          completed: project.completed,
+          hours: getHours(project.time)
+        })
+      })
+      console.log(tableDataArr);
     }
-  });
+
+    function getHours(project){
+      return project.reduce((a,b)=>{
+        return a + b.sessionLength
+      },0);
+    }
+  // User.aggregate([
+  //   {
+  //     $match: {
+  //       _id: user._id
+  //     }
+  //   },{
+  //     $unwind: "$google.projects"
+  //   },{
+  //     $lookup: {
+  //       from: "projects",
+  //       localField: "google.projects",
+  //       foreignField: "_id",
+  //       as: "project_docs"
+  //     }
+  //   },{
+  //     $unwind: "$project_docs"
+  //   },{
+  //     $unwind: "$project_docs.time"
+  //   },{
+  //     $group: {
+  //     _id: "$project_docs.projectName",
+  //     total: { $sum: "$project_docs.time.sessionLength"  }
+  //       }
+  //     }
+  // ],
+  // (err,result)=> {
+  //   if(err){
+  //     console.log(err);
+  //   }else{
+  //
+  //     console.log(result);
+  //
+  //     //cb(pieChartData)
+  //   }
+  // });
 }
 module.exports = router;

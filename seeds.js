@@ -45,6 +45,7 @@ function seedDB(profile, callback){
     projectNames.forEach(project=>{
         projectData.push({
           projectName: project,
+          startDate: yearAgo,
           time: timelog
         });
     });
