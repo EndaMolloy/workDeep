@@ -171,18 +171,18 @@ router.route('/:id/liveprojects/:project_id')
 
 
 //GET CHART DATA
-router.route('/getData')
+router.route('/:id/chartData')
   .get(isAuthenticated,(req,res)=>{
-
       //  seedDB(req.user, (msg)=>{
-      //    console.log(msg);
+      //    res.json(msg);
       //  });
-
-    // getUserChartData(req.user, (chartData)=>{
-    //   res.send(chartData);
-    // })
-
-
+  User.findById(req.params.id)
+    .populate('google.projects')
+    .exec((err,user)=>{
+      getUserChartData(user, (chartData)=>{
+        res.send(chartData);
+      })
+    });
   });
 
 //LOAD USER'S HOMEPAGE
@@ -233,7 +233,10 @@ function getUserChartData(user, cb){
       chartData.pieData = pieData;
       getWeeklyData(user,diffWeek, (weeklyData)=>{
         chartData.weeklyData = weeklyData;
-        cb(chartData);
+        getTableData(user, (tableData)=>{
+          chartData.tableData = tableData;
+          cb(chartData);
+        })
       });
     });
   });
@@ -242,6 +245,7 @@ function getUserChartData(user, cb){
 function getDailyData(user, cb){
   const dailyData = {};
   //Get hours sorted by day
+
     User.aggregate([
       {
         $match: {
@@ -249,21 +253,33 @@ function getDailyData(user, cb){
         }
       },{
         $unwind: "$google.projects"
-      },
-      { $group: {
-        _id: "$google.projects.timestamp",
-        total: { $sum: "$google.projects.sessionLength"  }
-    }}
-    ], (err,result)=> {
+      },{
+        $lookup: {
+          from: "projects",
+          localField: "google.projects",
+          foreignField: "_id",
+          as: "project_docs"
+        }
+      },{
+        $unwind: "$project_docs"
+      },{
+        $unwind: "$project_docs.time"
+      },{
+        $group: {
+        _id: "$project_docs.time.timestamp",
+        total: { $sum: "$project_docs.time.sessionLength"  }
+          }
+        }
+      ], (err,result)=> {
       if(err){
         console.log(err);
       }
-
+      //console.log(result);
       //sort dates oldest to newest
       sortedResult = result.sort((a,b)=> {
         return b._id - a._id;
       });
-      // console.log(sortedResult);
+      //console.log(sortedResult);
 
       const longestStreak = getLongestStreak(sortedResult);
       const currentStreak = getCurrentStreak(sortedResult);
@@ -273,7 +289,7 @@ function getDailyData(user, cb){
       //get the difference between the current week and the week of the
       //last user's entry to the database
       const dBtime = moment(sortedResult[0]._id);
-      const currWeek = moment().startOf('week');
+      const currWeek = moment().startOf('isoWeek');
       const diffWeek = currWeek.diff(dBtime,'weeks');
 
       function getLongestStreak(sortedResult){
@@ -328,6 +344,7 @@ function getDailyData(user, cb){
       });
       dailyData.heatmap = heatmapData;
 
+      //console.log(dailyData);
       cb(dailyData,diffWeek);
     });
 };
@@ -337,15 +354,27 @@ function getPieData(user, cb){
   User.aggregate([
     {
       $match: {
-        _id:user._id
+        _id: user._id
       }
     },{
       $unwind: "$google.projects"
-    },
-    { $group: {
-      _id: "$google.projects.projectName",
-      total: { $sum: "$google.projects.sessionLength"}
-  }}
+    },{
+      $lookup: {
+        from: "projects",
+        localField: "google.projects",
+        foreignField: "_id",
+        as: "project_docs"
+      }
+    },{
+      $unwind: "$project_docs"
+    },{
+      $unwind: "$project_docs.time"
+    },{
+      $group: {
+      _id: "$project_docs.projectName",
+      total: { $sum: "$project_docs.time.sessionLength"  }
+        }
+      }
   ],
   (err,result)=> {
     if(err){
@@ -376,10 +405,21 @@ function getWeeklyData(user, diffWeek, cb){
       }
     },{
       $unwind: "$google.projects"
+    },{
+      $lookup: {
+        from: "projects",
+        localField: "google.projects",
+        foreignField: "_id",
+        as: "project_docs"
+      }
+    },{
+      $unwind: "$project_docs"
+    },{
+      $unwind: "$project_docs.time"
     },
     { $group: {
-      _id: {year:{$year: "$google.projects.timestamp"},week:{$week: "$google.projects.timestamp"}},
-      total: { $sum: "$google.projects.sessionLength"}
+      _id: {year:{$year: "$project_docs.time.timestamp"},week:{$isoWeek: "$project_docs.time.timestamp"}},
+      total: { $sum: "$project_docs.time.sessionLength"}
   }}
   ], (err,result)=> {
         if(err){
@@ -393,13 +433,15 @@ function getWeeklyData(user, diffWeek, cb){
             return b._id.year - a._id.year || b._id.week - a._id.week;
           })
 
-          //console.log("selected Array : ",result);
+          console.log("selected Array : ",result);
 
-          const thisWeek = moment().week();
-          const lastWeek = moment().subtract(1,'week').week();
+          const thisWeek = moment().isoWeek();;
+          const lastWeek = moment().subtract(1,'week').isoWeek();
           const newestDbWeek = result[0]._id.week;
           const nxtNewDbWeek = result[1]._id.week;
 
+          // console.log("This week: ",thisWeek);
+          // console.log("Last week: ",lastWeek);
 
           let thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
           let lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek)
@@ -509,4 +551,41 @@ function getWeeklyData(user, diffWeek, cb){
 
 }
 
+function getTableData(user, cb){
+  User.aggregate([
+    {
+      $match: {
+        _id: user._id
+      }
+    },{
+      $unwind: "$google.projects"
+    },{
+      $lookup: {
+        from: "projects",
+        localField: "google.projects",
+        foreignField: "_id",
+        as: "project_docs"
+      }
+    },{
+      $unwind: "$project_docs"
+    },{
+      $unwind: "$project_docs.time"
+    },{
+      $group: {
+      _id: "$project_docs.projectName",
+      total: { $sum: "$project_docs.time.sessionLength"  }
+        }
+      }
+  ],
+  (err,result)=> {
+    if(err){
+      console.log(err);
+    }else{
+
+      console.log(result);
+
+      //cb(pieChartData)
+    }
+  });
+}
 module.exports = router;
