@@ -112,90 +112,61 @@ router.route('/logout')
 
 
 //GET and ADD LiveProjects
-// router.route('/:id/liveProjects')
-//   .get(isAuthenticated,(req,res)=>{
-//     User.findById(req.params.id,(err,user)=>{
-//       if(err){
-//         console.log("'can't find user");
-//       }else{
-//         console.log(user);
-//       }
-//
-//     })
-//       // .populate('google.projects')
-//       // .exec((err,user)=>{
-//
-//         //res.send(user.google.projects)
-//   })
-//   .post((req,res)=>{
-//     const newProject = req.body;
-//     const liveProjectsArr = req.user.google.liveProjects;
-//     //console.log(newProject);
-//     liveProject.create(newProject,(err,project)=>{
-//       if(err){
-//         console.log(err);
-//       }else {
-//         liveProjectsArr.push(project);
-//         req.user.save((err)=>{
-//           if(err)
-//             console.log(err);
-//           else {
-//             const projectID = liveProjectsArr[liveProjectsArr.length-1];
-//             liveProject.findById(projectID,(err,savedProject)=>{
-//               if(err){
-//                 console.log(err);
-//               }else{
-//                 console.log(savedProject);
-//                 res.json(savedProject)
-//               }
-//             });
-//           }
-//         });
-//       }
-//     });
-//   })
-
-//DELETE LiveProjects
-router.route('/:id/liveprojects/:project_id')
-  .delete((req,res)=>{
-    const liveProjectsArr = req.user.google.liveProjects;
-    liveProject.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
-      if(err){
-        console.log(err);
-      }else{
-        console.log(deletedProject);
-        res.json(deletedProject)
-      }
-    });
-  })
+router.route('/:id/liveProjects')
+  .get(isAuthenticated,(req,res)=>{
+    User.findById(req.params.id)
+      .populate('google.projects')
+      .exec((err,user)=>{
+        const projectsArr = user.google.projects;
+        const liveProjectsArr = projectsArr.filter((project)=>{
+          return project.completed === false;
+        });
+        res.send(liveProjectsArr);
+      });
+   })
   .post((req,res)=>{
-    const compProject = req.body;
-    const compProjectsArr = req.user.google.completedProjs;
-
-    liveProject.create(newProject,(err,project)=>{
+    const newProject = req.body;
+    const projectsArr = req.user.google.projects;
+    console.log(newProject);
+    Project.create(newProject,(err,project)=>{
       if(err){
         console.log(err);
       }else {
-        liveProjectsArr.push(project);
+        projectsArr.push(project);
         req.user.save((err)=>{
           if(err)
             console.log(err);
           else {
-            const projectID = liveProjectsArr[liveProjectsArr.length-1];
-            liveProject.findById(projectID,(err,savedProject)=>{
-              if(err){
-                console.log(err);
-              }else{
-                console.log(savedProject);
-                res.json(savedProject)
-              }
-            });
+            res.json(project);
           }
         });
       }
     });
-
   })
+
+//DELETE LiveProjects or UPDATE as complete
+router.route('/:id/liveprojects/:project_id')
+  .delete((req,res)=>{
+    const projectsArr = req.user.google.projects;
+    Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
+      if(err){
+        console.log(err);
+      }else{
+        //Remove objectID from User model
+        const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
+        projectsArr.splice(arrIndex,1);
+
+        res.json(deletedProject)
+      }
+    });
+  })
+  .put((req,res)=>{
+    const compProject = req.body;
+    const projectsArr = req.user.google.projects;
+    Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
+      res.json(updatedProj);
+    })
+  });
 
 
 
@@ -203,9 +174,9 @@ router.route('/:id/liveprojects/:project_id')
 router.route('/getData')
   .get(isAuthenticated,(req,res)=>{
 
-       seedDB(req.user, (msg)=>{
-         console.log(msg);
-       });
+      //  seedDB(req.user, (msg)=>{
+      //    console.log(msg);
+      //  });
 
     // getUserChartData(req.user, (chartData)=>{
     //   res.send(chartData);
