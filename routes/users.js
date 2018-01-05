@@ -243,107 +243,107 @@ function getDailyData(user, cb){
   const dailyData = {};
   //Get hours sorted by day
 
-    User.aggregate([
-      {
-        $match: {
-          _id: user._id
-        }
-      },{
-        $unwind: "$google.projects"
-      },{
-        $lookup: {
-          from: "projects",
-          localField: "google.projects",
-          foreignField: "_id",
-          as: "project_docs"
-        }
-      },{
-        $unwind: "$project_docs"
-      },{
-        $unwind: "$project_docs.time"
-      },{
-        $group: {
-        _id: "$project_docs.time.timestamp",
-        total: { $sum: "$project_docs.time.sessionLength"  }
-          }
-        }
-      ], (err,result)=> {
-      if(err){
-        console.log(err);
+  User.aggregate([
+    {
+      $match: {
+        _id: user._id
       }
-      //console.log(result);
-      //sort dates oldest to newest
-      sortedResult = result.sort((a,b)=> {
-        return b._id - a._id;
-      });
-      //console.log(sortedResult);
+    },{
+      $unwind: "$google.projects"
+    },{
+      $lookup: {
+        from: "projects",
+        localField: "google.projects",
+        foreignField: "_id",
+        as: "project_docs"
+      }
+    },{
+      $unwind: "$project_docs"
+    },{
+      $unwind: "$project_docs.time"
+    },{
+      $group: {
+      _id: "$project_docs.time.timestamp",
+      total: { $sum: "$project_docs.time.sessionLength"  }
+        }
+      }
+    ], (err,result)=> {
+    if(err){
+      console.log(err);
+    }
+    //console.log(result);
+    //sort dates oldest to newest
+    sortedResult = result.sort((a,b)=> {
+      return b._id - a._id;
+    });
+    //console.log(sortedResult);
 
-      const longestStreak = getLongestStreak(sortedResult);
-      const currentStreak = getCurrentStreak(sortedResult);
-      dailyData.longestStreak = longestStreak;
-      dailyData.currentStreak = currentStreak;
+    const longestStreak = getLongestStreak(sortedResult);
+    const currentStreak = getCurrentStreak(sortedResult);
+    dailyData.longestStreak = longestStreak;
+    dailyData.currentStreak = currentStreak;
 
-      //get the difference between the current week and the week of the
-      //last user's entry to the database
-      const dBtime = moment(sortedResult[0]._id);
-      const currWeek = moment().startOf('isoWeek');
-      const diffWeek = currWeek.diff(dBtime,'weeks');
+    //get the difference between the current week and the week of the
+    //last user's entry to the database
+    const dBtime = moment(sortedResult[0]._id);
+    const currWeek = moment().startOf('isoWeek');
+    const diffWeek = currWeek.diff(dBtime,'weeks');
 
-      function getLongestStreak(sortedResult){
+    function getLongestStreak(sortedResult){
 
-        let consecArr = [];
+      let consecArr = [];
+      let count = 0;
+      for(let i =0; i< sortedResult.length-1; i++){
+        if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
+          count++;
+        }else{
+          consecArr.push(count);
+          count = 0;
+        }
+      }
+      if(!consecArr.length)
+        consecArr.push(count);
+
+      return Math.max(...consecArr);
+    }
+
+    function getCurrentStreak(sortedResult){
+
+      const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
+      let yesterday = new Date(new Date().setHours(0,0,0,0));
+      yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
+
+      const lastEntry = sortedResult[0]._id.toISOString();
+
+      //if not today or yesterday then streak = 0
+      if(lastEntry !==today && lastEntry !== yesterday){
+        return 0;
+      }else{
+        //else subtract days and count until not equal to 90000000
         let count = 0;
-        for(let i =0; i< sortedResult.length-1; i++){
+        for(let i=0; i<sortedResult.length-1; i++){
           if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
             count++;
           }else{
-            consecArr.push(count);
-            count = 0;
+            return count;
           }
         }
-        if(!consecArr.length)
-          consecArr.push(count);
-
-        return Math.max(...consecArr);
+        return count;
       }
+    }
 
-      function getCurrentStreak(sortedResult){
-
-        const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
-        let yesterday = new Date(new Date().setHours(0,0,0,0));
-        yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
-
-        const lastEntry = sortedResult[0]._id.toISOString();
-
-        //if not today or yesterday then streak = 0
-        if(lastEntry !==today && lastEntry !== yesterday){
-          return 0;
-        }else{
-          //else subtract days and count until not equal to 90000000
-          let count = 0;
-          for(let i=0; i<sortedResult.length-1; i++){
-            if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
-              count++;
-            }else{
-              return count;
-            }
-          }
-          return count;
-        }
+    //FINAL HEATMAP DATA
+    heatmapData = result.map((day)=> {
+      return {
+        date: day._id,
+        count: day.total
       }
-
-      //FINAL HEATMAP DATA
-      heatmapData = result.map((day)=> {
-        return {
-          date: day._id,
-          count: day.total
-        }
-      });
-      dailyData.heatmap = heatmapData;
-
-      //console.log(dailyData);
-      cb(dailyData,diffWeek);
     });
+    dailyData.heatmap = heatmapData;
+
+    //console.log(dailyData);
+    cb(dailyData,diffWeek);
+  });
 };
 
 function getPieData(user, cb){
@@ -553,21 +553,35 @@ function getTableData(user, cb){
     .populate('google.projects')
     .exec((err,user)=>{
       //console.log(JSON.stringify(user.google.projects));
-      getUsefuldata(user.google.projects);
-
+      getUsefuldata(user.google.projects, (tableData)=>{
+        const tableDataArr=[];
+        tableData.forEach(obj=>{
+          tableDataArr.push(Object.keys(obj).map(x=>obj[x]));
+        })
+        tableDataArr.unshift(['Project','Hours',{type: 'date', label: 'Start Date'},{type: 'date', label: 'Finish Date'}]);
+        console.log(tableDataArr);
+        cb(tableDataArr)
+      });
     });
 
-    function getUsefuldata(projects){
-      const tableDataArr = [];
+    function getUsefuldata(projects, cb){
+      const tableData = [];
       projects.forEach(project=>{
-        tableDataArr.push({
+        tableData.push({
           projectName: project.projectName,
-          startDate: project.startDate,
-          completed: project.completed,
-          hours: getHours(project.time)
+          hours: getHours(project.time),
+          startDate: "Date("+moment(project.startDate).format('YYYY,MM,DD')+")",
+          finishDate: getFinishDate(project.finishDate)
         })
-      })
-      console.log(tableDataArr);
+      });
+      cb(tableData);
+    }
+
+    function getFinishDate(date){
+      if(date)
+        return "Date("+moment(date).format('YYYY,MM,DD')+")"
+      else
+        return null;
     }
 
     function getHours(project){
@@ -575,40 +589,6 @@ function getTableData(user, cb){
         return a + b.sessionLength
       },0);
     }
-  // User.aggregate([
-  //   {
-  //     $match: {
-  //       _id: user._id
-  //     }
-  //   },{
-  //     $unwind: "$google.projects"
-  //   },{
-  //     $lookup: {
-  //       from: "projects",
-  //       localField: "google.projects",
-  //       foreignField: "_id",
-  //       as: "project_docs"
-  //     }
-  //   },{
-  //     $unwind: "$project_docs"
-  //   },{
-  //     $unwind: "$project_docs.time"
-  //   },{
-  //     $group: {
-  //     _id: "$project_docs.projectName",
-  //     total: { $sum: "$project_docs.time.sessionLength"  }
-  //       }
-  //     }
-  // ],
-  // (err,result)=> {
-  //   if(err){
-  //     console.log(err);
-  //   }else{
-  //
-  //     console.log(result);
-  //
-  //     //cb(pieChartData)
-  //   }
-  // });
+
 }
 module.exports = router;

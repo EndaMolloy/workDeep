@@ -13,6 +13,7 @@ const userUrl = window.location.pathname;
 google.load("visualization", "1", {packages:["corechart"]});
 
 
+
 $(document).scroll(function(e){
 
   if(loaded)
@@ -34,6 +35,7 @@ $(document).scroll(function(e){
         $('#loader').hide();
         $('#chartArea').show();
         drawCharts(chartData);
+
 
         document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
         document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
@@ -151,63 +153,19 @@ $(document).scroll(function(e){
     barChart.draw(barData, barOptions);
 
 
-
-
     // BEGIN LINE GRAPH
 
-    // var data = google.visualization.arrayToDataTable([
-    //    ['ID', 'Life Expectancy', 'Fertility Rate', 'Project', 'Population'],
-    //    ['',    80.66,              1.67,            'a',33739900],
-    //    ['',    79.84,              1.36,            'b',81902307],
-    //    ['',    78.6,               1.84,            'c',5523095],
-    //    ['',    72.73,              2.78,            'd',79716203],
-    //    ['',    80.05,              2,               'e',61801570],
-    //    ['',    72.49,              1.7,             'f',73137148],
-    //    ['',    68.09,              4.77,            'g',31090763],
-    //    ['',    81.55,              2.96,            'h',7485600],
-    //    ['',    68.6,               1.54,            'i',141850000],
-    //    ['',    78.09,              2.05,            'k',307007000]
-    //  ]);
-    //
-    //  var options = {
-    //    hAxis: {title: 'Life Expectancy'},
-    //    vAxis: {title: 'Fertility Rate'}
-    //  };
-    //
-    //  var chart = new google.visualization.BubbleChart(document.getElementById('line-chart'));
-    //
-    //  chart.draw(data, options);
     google.charts.load('current', {'packages':['table']});
-      google.charts.setOnLoadCallback(drawTable);
+    google.charts.setOnLoadCallback(drawTable);
 
 
-    function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Project');
-        data.addColumn('number', 'Hours');
-        data.addColumn('date', 'Start Date');
-        data.addColumn('date', 'Finish Date');
-        data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, new Date(2017, 1, 30), new Date(2017, 2, 22)],
-          ['Jim',   {v:8000,   f: '$8,000'},  new Date(2017, 2, 4),  new Date(2017, 5, 3)],
-          ['Alice', {v: 12500, f: '$12,500'}, new Date(2017, 5, 4),  null],
-          ['Bob',   {v: 7000,  f: '$7,000'},  new Date(2017, 7, 30), null],
-          ['Mary',  {v: 10000, f: '$10,000'}, new Date(2017, 1, 30), new Date(2017, 2, 22)],
-          ['John',   {v:8000,   f: '$8,000'},  new Date(2017, 2, 4),  new Date(2017, 5, 3)],
-          ['Mary',  {v: 10000, f: '$10,000'}, new Date(2017, 1, 30), new Date(2017, 2, 22)],
-          ['John',   {v:8000,   f: '$8,000'},  new Date(2017, 2, 4),  new Date(2017, 5, 3)],
-          ['Mary',  {v: 10000, f: '$10,000'}, new Date(2017, 1, 30), new Date(2017, 2, 22)],
-          ['John',   {v:8000,   f: '$8,000'},  new Date(2017, 2, 4),  new Date(2017, 5, 3)],
-          ['Mary',  {v: 10000, f: '$10,000'}, new Date(2017, 1, 30), new Date(2017, 2, 22)],
-          ['John',   {v:8000,   f: '$8,000'},  new Date(2017, 2, 4),  new Date(2017, 5, 3)],
-          ['Allie', {v: 12500, f: '$12,500'}, new Date(2017, 5, 4),  new Date(2017, 9, 7)],
-          ['Smith',   {v: 7000,  f: '$7,000'},  new Date(2017, 7, 30), new Date(2017, 11, 22)]
-        ]);
+    function drawTable(){
+        var data = google.visualization.arrayToDataTable(chartData.tableData)
 
         var table = new google.visualization.Table(document.getElementById('proj-table'));
 
         var options = {
-          showRowNumber: false,
+          showRowNumber: true,
           width: '100%',
           height: '100%'
         }
