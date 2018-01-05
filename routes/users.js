@@ -553,33 +553,50 @@ function getTableData(user, cb){
     .populate('google.projects')
     .exec((err,user)=>{
       //console.log(JSON.stringify(user.google.projects));
-      getUsefuldata(user.google.projects, (tableData)=>{
+      getData(user.google.projects, (tableData)=>{
         const tableDataArr=[];
         tableData.forEach(obj=>{
           tableDataArr.push(Object.keys(obj).map(x=>obj[x]));
         })
         tableDataArr.unshift(['Project','Hours',{type: 'date', label: 'Start Date'},{type: 'date', label: 'Finish Date'}]);
-        console.log(tableDataArr);
+        //console.log(tableDataArr);
         cb(tableDataArr)
       });
     });
 
-    function getUsefuldata(projects, cb){
+    function getData(projects, cb){
       const tableData = [];
       projects.forEach(project=>{
+        const dates = getDates(project.time);
+
         tableData.push({
           projectName: project.projectName,
           hours: getHours(project.time),
-          startDate: "Date("+moment(project.startDate).format('YYYY,MM,DD')+")",
-          finishDate: getFinishDate(project.finishDate)
+          startDate: getFormattedDate(dates[dates.length-1].timestamp),
+          finishDate: getFinishDate(project.completed, dates[0].timestamp)
         })
       });
+      //console.log(tableData);
       cb(tableData);
     }
 
-    function getFinishDate(date){
-      if(date)
-        return "Date("+moment(date).format('YYYY,MM,DD')+")"
+    function getFormattedDate(date){
+      const year = moment(date).year();
+      const month = moment(date).month();
+      const day = moment(date).date();
+
+      return "Date("+year+","+month+","+day+")"
+    }
+
+    function getDates(time){
+      return time.sort((a,b)=>{
+        return Date.parse(a.timestamp) < Date.parse(b.timestamp);
+      });
+    }
+
+    function getFinishDate(complete, date){
+      if(complete)
+        return getFormattedDate(date);
       else
         return null;
     }
