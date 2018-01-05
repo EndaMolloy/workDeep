@@ -1,88 +1,106 @@
+  //
+  // function sendDataToDb(){
+  //
+  //   const sessHrsTen2Mins = Number(sessHrsTen)*60;
+  //   const sessHrsOne2Mins = Number(sessHrsOne)*60;
+  //
+  //   const totalSessMins = sessHrsTen2Mins+sessHrsOne2Mins+Number(sessMinsTen)+Number(sessMinsOne);
+  //   const totalSessHrs = totalSessMins/60;
+  //
+  //   const projectName = document.getElementById('taskInput').textContent
+  //
+  //   const userUrl = window.location.pathname;
+  //   console.log(userUrl);
+  //   const test = 1;
+  //
+  //   const projectData = {
+  //     projectName: projectName,
+  //     sessionLength: totalSessMins,
+  //     timestamp: Date.now()
+  //   }
+  //
+  //   console.log(projectData);
+  //
+  //
+  //   $.ajax({
+  //     type: "POST",
+  //     url: userUrl,
+  //     data: projectData,
+  //     success: function() {
+  //         alert('It worked');
+  //     }
+  //   });
+  //
+  // }
 
-  function sendDataToDb(){
-
-    const sessHrsTen2Mins = Number(sessHrsTen)*60;
-    const sessHrsOne2Mins = Number(sessHrsOne)*60;
-
-    const totalSessMins = sessHrsTen2Mins+sessHrsOne2Mins+Number(sessMinsTen)+Number(sessMinsOne);
-    const totalSessHrs = totalSessMins/60;
-
-    const projectName = document.getElementById('taskInput').textContent
-
-    const userUrl = window.location.pathname;
-    console.log(userUrl);
-    const test = 1;
-
-    const projectData = {
-      projectName: projectName,
-      sessionLength: totalSessMins,
-      timestamp: Date.now()
-    }
-
-    console.log(projectData);
-
-
-    $.ajax({
-      type: "POST",
-      url: userUrl,
-      data: projectData,
-      success: function() {
-          alert('It worked');
-      }
-    });
-
+function sendToMongo(time){
+  const timeLog = {
+    projectId: selectedProj,
+    sessionLength: time,
+    timestamp: new Date().setHours(0,0,0,0)
   }
 
+  console.log(timeLog);
+}
 
 
-  let hrs = 0
-  let mins=0
-  let secs =0
-  let hrsTen  = 0;
-  let hrsOne  = 0;
-  let minsOne = 0;
-  let minsTen = 0;
-  let secsTen = 0;
-  let secsOne = 0;
-  let sessHrsTen
-  let sessHrsOne
-  let sessMinsTen
-  let sessMinsOne
-  let sessSecsTen
-  let sessSecsOne
+let hrs = 0
+let mins=0
+let secs =0
+let hrsTen  = 0;
+let hrsOne  = 0;
+let minsOne = 0;
+let minsTen = 0;
+let secsTen = 0;
+let secsOne = 0;
+let sessHrsTen;
+let sessHrsOne;
+let sessMinsTen;
+let sessMinsOne;
+let sessSecsTen;
+let sessSecsOne;
+let sessHrs;
+let sessMins;
+let sessSecs;
+let count = 0;
 
-  var Interval
-  var pause = false;
-  var reset = false;
-  var isCounting = false;
-  const inputBoxes = document.getElementById('main').getElementsByTagName('input')
-  const labelDiv = document.getElementById('labels')
-
-
-  //get inital time values from html input
-  getTimeValues()
-
-  //store the values in session variables
-  saveSessionLength();
-
-  //shorthand values
-  //e.g hrs = 5 mins=13 secs=42
-  parseTimeValues()
+let Interval;
+let pause = false;
+let reset = false;
+let selectedProj;
+var isCounting = false;
+const inputBoxes = document.getElementById('main').getElementsByTagName('input');
+const labelDiv = document.getElementById('labels');
 
 
-  //listen for user inputs to change countdown timer value
-  for(let i=0; i<inputBoxes.length; i++){
-    inputBoxes[i].addEventListener('change',(ev)=>{
-      getTimeValues()
-      saveSessionLength()
-      parseTimeValues()
+//get inital time values from html input
+getTimeValues();
 
-    })
-  }
+//store the values in session variables
+saveSessionLength();
+
+//shorthand values
+//e.g hrs = 5 mins=13 secs=42
+parseTimeValues();
+
+
+//listen for user inputs to change countdown timer value
+for(let i=0; i<inputBoxes.length; i++){
+  inputBoxes[i].addEventListener('change',(ev)=>{
+    getTimeValues()
+    saveSessionLength()
+    parseTimeValues()
+
+  })
+}
 
 
 
 $("#button-start").on('click',()=>{
+  if(count === 0){
+    selectedProj = getSelectedProjectId($(".projects li"));
+    count++;
+  }
 
   if(isCounting){
     clearInterval(Interval);
@@ -92,8 +110,6 @@ $("#button-start").on('click',()=>{
     document.getElementById('button-reset').style.display = 'inline-block';
     document.getElementById('button-clear').style.display = 'inline-block';
     document.getElementById('button-finish').style.visibility = 'visible';
-
-
   }
   else{
         //if no value entered alert user
@@ -110,12 +126,12 @@ $("#button-start").on('click',()=>{
       document.getElementById('projects').style.display = 'none';
       document.getElementById('button-finish').style.visibility = 'hidden';
 
-      getTimeValues()
-      parseTimeValues()
-      setDisplay()
-      modifyInputField()
+      getTimeValues();
+      parseTimeValues();
+      setDisplay();
+      modifyInputField();
 
-      Interval = setInterval(startTimer, 1000)
+      Interval = setInterval(startTimer, 1000);
     }
 
   }
@@ -124,6 +140,7 @@ $("#button-start").on('click',()=>{
 
 $("#button-reset").on('click',()=>{
   reset = true;
+  count = 0;
   clearInterval(Interval);
   resetValues()
   setDisplay()
@@ -144,19 +161,34 @@ $("#button-clear").on('click',()=>{
 
 })
 
-// $("#button-done").on('click',()=>{
-//   clearInterval(Interval);
-//   parseTimeValues();
-//   pause = true;
-//
-//   //get values in seconds
-//   let diffHrs = (sesHrs - hrs)*60*60;
-//   let diffMins= (sesMins - mins)*60;
-//   let diffSecs = sesSecs - secs;
-//   convertToMins(diffHrs,diffMins,diffSecs)
-//
-// })
+$("#button-finish").on('click',()=>{
 
+  const confirm = window.confirm("Finish your current session and log your time?")
+
+  if(confirm){
+    clearInterval(Interval);
+    parseTimeValues();
+
+    //get values in seconds
+    let diffHrs = (sessHrs - hrs)*60*60;
+    let diffMins= (sessMins - mins)*60;
+    let diffSecs = sessSecs - secs;
+    sendToMongo(convertToMins(diffHrs,diffMins,diffSecs));
+  }
+
+})
+
+function getSelectedProjectId(li){
+  if(!li) return;
+
+  const selector = 'fa-circle-thin';
+  for(let i=0; i<li.length; i++){
+    if(li[i].innerHTML.indexOf(selector) === -1){
+      let projectId = li[i].lastElementChild.action.replace("http://localhost:5000/liveprojects/","");
+      return projectId;
+    }
+  }
+}
 
 function getTimeValues(){
   hrsTen = document.getElementById("hoursTen").value || '0'
@@ -175,6 +207,10 @@ function saveSessionLength(){
   sessMinsOne = minsOne;
   sessSecsTen = secsTen;
   sessSecsOne = secsOne;
+
+  sessHrs = Number(sessHrsTen+sessHrsOne);
+  sessMins = Number(sessMinsTen+sessMinsOne);
+  sessSecs = Number(sessSecsTen+sessMinsOne);
 }
 
 function parseTimeValues(){
@@ -220,7 +256,7 @@ function resetValues(){
 
 function convertToMins(hrs,mins,secs){
   let totalSecs = hrs+mins+secs
-  console.log(Math.floor(totalSecs/60))
+  return Math.floor(totalSecs/60);
 }
 
 
@@ -286,7 +322,7 @@ function startTimer () {
 }
 
 
-  function setDisplay(){
+function setDisplay(){
 
     document.getElementById('secondsOne').value = secsOne;
     document.getElementById('secondsTen').value = secsTen;
