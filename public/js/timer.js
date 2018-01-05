@@ -1,20 +1,4 @@
 
-  //doesn't work with login/signup yet
-
-  // $(".scroll").click(function(event){
-  //   console.log(event);
-	// 	event.preventDefault();
-	// 	$("html,body").animate({scrollTop:$(this.hash).offset().top}, 500);
-	// 	// $('.navbar-default a').removeClass('selected');
-	// 	// $(this).addClass('selected');
-  //   	});
-
-  // let projectinfo = {
-  //     projectName: "French",
-  //     sessionLength: 2,
-  //     timestamp: Date.now()
-  //   };
-
   function sendDataToDb(){
 
     const sessHrsTen2Mins = Number(sessHrsTen)*60;
@@ -48,20 +32,6 @@
     });
 
   }
-
-  //
-  // $("#data").on('click',()=>{
-  //
-  //
-  //   $.post('http://localhost:5000/users/post',projectinfo,(data)=>{
-  //     if(data.error){
-  //       console.log(data.error);
-  //     }else{
-  //
-  //     }
-  //   });
-  //
-  // });
 
 
 
@@ -111,15 +81,17 @@
   }
 
 
+
 $("#button-start").on('click',()=>{
 
   if(isCounting){
     clearInterval(Interval);
     isCounting = false;
-    document.getElementById('play').classList.remove('fa-pause')
-    document.getElementById('play').classList.add('fa-play')
+    document.getElementById('play').classList.remove('fa-pause');
+    document.getElementById('play').classList.add('fa-play');
     document.getElementById('button-reset').style.display = 'inline-block';
     document.getElementById('button-clear').style.display = 'inline-block';
+    document.getElementById('button-finish').style.visibility = 'visible';
 
 
   }
@@ -131,11 +103,12 @@ $("#button-start").on('click',()=>{
     }
     else{
       isCounting = true;
-      document.getElementById('play').classList.remove('fa-play')
-      document.getElementById('play').classList.add('fa-pause')
+      document.getElementById('play').classList.remove('fa-play');
+      document.getElementById('play').classList.add('fa-pause');
       document.getElementById('button-reset').style.display = 'none';
       document.getElementById('button-clear').style.display = 'none';
       document.getElementById('projects').style.display = 'none';
+      document.getElementById('button-finish').style.visibility = 'hidden';
 
       getTimeValues()
       parseTimeValues()

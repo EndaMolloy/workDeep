@@ -206,10 +206,10 @@ router.route('/:id')
   });
 
 
-
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
   .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
+
 
 router.route('/auth/google/callback')
   .get(passport.authenticate('google', {
@@ -238,6 +238,7 @@ function getUserChartData(user, cb){
     });
   });
 };
+
 
 function getDailyData(user, cb){
   const dailyData = {};
@@ -346,6 +347,7 @@ function getDailyData(user, cb){
   });
 };
 
+
 function getPieData(user, cb){
 
   User.aggregate([
@@ -390,6 +392,7 @@ function getPieData(user, cb){
     }
   });
 }
+
 
 function getWeeklyData(user, diffWeek, cb){
 
@@ -548,6 +551,7 @@ function getWeeklyData(user, diffWeek, cb){
 
 }
 
+
 function getTableData(user, cb){
   User.findById(user._id)
     .populate('google.projects')
@@ -608,4 +612,5 @@ function getTableData(user, cb){
     }
 
 }
+
 module.exports = router;

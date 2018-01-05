@@ -25,11 +25,11 @@ body{
 
 
 #buttons{
-  padding-top: 70px;
+  padding-top: 50px;
 }
 
 #button-start{
-  margin: 0 7%;
+  margin: 0 75px;
 }
 
 #button-reset{
@@ -38,6 +38,19 @@ body{
 
 #button-clear{
   display: none;
+}
+
+#button-finish{
+  visibility: hidden;
+  border-color: white;
+  background-color: inherit;
+  transition: all 0.2s linear;
+}
+
+#button-finish:hover{
+  color: #fff;
+  background-color: #a83636;
+  border-color: #a83636;
 }
 
 .start{
@@ -112,8 +125,12 @@ span.timeBox  {
   display:none;
 }
 
+#finish{
+  margin-top: 20px;
+}
+
 .quote{
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
 .custom-icon {
