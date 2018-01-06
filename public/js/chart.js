@@ -30,20 +30,21 @@ $(document).scroll(function(e){
     if(scrollPercent > 50) {
       loaded = true;
         // run a function called doSomething
-      $.get('http://localhost:5000'+userUrl+'/chartData',(chartData)=> {
+      $.get('http://localhost:5000'+userUrl+'/logtime',(chartData)=> {
 
         $('#loader').hide();
         $('#chartArea').show();
+        console.log(chartData);
         drawCharts(chartData);
 
 
         document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
         document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
+        document.getElementById('totHrs').textContent = chartData.dailyData.totalHours;
         document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
         document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
         document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
 
-        //TODO document.getElementById('compProj').textContent = chartData.completedProjs
         //console.log(chartData);
       });
     }

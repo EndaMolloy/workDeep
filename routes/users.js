@@ -168,10 +168,23 @@ router.route('/:id/liveprojects/:project_id')
     })
   });
 
-
+//SAVE Logged time to database
+router.route('/:id/logtime/:project_id')
+  .post(isAuthenticated,(req,res)=>{
+    Project.findById(req.params.project_id,(err, project)=>{
+      project.time.push(req.body);
+      project.save((err, updatedProj)=>{
+        if(err)
+          res.json("Something bad went wrong")
+        else{
+          res.json("Your time has been successfully logged");
+        }
+      })
+    })
+  });
 
 //GET CHART DATA
-router.route('/:id/chartData')
+router.route('/:id/logtime')
   .get(isAuthenticated,(req,res)=>{
       //  seedDB(req.user, (msg)=>{
       //    res.json(msg);
@@ -277,12 +290,14 @@ function getDailyData(user, cb){
     sortedResult = result.sort((a,b)=> {
       return b._id - a._id;
     });
-    //console.log(sortedResult);
+    console.log(sortedResult);
 
     const longestStreak = getLongestStreak(sortedResult);
     const currentStreak = getCurrentStreak(sortedResult);
+    const totalHours = getTotalHours(sortedResult);
     dailyData.longestStreak = longestStreak;
     dailyData.currentStreak = currentStreak;
+    dailyData.totalHours = totalHours;
 
     //get the difference between the current week and the week of the
     //last user's entry to the database
@@ -293,19 +308,18 @@ function getDailyData(user, cb){
     function getLongestStreak(sortedResult){
 
       let consecArr = [];
-      let count = 0;
-      for(let i =0; i< sortedResult.length-1; i++){
+      let count = 1;
+      for(let i=0; i< sortedResult.length-1; i++){
         if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
           count++;
         }else{
           consecArr.push(count);
-          count = 0;
+          count = 1;
         }
       }
-      if(!consecArr.length)
-        consecArr.push(count);
+      consecArr.push(count);
 
-      return Math.max(...consecArr);
+      return Math.max(...consecArr) || 0;
     }
 
     function getCurrentStreak(sortedResult){
@@ -321,7 +335,7 @@ function getDailyData(user, cb){
         return 0;
       }else{
         //else subtract days and count until not equal to 90000000
-        let count = 0;
+        let count = 1;
         for(let i=0; i<sortedResult.length-1; i++){
           if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
             count++;
@@ -331,6 +345,12 @@ function getDailyData(user, cb){
         }
         return count;
       }
+    }
+
+    function getTotalHours(sortedResult){
+        return sortedResult.reduce((a,b)=>{
+          return a+b.total;
+        },0);
     }
 
     //FINAL HEATMAP DATA

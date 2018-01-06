@@ -35,12 +35,18 @@
 
 function sendToMongo(time){
   const timeLog = {
-    projectId: selectedProj,
     sessionLength: time,
     timestamp: new Date().setHours(0,0,0,0)
   }
 
-  console.log(timeLog);
+  $.post('http://localhost:5000'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
+    if(message.error){
+      console.log('Something bad happened');
+    }else{
+      alert(message);
+    }
+  });
+
 }
 
 
@@ -89,7 +95,7 @@ for(let i=0; i<inputBoxes.length; i++){
   inputBoxes[i].addEventListener('change',(ev)=>{
     getTimeValues()
     saveSessionLength()
-    parseTimeValues()
+    parseTimeValues().attr('action')
 
   })
 }
