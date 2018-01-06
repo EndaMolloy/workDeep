@@ -46,7 +46,6 @@ function sendToMongo(time){
       alert(message);
     }
   });
-
 }
 
 
@@ -225,7 +224,6 @@ function parseTimeValues(){
    secs = Number(secsTen + secsOne)
 }
 
-
 function modifyInputField(){
 
   if(reset){
@@ -259,12 +257,10 @@ function resetValues(){
   secsOne = sessSecsOne
 }
 
-
 function convertToMins(hrs,mins,secs){
   let totalSecs = hrs+mins+secs
   return Math.floor(totalSecs/60);
 }
-
 
 function startTimer () {
 
@@ -327,7 +323,6 @@ function startTimer () {
 
 }
 
-
 function setDisplay(){
 
     document.getElementById('secondsOne').value = secsOne;
@@ -337,4 +332,4 @@ function setDisplay(){
     document.getElementById("hoursTen").value = hrsTen;
     document.getElementById("hoursOne").value = hrsOne;
 
-  }
+}

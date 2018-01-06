@@ -282,13 +282,79 @@ span.timeBox  {
   padding: 10px 0;
 }
 /* ----- BOOTSTRAP LOGIN FORM ----- */
+.container-signin{
+  max-width: 300px;
+  padding: 12px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.signin-header{
+  padding-bottom: 9px;
+  margin: 20px 0 20px;
+}
+
+.btn{
+  margin: 10px auto;
+  max-width: 100%;
+}
+
+.btn-social-signin{
+  margin-bottom: 15px;
+}
+
+.signin-more{
+  font-size: 12px;
+}
+
+.btn-link{
+  float: none;
+  display: table-cell;
+  width: 1%;
+}
+
+.btn-link:hover{
+  color: white;
+}
+
+.btn-signup{
+  text-align: right;
+  padding-right: 5px;
+}
+
+.btn-forgot{
+  text-align: left;
+  padding-left: 5px;
+}
+
+.btn-group-justified{
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+}
+
+.text-muted{
+  color: white;
+}
+
+
+legend {
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: inherit;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+}
 
 .form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin-top: 30px;
 }
-.form-signin .form-signin-heading,
+
 .form-signin .checkbox {
   margin-bottom: 10px;
 }
@@ -308,13 +374,11 @@ span.timeBox  {
   z-index: 2;
 }
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+  margin-bottom: 10px;
+
 }
 .form-signin input[type="password"] {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  margin-bottom: 20px;
 }
 
 #projects{
@@ -409,6 +473,7 @@ span.timeBox  {
           color: #333;
     }
 }
+
 
 
 

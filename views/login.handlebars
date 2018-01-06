@@ -1,5 +1,24 @@
-<form class="form-signin" action="/users/login" method="POST">
-  <h2 class="form-signin-heading">Please log in</h2>
+<div class="container-signin">
+  <div class="signin-header">
+      <h1>Sign in</h1>
+  </div>
+  <div class="btn-social-signin">
+    <a class="btn btn-block btn-social btn-google" href="/users/auth/google">
+      <span class="fa fa-google"></span> Sign in with Google
+    </a>
+    <a class="btn btn-block btn-social btn-twitter">
+      <span class="fa fa-twitter"></span>
+      Sign in with Twitter
+    </a>
+    <a class="btn btn-block btn-social btn-github">
+      <span class="fa fa-github"></span>
+      Sign in with GitHub
+    </a>
+  </div>
+
+  <legend class="text-muted text-center">or</legend>
+
+  <form class="form-signin" action="/users/login" method="POST">
 
   <label for="inputEmail" class="sr-only">Email address</label>
   <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
@@ -7,10 +26,12 @@
   <label for="inputPassword" class="sr-only">Password</label>
   <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
 
-  <br/>
+  <div class="signin-controls">
+    <button class="btn btn-lg btn-default btn-block" type="submit">Sign in</button>
+  </div>
+  <div class="signin-more btn-group-justified">
+    <a class="btn-forgot btn-link" href="/forgot">Forgot Password</a>
+    <a class = "btn-signup btn-link" href="/signup">Create new account</a>
+  </div>
 
-  <button class="btn btn-lg btn-default btn-block" type="submit">Log in</button>
-
-  <br/>
-
-  <a href="/users/auth/google">Log In with Google</a>
+</div>
