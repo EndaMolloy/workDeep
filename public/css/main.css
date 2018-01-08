@@ -1,7 +1,7 @@
 
 body{
   background-color: #21272d;
-	text-align: center;
+	text-align: left;
 	color: white;
   /*background: url(https://s17.postimg.org/9vcwy27un/patrick-hendry-181408.jpg)
     no-repeat
@@ -445,7 +445,7 @@ legend {
 .custom-icon-list {
   background: inherit;
   border-radius: 100%;
-  color: white;
+  color: black;
   display: table-cell;
   font-size: 15px;
   height: 30px;

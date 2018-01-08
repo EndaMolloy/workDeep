@@ -5,6 +5,20 @@ $(document).ready(function () {
   let inFocusProject = 0;
   const userUrl = window.location.pathname;
 
+  // var slideout = new Slideout({
+  //   'panel': document.getElementById('panel'),
+  //   'menu': document.getElementById('menu'),
+  //   'padding': 256,
+  //   'tolerance': 70
+  // });
+  // slideout.toggle();
+  //
+  // Toggle button
+  // document.querySelector('.toggle-button').addEventListener('click', function() {
+  //   slideout.toggle();
+  // });
+
+
   if(projectList.length < 1)
     document.getElementById('taskInput').textContent = "Add a project";
 

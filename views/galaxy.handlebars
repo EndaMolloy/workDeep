@@ -1,71 +1,92 @@
 <!----------------------- TIMER -------------------------->
-<div class="container">
-
-  <div class="wrapper">
-    <div id="greeting">
-      <h1>Hey <span id='userName'>{{username}}</span>, <span id=motivation>let's get it done!</span></h1>
-    </div>
-    <div id="inputContainer">
-      <div id ="taskInput"></div>
-    </div>
-
-    <div class ="row">
-        <div class ="projects col-md-4 col-xs-12">
-          <div id="projects" class="container">
-            <h4>Live Projects</h4>
-            <ul>
-            </ul>
-            <div class="newProject">
-              <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
-            </div>
-          </div>
+<nav id="menu">
+  <div class="menu-container">
+    <div class="menu-heading">
+      <h2>Deep Work</h2>
+      <div id="projects" class="container projects">
+        <h4>Live Projects</h4>
+        <ul>
+        </ul>
+        <div class="newProject">
+          <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
         </div>
-        <div class ="col-md-4 col-xs-12">
-          <div id ="main">
-             <!-- need to find a way to move the oninput to css if possible -->
-              <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-              <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-              <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
-              <input class="timeBox" type="text" id="minutesOne" value="5"/>
-              <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
-              <input class="timeBox" type="text" id="secondsOne" value="0"/>
-
-          </div>
-
-          <div id="labels">H <span>M </span> S </div>
-
-          <div id="buttons">
-
-            <!-- <button id="button-done">Done</button> -->
-
-            <div class="icon-wrapper" id="button-reset">
-              <i class="fa fa-undo custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-            </div>
-            <div class="icon-wrapper" id="button-start">
-              <i id='play' class="fa fa-play custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-            </div>
-
-            <div class="icon-wrapper" id="button-clear">
-              <i class="fa fa-trash custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
-            </div>
-          </div>
-
-          <div id="finish">
-            <button type="button" name="button" id="button-finish" class="btn btn-primary">(Finish session early)</button>
-          </div>
-
-          <div class="quote">
-            <h5>"We do not rise to the level of our expectations, we fall to the level of our training" - Archilochus</h5>
-          </div>
-
-        </div>
-
-      <div class ="col-md-4 col-xs-12">
-
       </div>
-   </div>
+    </div>
   </div>
-</div>
+</nav>
+
+    <main id="panel">
+      <button class="toggle-button">☰</button>
+      <div class="container">
+        <div class="wrapper">
+          <div id="greeting">
+            <h1>Hey <span id='userName'>{{username}}</span>, <span id=motivation>let's get it done!</span></h1>
+          </div>
+          <div id="inputContainer">
+            <div id ="taskInput"></div>
+          </div>
+
+          <div class ="row">
+              <div class ="projects col-md-4 col-xs-12">
+                <!-- <div id="projects" class="container">
+                  <h4>Live Projects</h4>
+                  <ul>
+                  </ul>
+                  <div class="newProject">
+                    <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
+                  </div>
+                </div> -->
+              </div>
+              <div class ="col-md-4 col-xs-12">
+                <div id ="main">
+                   <!-- need to find a way to move the oninput to css if possible -->
+                    <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                    <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                    <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
+                    <input class="timeBox" type="text" id="minutesOne" value="5"/>
+                    <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
+                    <input class="timeBox" type="text" id="secondsOne" value="0"/>
+
+                </div>
+
+                <div id="labels">H <span>M </span> S </div>
+
+                <div id="buttons">
+
+                  <!-- <button id="button-done">Done</button> -->
+
+                  <div class="icon-wrapper" id="button-reset">
+                    <i class="fa fa-undo custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+                  </div>
+                  <div class="icon-wrapper" id="button-start">
+                    <i id='play' class="fa fa-play custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+                  </div>
+
+                  <div class="icon-wrapper" id="button-clear">
+                    <i class="fa fa-trash custom-icon" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i>
+                  </div>
+                </div>
+
+                <div id="finish">
+                  <button type="button" name="button" id="button-finish" class="btn btn-primary">(Finish session early)</button>
+                </div>
+
+                <div class="quote">
+                  <h5>"We do not rise to the level of our expectations, we fall to the level of our training" - Archilochus</h5>
+                </div>
+
+              </div>
+
+            <div class ="col-md-4 col-xs-12">
+
+            </div>
+         </div>
+        </div>
+      </div>
+
+    </main>
+
+
 
 <!----------------------- Dashboard -------------------------->
 
@@ -152,7 +173,25 @@
   {{#section 'script'}}
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+    <script>
+      var slideout = new Slideout({
+        'panel': document.getElementById('panel'),
+        'menu': document.getElementById('menu'),
+        'padding': 256,
+        'tolerance': 70
+      });
+
+      // Toggle button
+      slideout.toggle();
+      document.querySelector('.toggle-button').addEventListener('click', function() {
+        slideout.toggle();
+      });
+
+  </script>
     <script type="text/javascript" src= "/js/timer.js"></script>
     <script type="text/javascript" src="/js/project.js"></script>
     <script type="text/javascript" src= "/js/chart.js"></script>
+
+
   {{/section}}
