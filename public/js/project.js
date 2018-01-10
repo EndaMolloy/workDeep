@@ -5,20 +5,6 @@ $(document).ready(function () {
   let inFocusProject = 0;
   const userUrl = window.location.pathname;
 
-  // var slideout = new Slideout({
-  //   'panel': document.getElementById('panel'),
-  //   'menu': document.getElementById('menu'),
-  //   'padding': 256,
-  //   'tolerance': 70
-  // });
-  // slideout.toggle();
-  //
-  // Toggle button
-  // document.querySelector('.toggle-button').addEventListener('click', function() {
-  //   slideout.toggle();
-  // });
-
-
   if(projectList.length < 1)
     document.getElementById('taskInput').textContent = "Add a project";
 
@@ -90,6 +76,8 @@ $(document).ready(function () {
     });
     event.stopPropagation();
   });
+
+
 
 
 
@@ -167,10 +155,18 @@ $(document).ready(function () {
       $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
 
     }else{
-      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+      $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span></span><div class="dropdown show"><a class="btn btn-sm dropdown-toggle">...</a></li>');
     }
 
   }
+
+  $("ul").on('click','.dropdown', function(event){
+    document.getElementById("myDropdown").classList.toggle("show");
+  });
+
+  $("ul").on('click','a .complete',function(event){
+    console.log("clicked");
+  });
 
   function addtoCompletedProjects(project){
 
