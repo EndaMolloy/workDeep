@@ -215,6 +215,7 @@ span.timeBox  {
 #loader{
   min-height: 80vh;
   padding-top: 20%;
+  text-align: center;
 }
 
 #loader-msg{
@@ -430,7 +431,7 @@ legend {
 }
 
 .projects li:hover{
-  background: grey;
+  background: gainsboro;
 }
 
 .projects span{
@@ -474,6 +475,8 @@ legend {
           color: #333;
     }
 }
+
+/*PREVENT NAVBAR FROM COLLAPSING*/
 
 .navbar-collapse.collapse {
 display: block!important;

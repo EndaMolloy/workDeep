@@ -155,8 +155,13 @@ router.route('/:id/liveprojects/:project_id')
         //Remove objectID from User model
         const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
         projectsArr.splice(arrIndex,1);
-
-        res.json(deletedProject)
+        req.user.save((err)=>{
+          if(err){
+            console.log(err);
+          }else{
+            res.json(deletedProject)
+          }
+        });
       }
     });
   })
@@ -190,8 +195,8 @@ router.route('/:id/logtime')
       //    res.json(msg);
       //  });
 
-      getUserChartData(req.user, (chartData)=>{
-        res.send(chartData);
+    getUserChartData(req.user, (chartData)=>{
+      res.send(chartData);
     });
   });
 
@@ -238,17 +243,21 @@ function getUserChartData(user, cb){
   const chartData = {};
 
   getDailyData(user, (dailyData, diffWeek)=>{
-    chartData.dailyData = dailyData;
-    getPieData(user, (pieData)=>{
-      chartData.pieData = pieData;
-      getWeeklyData(user,diffWeek, (weeklyData)=>{
-        chartData.weeklyData = weeklyData;
-        getTableData(user, (tableData)=>{
-          chartData.tableData = tableData;
-          cb(chartData);
-        })
+    if(dailyData === 'error'){
+      cb("Looks you haven't logged anytime yet :(")
+    }else{
+      chartData.dailyData = dailyData;
+      getPieData(user, (pieData)=>{
+        chartData.pieData = pieData;
+        getWeeklyData(user,diffWeek, (weeklyData)=>{
+          chartData.weeklyData = weeklyData;
+          getTableData(user, (tableData)=>{
+            chartData.tableData = tableData;
+            cb(chartData);
+          })
+        });
       });
-    });
+    }
   });
 };
 
@@ -285,85 +294,91 @@ function getDailyData(user, cb){
     if(err){
       console.log(err);
     }
-    //console.log(result);
-    //sort dates oldest to newest
-    sortedResult = result.sort((a,b)=> {
-      return b._id - a._id;
-    });
-    console.log(sortedResult);
 
-    const longestStreak = getLongestStreak(sortedResult);
-    const currentStreak = getCurrentStreak(sortedResult);
-    const totalHours = getTotalHours(sortedResult);
-    dailyData.longestStreak = longestStreak;
-    dailyData.currentStreak = currentStreak;
-    dailyData.totalHours = totalHours;
+    if(result.length<1){
+      cb('error');
+    }else{
+      //console.log(result);
+      //sort dates oldest to newest
+      sortedResult = result.sort((a,b)=> {
+        return b._id - a._id;
+      });
+      console.log(sortedResult);
 
-    //get the difference between the current week and the week of the
-    //last user's entry to the database
-    const dBtime = moment(sortedResult[0]._id);
-    const currWeek = moment().startOf('isoWeek');
-    const diffWeek = currWeek.diff(dBtime,'weeks');
+      const longestStreak = getLongestStreak(sortedResult);
+      const currentStreak = getCurrentStreak(sortedResult);
+      const totalHours = getTotalHours(sortedResult);
+      dailyData.longestStreak = longestStreak;
+      dailyData.currentStreak = currentStreak;
+      dailyData.totalHours = totalHours;
 
-    function getLongestStreak(sortedResult){
+      //get the difference between the current week and the week of the
+      //last user's entry to the database
+      const dBtime = moment(sortedResult[0]._id);
+      const currWeek = moment().startOf('isoWeek');
+      const diffWeek = currWeek.diff(dBtime,'weeks');
 
-      let consecArr = [];
-      let count = 1;
-      for(let i=0; i< sortedResult.length-1; i++){
-        if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
-          count++;
-        }else{
-          consecArr.push(count);
-          count = 1;
-        }
-      }
-      consecArr.push(count);
+      function getLongestStreak(sortedResult){
 
-      return Math.max(...consecArr) || 0;
-    }
-
-    function getCurrentStreak(sortedResult){
-
-      const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
-      let yesterday = new Date(new Date().setHours(0,0,0,0));
-      yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
-
-      const lastEntry = sortedResult[0]._id.toISOString();
-
-      //if not today or yesterday then streak = 0
-      if(lastEntry !==today && lastEntry !== yesterday){
-        return 0;
-      }else{
-        //else subtract days and count until not equal to 90000000
+        let consecArr = [];
         let count = 1;
-        for(let i=0; i<sortedResult.length-1; i++){
+        for(let i=0; i< sortedResult.length-1; i++){
           if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
             count++;
           }else{
-            return count;
+            consecArr.push(count);
+            count = 1;
           }
         }
-        return count;
+        consecArr.push(count);
+
+        return Math.max(...consecArr) || 0;
       }
+
+      function getCurrentStreak(sortedResult){
+
+        const today = new Date(new Date().setHours(0,0,0,0)).toISOString();
+        let yesterday = new Date(new Date().setHours(0,0,0,0));
+        yesterday = new Date(yesterday.setDate(yesterday.getDate()-1)).toISOString();
+
+        const lastEntry = sortedResult[0]._id.toISOString();
+
+        //if not today or yesterday then streak = 0
+        if(lastEntry !==today && lastEntry !== yesterday){
+          return 0;
+        }else{
+          //else subtract days and count until not equal to 90000000
+          let count = 1;
+          for(let i=0; i<sortedResult.length-1; i++){
+            if(sortedResult[i]._id - sortedResult[i+1]._id <= 90000000){
+              count++;
+            }else{
+              return count;
+            }
+          }
+          return count;
+        }
+      }
+
+      function getTotalHours(sortedResult){
+          return sortedResult.reduce((a,b)=>{
+            return a+b.total;
+          },0);
+      }
+
+      //FINAL HEATMAP DATA
+      heatmapData = result.map((day)=> {
+        return {
+          date: day._id,
+          count: day.total
+        }
+      });
+      dailyData.heatmap = heatmapData;
+
+      //console.log(dailyData);
+      cb(dailyData,diffWeek);
     }
 
-    function getTotalHours(sortedResult){
-        return sortedResult.reduce((a,b)=>{
-          return a+b.total;
-        },0);
-    }
-
-    //FINAL HEATMAP DATA
-    heatmapData = result.map((day)=> {
-      return {
-        date: day._id,
-        count: day.total
-      }
-    });
-    dailyData.heatmap = heatmapData;
-
-    //console.log(dailyData);
-    cb(dailyData,diffWeek);
   });
 };
 
@@ -596,8 +611,8 @@ function getTableData(user, cb){
         tableData.push({
           projectName: project.projectName,
           hours: getHours(project.time),
-          startDate: getFormattedDate(dates[dates.length-1].timestamp),
-          finishDate: getFinishDate(project.completed, dates[0].timestamp)
+          startDate: getFormattedDate(project.startDate),
+          finishDate: getFinishDate(project.completed, dates)
         })
       });
       //console.log(tableData);
@@ -618,9 +633,9 @@ function getTableData(user, cb){
       });
     }
 
-    function getFinishDate(complete, date){
+    function getFinishDate(complete, dates){
       if(complete)
-        return getFormattedDate(date);
+        return getFormattedDate(dates[0].timestamp);
       else
         return null;
     }

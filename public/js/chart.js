@@ -29,21 +29,28 @@ $(document).scroll(function(e){
     // do something when a user gets 50% of the way down my page
     if(scrollPercent > 50) {
       loaded = true;
-        // run a function called doSomething
+
       $.get('http://localhost:5000'+userUrl+'/logtime',(chartData)=> {
 
-        $('#loader').hide();
-        $('#chartArea').show();
-        console.log(chartData);
-        drawCharts(chartData);
+        if(typeof chartData === 'string'){
+          $('#spinner').hide();
+          document.getElementById('loader-msg').textContent = chartData;
+
+        }
+        else{
+          $('#loader').hide();
+          $('#chartArea').show();
+          console.log(chartData);
+          drawCharts(chartData);
 
 
-        document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
-        document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
-        document.getElementById('totHrs').textContent = chartData.dailyData.totalHours;
-        document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
-        document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
-        document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
+          document.getElementById('streak-num').textContent = chartData.dailyData.currentStreak;
+          document.getElementById('longStreak').textContent = chartData.dailyData.longestStreak;
+          document.getElementById('totHrs').textContent = chartData.dailyData.totalHours;
+          document.getElementById('currWeek').textContent = chartData.weeklyData.thisWeekHrs;
+          document.getElementById('lastWeek').textContent = chartData.weeklyData.lastWeekHrs;
+          document.getElementById('avgHrs').textContent = chartData.weeklyData.avgWeekHrs;
+        }
 
         //console.log(chartData);
       });
