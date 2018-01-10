@@ -272,11 +272,11 @@ function getDailyData(user, cb){
         _id: user._id
       }
     },{
-      $unwind: "$google.projects"
+      $unwind: "$"+user.method+".projects"
     },{
       $lookup: {
         from: "projects",
-        localField: "google.projects",
+        localField: user.method+".projects",
         foreignField: "_id",
         as: "project_docs"
       }
@@ -384,6 +384,7 @@ function getDailyData(user, cb){
 
 
 function getPieData(user, cb){
+  const method = user.method;
 
   User.aggregate([
     {
@@ -391,11 +392,11 @@ function getPieData(user, cb){
         _id: user._id
       }
     },{
-      $unwind: "$google.projects"
+      $unwind: "$"+user.method+".projects"
     },{
       $lookup: {
         from: "projects",
-        localField: "google.projects",
+        localField: user.method+".projects",
         foreignField: "_id",
         as: "project_docs"
       }
@@ -439,11 +440,11 @@ function getWeeklyData(user, diffWeek, cb){
         _id: user._id
       }
     },{
-      $unwind: "$google.projects"
+      $unwind: "$"+user.method+".projects"
     },{
       $lookup: {
         from: "projects",
-        localField: "google.projects",
+        localField: user.method+".projects",
         foreignField: "_id",
         as: "project_docs"
       }
@@ -588,11 +589,13 @@ function getWeeklyData(user, diffWeek, cb){
 
 
 function getTableData(user, cb){
+  const method = user.method;
+
   User.findById(user._id)
-    .populate('google.projects')
+    .populate(method+'.projects')
     .exec((err,user)=>{
       //console.log(JSON.stringify(user.google.projects));
-      getData(user.google.projects, (tableData)=>{
+      getData(user[method].projects, (tableData)=>{
         const tableDataArr=[];
         tableData.forEach(obj=>{
           tableDataArr.push(Object.keys(obj).map(x=>obj[x]));
