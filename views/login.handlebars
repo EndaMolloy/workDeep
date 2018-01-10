@@ -20,15 +20,17 @@
 
   <form class="form-signin" action="/users/login" method="POST">
 
-  <label for="inputEmail" class="sr-only">Email address</label>
-  <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
 
-  <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
 
-  <div class="signin-controls">
-    <button class="btn btn-lg btn-default btn-block" type="submit">Sign in</button>
-  </div>
+    <div class="signin-controls">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </div>
+
+  </form>
   <div class="signin-more btn-group-justified">
     <a class="btn-forgot btn-link" href="/forgot">Forgot Password</a>
     <a class = "btn-signup btn-link" href="/signup">Create new account</a>

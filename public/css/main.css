@@ -9,9 +9,12 @@ body{
   background-size: cover;
 
   width: 100vw;*/
-
-
 }
+
+.signin-header h1{
+  text-align: center;
+}
+
 
 #greeting h1{
   font-size: 3.5em;
