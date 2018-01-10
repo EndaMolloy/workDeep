@@ -115,9 +115,9 @@ router.route('/logout')
 router.route('/:id/liveProjects')
   .get(isAuthenticated,(req,res)=>{
     User.findById(req.params.id)
-      .populate('google.projects')
+      .populate(req.user.method+'.projects')
       .exec((err,user)=>{
-        const projectsArr = user.google.projects;
+        const projectsArr = user[req.user.method].projects;
         const liveProjectsArr = projectsArr.filter((project)=>{
           return project.completed === false;
         });
@@ -126,7 +126,7 @@ router.route('/:id/liveProjects')
    })
   .post((req,res)=>{
     const newProject = req.body;
-    const projectsArr = req.user.google.projects;
+    const projectsArr = req.user[req.user.method].projects;
     console.log(newProject);
     Project.create(newProject,(err,project)=>{
       if(err){
@@ -147,7 +147,7 @@ router.route('/:id/liveProjects')
 //DELETE LiveProjects or UPDATE as complete
 router.route('/:id/liveprojects/:project_id')
   .delete((req,res)=>{
-    const projectsArr = req.user.google.projects;
+    const projectsArr = req.user[req.user.method].projects;
     Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
       if(err){
         console.log(err);
@@ -167,7 +167,7 @@ router.route('/:id/liveprojects/:project_id')
   })
   .put((req,res)=>{
     const compProject = req.body;
-    const projectsArr = req.user.google.projects;
+    const projectsArr = req.user[req.user.method].projects;
     Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
       res.json(updatedProj);
     })
@@ -471,7 +471,7 @@ function getWeeklyData(user, diffWeek, cb){
 
           //console.log("selected Array : ",result);
 
-          const thisWeek = moment().isoWeek();;
+          const thisWeek = moment().isoWeek();
           const lastWeek = moment().subtract(1,'week').isoWeek();
           const newestDbWeek = result[0]._id.week;
           const nxtNewDbWeek = result[1]._id.week;
@@ -479,8 +479,8 @@ function getWeeklyData(user, diffWeek, cb){
           // console.log("This week: ",thisWeek);
           // console.log("Last week: ",lastWeek);
 
-          let thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
-          let lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek)
+          const thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
+          const lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek);
 
           function getLastWeekHrs(newestDbWeek,nxtNewDbWeek){
               let hrs=0;

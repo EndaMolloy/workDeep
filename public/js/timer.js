@@ -44,6 +44,11 @@ function sendToMongo(time){
       console.log('Something bad happened');
     }else{
       alert(message);
+      timerClear();
+      document.getElementById('button-reset').style.display = 'none';
+      document.getElementById('button-clear').style.display = 'none';
+      document.getElementById('button-finish').style.visibility = 'hidden';
+      document.getElementById('toggle').style.visibility = 'visible';
     }
   });
 }
@@ -130,6 +135,7 @@ $("#button-start").on('click',()=>{
       document.getElementById('button-clear').style.display = 'none';
       document.getElementById('projects').style.display = 'none';
       document.getElementById('button-finish').style.visibility = 'hidden';
+      document.getElementById('toggle').style.visibility = 'hidden';
 
       getTimeValues();
       parseTimeValues();
@@ -144,30 +150,18 @@ $("#button-start").on('click',()=>{
 })
 
 $("#button-reset").on('click',()=>{
-  reset = true;
-  count = 0;
-  clearInterval(Interval);
-  resetValues()
-  setDisplay()
-  document.getElementById('projects').style.display = 'block';
-})
+  timerReset();
+});
 
 $("#button-clear").on('click',()=>{
-
-  reset = true;
-  clearInterval(Interval);
-
-  resetValues()
-  setDisplay()
-  addLabels()
-  modifyInputField()
-  reset = false;
-  document.getElementById('projects').style.display = 'block';
-
-})
+  timerClear();
+});
 
 $("#button-finish").on('click',()=>{
+  timerFinish();
+});
 
+function timerFinish(){
   const confirm = window.confirm("Finish your current session and log your time?")
 
   if(confirm){
@@ -178,10 +172,38 @@ $("#button-finish").on('click',()=>{
     let diffHrs = (sessHrs - hrs)*60*60;
     let diffMins= (sessMins - mins)*60;
     let diffSecs = sessSecs - secs;
+
+    console.log("sessMins:" ,sessMins);
+    console.log("diffHrs:" ,diffHrs);
+    console.log("diffMins:" ,diffMins);
+    console.log("diffSecs:" ,diffSecs);
+
     sendToMongo(convertToMins(diffHrs,diffMins,diffSecs));
   }
+}
 
-})
+function timerReset(){
+  reset = true;
+  count = 0;
+  clearInterval(Interval);
+  resetValues()
+  setDisplay()
+  document.getElementById('projects').style.display = 'block';
+}
+
+function timerClear(){
+  reset = true;
+  clearInterval(Interval);
+
+  resetValues()
+  setDisplay()
+  addLabels()
+  modifyInputField()
+  reset = false;
+  document.getElementById('projects').style.display = 'block';
+}
+
+
 
 function getSelectedProjectId(li){
   if(!li) return;
@@ -258,7 +280,8 @@ function resetValues(){
 }
 
 function convertToMins(hrs,mins,secs){
-  let totalSecs = hrs+mins+secs
+  let totalSecs = hrs+mins+secs;
+  console.log("mins: ", Math.floor(totalSecs/60));
   return Math.floor(totalSecs/60);
 }
 
@@ -270,7 +293,7 @@ function startTimer () {
       alert("Times up")
       clearInterval(Interval);
 
-      sendDataToDb();
+      sendToMongo();
     }
 
     else{

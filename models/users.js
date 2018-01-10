@@ -14,14 +14,10 @@ const userSchema = new Schema({
     email: String,
     username: String,
     password: String,
-    liveProjects: [],
-    projects: [
-      {
-        projectName: String,
-        sessionLength: Number,
-        timestamp: Date
-      }
-    ]
+    projects: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project'
+    }]
 
   },
   google: {
