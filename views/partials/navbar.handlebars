@@ -1,22 +1,19 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/">Deep Work</a>
-    </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        {{#if authenticated}}
-        <!-- <button type="button" name="button" class="btn btn-primary" id='data'></button> -->
-        <li><a href="#dash" class="scroll">Dashboard</a></li>
-        <li><a href="/users/logout" class="scroll">Logout</a></li>
-        {{else}}
-        <li><a href="/login" class="scroll">sign in</a></li>
-        <li><a href="/signup" class="scroll">sign up</a></li>
-        {{/if}}
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+<nav class="navbar navbar-expand navbar-default">
+  <div class="container">
+    <ul class="nav navbar-nav navbar-left">
+      <li><a href="/">Deep Work</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {{#if authenticated}}
+      <!-- <button type="button" name="button" class="btn btn-primary" id='data'></button> -->
+      <li><a href="#dash" class="scroll">Dashboard</a></li>
+      <li><a href="/users/logout" class="scroll">Logout</a></li>
+      {{else}}
+      <li><a href="/login" class="scroll">sign in</a></li>
+      <li><a href="/signup" class="scroll">sign up</a></li>
+      {{/if}}
+    </ul>
+
+  </div>
 </nav>
