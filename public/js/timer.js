@@ -32,6 +32,8 @@
   //   });
   //
   // }
+const time = moment().format('dddd') +", "+moment().format('LL');
+document.getElementById('time').textContent = time;
 
 function sendToMongo(time){
   const timeLog = {

@@ -6,11 +6,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login',(req, res) => {
-    res.render('login');
+    res.render('login',{layout: 'auth'});
 });
 
 router.get('/signup',(req, res) => {
-    res.render('signup');
+    res.render('signup',{layout: 'auth'});
 });
 
 module.exports = router;
