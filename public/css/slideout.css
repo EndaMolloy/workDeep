@@ -55,7 +55,3 @@ body {
 .slideout-open .slideout-menu {
   display: block;
 }
-
-#projects .container{
-  padding-right: 0;
-}

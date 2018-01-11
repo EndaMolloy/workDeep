@@ -474,11 +474,13 @@ function getWeeklyData(user, diffWeek, cb){
           const thisWeek = moment().isoWeek();
           const lastWeek = moment().subtract(1,'week').isoWeek();
           const newestDbWeek = result[0]._id.week;
-          const nxtNewDbWeek = result[1]._id.week;
+          const nxtNewDbWeek = result.length > 1 ? result[1]._id.week : null;
 
           // console.log("This week: ",thisWeek);
           // console.log("Last week: ",lastWeek);
 
+          //if the first value in the array is timestamped as this week then its this weeks hours,
+          //else zero hours for this week.
           const thisWeekHrs = thisWeek === newestDbWeek ? result[0].total : 0;
           const lastWeekHrs = getLastWeekHrs(newestDbWeek,nxtNewDbWeek);
 
@@ -549,6 +551,8 @@ function getWeeklyData(user, diffWeek, cb){
             return iso2Day.map((day)=>Object.values(day));
           }
 
+
+          //put the data in the correct order for the barchart
           function updateChartData(barChartData,lastWeekArr,thisWeekArr){
 
             for(let i=1; i<barChartData.length; i++){
@@ -559,6 +563,7 @@ function getWeeklyData(user, diffWeek, cb){
               }
             }
 
+            //zero padding if no values
             for(let i=0; i<barChartData.length; i++){
                while (barChartData[i].length<2)
                  barChartData[i].push(0);
@@ -572,6 +577,7 @@ function getWeeklyData(user, diffWeek, cb){
               }
             }
 
+            
             for(let i=0; i<barChartData.length; i++){
               while(barChartData[i].length < 3)
                 barChartData[i].push(0);

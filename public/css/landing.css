@@ -11,13 +11,12 @@ html{
 
 #content{
   text-align: center;
-  padding-top: 15%;
+  padding-top: 25%;
 }
 
 #content .buttons #signup {
   background-color: #de4f4f;
   color: #fff;
-  float: left;
   border: none;
   width: 150px;
   line-height: 50px;
@@ -43,7 +42,6 @@ html{
   height: 50px;
   line-height: 50px;
   border: 1px solid #fff;
-  margin-right: 20px;
 }
 
 .btn-custom{
@@ -141,4 +139,14 @@ h1{
  .navbar-default .navbar-toggle:hover,
  .navbar-default .navbar-toggle:focus {
     border: 1px solid #DDD;
+}
+
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 1224px) {
+
+  #content{
+    padding-top: 15%;
+  }
+
 }

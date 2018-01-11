@@ -17,14 +17,14 @@ body{
 
 
 #greeting h1{
-  font-size: 3.5em;
+  font-size: 2em;
 }
 
 .wrapper{
   text-align: center;
   height: 100vh;
+  overflow-x: hidden;
 }
-
 
 
 #buttons{
@@ -63,23 +63,24 @@ body{
 
 #taskInput {
     background: transparent;
-    font-size: 3em;
+    font-size: 2.5em;
     border: none;
 		color: inherit;
 		text-align: center;
 		padding-top: 3%;
-
-		/*-webkit-transition: width .35s ease-in-out;
-  transition: width .35s ease-in-out;*/
 }
 
 textarea:focus, input:focus{
     outline: none;
 }
 
+#main{
+  padding-top: 20%;
+}
+
 #main input{
-  width: 35px;
-  height: 60px;
+  width: 32px;
+  height: 50px;
   background: transparent;
   text-align: center  ;
   border: none;
@@ -102,9 +103,7 @@ span.timeBox  {
   margin-right: 3.5px;
 }
 
-#main{
-  padding-top: 80px;
-}
+
 
 #labels{
   padding-top: 1%;
@@ -113,7 +112,7 @@ span.timeBox  {
 
 
 #labels span{
- padding: 0px 83px;
+ padding: 0px 78px;
  margin-right: 2px;
 }
 
@@ -133,6 +132,7 @@ span.timeBox  {
 
 .quote{
   margin-top: 30px;
+  padding: 0 15px;
 }
 
 .custom-icon {
@@ -153,13 +153,24 @@ span.timeBox  {
 }
 
 
-
 .fix-editor {
   display: none;
 }
 .icon-wrapper {
   display: inline-block;
 }
+
+#projects h4{
+  padding: 5px;
+  background: blue;
+  color: white;
+  margin-bottom: 0;
+}
+
+.menu-heading h2{
+  padding-left: 5px;
+}
+
 
 /*NAV BAR */
 
@@ -268,6 +279,9 @@ span.timeBox  {
   border-bottom: 0;
 }
 
+#heatmap{
+  display: none;
+}
 
 #streak-num{
   font-size: 60px;
@@ -387,8 +401,6 @@ legend {
 
 #projects{
   padding-top: 30px;
-  width: 256px;
-  height: 300px;
   margin-left: 0;
   text-align: left;
   overflow: hidden;
@@ -419,7 +431,7 @@ legend {
 }
 
 .projects .complete{
-  margin: 0;
+  margin: 0 5px;
   float: right;
   display: none;
 }
@@ -438,7 +450,8 @@ legend {
 }
 
 .projects span{
-  margin-right: 15px;
+  margin-right: 5px;
+  margin-left: 5px
 }
 
 .projects input{
@@ -497,6 +510,54 @@ margin-right: -15px !important;
 .navbar-right {
 float: right!important;
 }
+
+
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 1224px) {
+
+/*TIMER----------------------------*/
+  #greeting h1{
+    font-size: 3.5em;
+  }
+
+  #taskInput {
+      background: transparent;
+      font-size: 3em;
+      border: none;
+  		color: inherit;
+  		text-align: center;
+  		padding-top: 3%;
+  }
+
+  #main{
+    padding-top: 80px;
+  }
+
+  #main input{
+    width: 35px;
+    height: 60px;
+    background: transparent;
+    text-align: center  ;
+    border: none;
+    border-bottom: 1.5px solid white;
+    transition: all 0.6s;
+  }
+
+  #labels span{
+   padding: 0px 83px;
+   margin-right: 2px;
+  }
+
+
+/*DASH----------------------------*/
+
+  #heatmap{
+    display: block;
+  }
+
+}
+
 
 
 {
