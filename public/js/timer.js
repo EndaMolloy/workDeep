@@ -173,7 +173,7 @@ function timerFinish(){
     let diffMins= (sessMins - mins)*60;
     let diffSecs = sessSecs - secs;
 
-    sendToMongo(convertToMins(diffHrs,diffMins,diffSecs));
+    sendToMongo(convertToHrs(diffHrs,diffMins,diffSecs));
     clearInterval(Interval);
   }
 }
@@ -233,17 +233,22 @@ function saveSessionLength(){
   sessSecsTen = secsTen;
   sessSecsOne = secsOne;
 
-  sessHrs = Number(sessHrsTen+sessHrsOne);
-  sessMins = Number(sessMinsTen+sessMinsOne);
+  //all values in seconds
+  sessHrs = Number(sessHrsTen+sessHrsOne)*60*60;
+  sessMins = Number(sessMinsTen+sessMinsOne)*60;
   sessSecs = Number(sessSecsTen+sessMinsOne);
 }
 
 function parseTimeValues(){
-   hrs =  hrsTen.toString() + hrsOne.toString();
-   mins = minsTen.toString() + minsOne.toString();
-   secs = secsTen.toString() + secsOne.toString();
+  hrs =  hrsTen.toString() + hrsOne.toString();
+  mins = minsTen.toString() + minsOne.toString();
+  secs = secsTen.toString() + secsOne.toString();
 
-   console.log("mins:" ,mins);
+  console.log("mins:" ,mins);
+}
+
+function sessionValuesToHrs(){
+  return (sessHrs+sessMins+sessSecs)/3600;
 }
 
 function modifyInputField(){
@@ -279,10 +284,10 @@ function resetValues(){
   secsOne = sessSecsOne
 }
 
-function convertToMins(hrs,mins,secs){
+function convertToHrs(hrs,mins,secs){
   let totalSecs = hrs+mins+secs;
-  console.log("mins: ", Math.floor(totalSecs/60));
-  return Math.floor(totalSecs/60);
+  console.log("hrs: ", totalSecs/3600);
+  return totalSecs/3600;
 }
 
 function startTimer () {
@@ -293,7 +298,7 @@ function startTimer () {
       alert("Times up")
       clearInterval(Interval);
 
-      sendToMongo();
+      sendToMongo(sessionValuesToHrs());
     }
 
     else{

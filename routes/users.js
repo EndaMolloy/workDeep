@@ -3,7 +3,10 @@ const router = express.Router();
 const Joi = require('joi');
 const passport = require('passport');
 const moment = require('moment');
-const mongoose = require('mongoose')
+const randomstring = require('randomstring');
+const nodemailer = require('nodemailer');
+const mailer = require('../config/nodemailer');
+const mongoose = require('mongoose');
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 
@@ -22,23 +25,23 @@ const userSchema = Joi.object().keys({
 
 
 const isAuthenticated = (req, res, next)=> {
-    //passportjs function
-    if(req.isAuthenticated()){
-      return next();
-    }else{
-      req.flash('error', 'Oops looks like you\'re not allowed to go there');
-      res.redirect('/');
-    }
+  //passportjs function
+  if(req.isAuthenticated()){
+    return next();
+  }else{
+    req.flash('error', 'Oops looks like you\'re not allowed to go there');
+    res.redirect('/');
+  }
 };
 
 const isNotAuthenticated = (req, res, next)=> {
-    //passportjs function
-    if(req.isAuthenticated()){
-      req.flash('error', 'Oops looks like you\'re not allowed to go there');
-      res.redirect('/');
-    }else{
-      next();
-    }
+  //passportjs function
+  if(req.isAuthenticated()){
+    req.flash('error', 'Oops looks like you\'re not allowed to go there');
+    res.redirect('/');
+  }else{
+    next();
+  }
 };
 
 //REGISTER A NEW USER
@@ -57,7 +60,7 @@ router.route('/register')
     }
 
     //check if the email already exists
-    User.findOne({'email': result.value.email}, (err,user)=>{
+    User.findOne({'local.email': result.value.email}, (err,user)=>{
       if(user){
         req.flash('error', 'Email is already in use');
         res.redirect('/users/register');
@@ -83,12 +86,9 @@ router.route('/register')
               req.flash('success', 'You may now login.')
               res.redirect('/login')
             });
-
         })
       }
-
     })
-
   })
 
 router.route('/login')
@@ -102,6 +102,79 @@ router.route('/login')
     res.redirect('/users/'+req.user._id)
   });
 
+router.route('/forgot')
+  .get(isNotAuthenticated,(req,res) => {
+    res.render('forgot', {layout: 'auth'});
+  })
+  .post(async(req,res,next)=> {
+    try{
+
+      const secretToken = randomstring.generate();
+
+      const user = await User.findOne({'local.email': req.body.email});
+      if(!user){
+        req.flash('error', 'No account with that email address exists.');
+        return res.redirect('/forgot');
+      }
+
+      user.local.resetPasswordToken = secretToken;
+      user.local.resetPasswordExpires = Date.now() + 3600000;
+
+      await user.save();
+
+      const html = `Hi ${user.local.username} <br/></br>You are receiving this because you (or someone else) have requested the reset of the password for your account.<br/>
+          Please click on the following link, or paste this into your browser to complete the process:<br/><br/>
+          <a href ="http://${req.headers.host}/users/reset/${secretToken}">http://${req.headers.host}/reset/${secretToken}</a><br/></br>
+          If you did not request this, please ignore this email and your password will remain unchanged.`;
+
+      //send the request email
+      await mailer.sendEmail('workDeep.com','workDeep password reset', req.body.email, html);
+
+      req.flash('success', `An e-mail has been sent to ${req.body.email} with further instructions.`);
+      res.redirect('/forgot');
+    }
+    catch(err){
+      next(err);
+    }
+  });
+
+router.route('/reset/:token')
+  .get((req,res) => {
+    User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}},(err, user)=>{
+      if(!user){
+        req.flash('error', 'Your link has expired');
+        return res.redirect('/forgot');
+      }
+      res.render('reset' ,{layout: 'auth', token: req.params.token});
+    });
+  })
+  .post(async(req,res,next)=> {
+    try {
+      const user = await User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}});
+      if(!user){
+        req.flash('error', 'Your link has expired');
+        return res.redirect('/forgot');
+      }
+
+      User.hashPassword(req.body.password, (err, hash)=>{
+        if(err) console.log(err);
+        else{
+          user.local.password = hash;
+          user.local.resetPasswordToken = "";
+          user.local.resetPasswordExpires = "";
+
+          user.save();
+
+          req.flash('success','Your password has been changed');
+          res.redirect('/');
+        }
+      })
+
+
+    } catch (err) {
+      next(err);
+    }
+  })
 
 router.route('/logout')
   .get(isAuthenticated,(req,res)=>{
@@ -216,12 +289,12 @@ router.route('/:id')
     }
 
   })
-  .post((req,res,next)=>{
-    // console.log(req.body);
-    // console.log(req.user);
-    req.user.google.projects.push(req.body);
-    req.user.save();
-  });
+  // .post((req,res,next)=>{
+  //   // console.log(req.body);
+  //   // console.log(req.user);
+  //   req.user.google.projects.push(req.body);
+  //   req.user.save();
+  // });
 
 
 //GOOGLE AUTH ROUTES
@@ -577,7 +650,7 @@ function getWeeklyData(user, diffWeek, cb){
               }
             }
 
-            
+
             for(let i=0; i<barChartData.length; i++){
               while(barChartData[i].length < 3)
                 barChartData[i].push(0);

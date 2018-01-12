@@ -35,12 +35,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
+
+//cookie: { maxAge: 600000 },
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  cookie: { maxAge: 600000 },
   secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false

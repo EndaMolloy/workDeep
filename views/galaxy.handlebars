@@ -18,7 +18,7 @@
 
   <main id="panel">
     <nav class="navbar navbar-expand navbar-default">
-      <div class="container-fluid">
+      <div class="container">
         <button id="toggle" class="toggle-button">☰</button>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/users/logout" class="scroll"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
@@ -43,10 +43,10 @@
                  <!-- need to find a way to move the oninput to css if possible -->
                   <input class="timeBox" type="text" id="hoursTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                   <input class="timeBox" type="text" id="hoursOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-                  <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2"/>
-                  <input class="timeBox" type="text" id="minutesOne" value="5"/>
-                  <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0"/>
-                  <input class="timeBox" type="text" id="secondsOne" value="0"/>
+                  <span class="timeBox">:</span><input class="timeBox" type="text" id="minutesTen" value="2" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                  <input class="timeBox" type="text" id="minutesOne" value="5" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                  <span class="timeBox">:</span><input class="timeBox" type="text" id="secondsTen" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                  <input class="timeBox" type="text" id="secondsOne" value="0" maxlength="1"oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
 
               </div>
 
