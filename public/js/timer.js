@@ -99,9 +99,9 @@ parseTimeValues();
 //listen for user inputs to change countdown timer value
 for(let i=0; i<inputBoxes.length; i++){
   inputBoxes[i].addEventListener('change',(ev)=>{
-    getTimeValues()
-    saveSessionLength()
-    parseTimeValues().attr('action')
+    getTimeValues();
+    saveSessionLength();
+    parseTimeValues();
 
   })
 }
@@ -135,7 +135,6 @@ $("#button-start").on('click',()=>{
       document.getElementById('play').classList.add('fa-pause');
       document.getElementById('button-reset').style.display = 'none';
       document.getElementById('button-clear').style.display = 'none';
-      document.getElementById('projects').style.display = 'none';
       document.getElementById('button-finish').style.visibility = 'hidden';
       document.getElementById('toggle').style.visibility = 'hidden';
 
@@ -167,20 +166,15 @@ function timerFinish(){
   const confirm = window.confirm("Finish your current session and log your time?")
 
   if(confirm){
-    clearInterval(Interval);
-    parseTimeValues();
 
+    parseTimeValues();
     //get values in seconds
     let diffHrs = (sessHrs - hrs)*60*60;
     let diffMins= (sessMins - mins)*60;
     let diffSecs = sessSecs - secs;
 
-    console.log("sessMins:" ,sessMins);
-    console.log("diffHrs:" ,diffHrs);
-    console.log("diffMins:" ,diffMins);
-    console.log("diffSecs:" ,diffSecs);
-
     sendToMongo(convertToMins(diffHrs,diffMins,diffSecs));
+    clearInterval(Interval);
   }
 }
 
@@ -190,7 +184,8 @@ function timerReset(){
   clearInterval(Interval);
   resetValues()
   setDisplay()
-  document.getElementById('projects').style.display = 'block';
+  document.getElementById('toggle').style.visibility = 'visible';
+  document.getElementById('button-finish').style.visibility = 'hidden';
 }
 
 function timerClear(){
@@ -202,7 +197,8 @@ function timerClear(){
   addLabels()
   modifyInputField()
   reset = false;
-  document.getElementById('projects').style.display = 'block';
+  document.getElementById('toggle').style.visibility = 'visible';
+  document.getElementById('button-finish').style.visibility = 'hidden';
 }
 
 
@@ -243,9 +239,11 @@ function saveSessionLength(){
 }
 
 function parseTimeValues(){
-   hrs =  Number(hrsTen+ hrsOne)
-   mins = Number(minsTen + minsOne)
-   secs = Number(secsTen + secsOne)
+   hrs =  hrsTen.toString() + hrsOne.toString();
+   mins = minsTen.toString() + minsOne.toString();
+   secs = secsTen.toString() + secsOne.toString();
+
+   console.log("mins:" ,mins);
 }
 
 function modifyInputField(){
@@ -299,42 +297,42 @@ function startTimer () {
     }
 
     else{
-      if(secsOne>0){
+      if(secsOne>'0'){
         secsOne --;
       }
       else{
-        if(secsTen>0){
-          secsOne=9;
+        if(secsTen>'0'){
+          secsOne='9';
           secsTen--;
         }
         else{
-          if(minsOne>0){
-            secsOne=9
-            secsTen=5;
+          if(minsOne>'0'){
+            secsOne='9';
+            secsTen='5';
             minsOne--;
           }
           else{
-            if(minsTen>0){
-              secsOne=9
-              secsTen=5;
-              minsOne=9
+            if(minsTen>'0'){
+              secsOne='9';
+              secsTen='5';
+              minsOne='9';
               minsTen--;
             }
             else{
-              if(hrsOne>0){
-                secsOne=9
-                secsTen=5;
-                minsOne=9
-                minsTen=5
+              if(hrsOne>'0'){
+                secsOne='9';
+                secsTen='5';
+                minsOne='9';
+                minsTen='5';
                 hrsOne--;
               }
               else{
-                if(hrsTen>0){
-                  secsOne=9
-                  secsTen=5;
-                  minsOne=9
-                  minsTen=5
-                  hrsOne=9
+                if(hrsTen>'0'){
+                  secsOne='9';
+                  secsTen='5';
+                  minsOne='9';
+                  minsTen='5';
+                  hrsOne='9';
                   hrsTen--;
                 }
               }
@@ -344,7 +342,7 @@ function startTimer () {
       }
     }
 
-  setDisplay()
+  setDisplay();
 
 }
 
