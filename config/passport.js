@@ -35,6 +35,12 @@ passport.use('local', new LocalStrategy({
             if (!isValid) {
               return done(null, false, { message: 'Incorrect password.' });
             }
+
+            //check if the account has been verified
+            if(!user.local.active){
+              return done(null, false, {message: 'Please verify your email before logging in.'})
+            }
+
               return done(null, user);
           }
       });

@@ -17,8 +17,13 @@ const Project = require('../models/projects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
-  username: Joi.string().min(3).max(20).required(),
+  username: Joi.string().min(8).max(20).required(),
   email: Joi.string().email(),
+  password: Joi.string().regex(/^[a-zA-Z0-9]{8,30}$/).required(),
+  confirmationPassword: Joi.any().valid(Joi.ref('password')).required()
+});
+
+const passwordSchema = Joi.object().keys({
   password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
   confirmationPassword: Joi.any().valid(Joi.ref('password')).required()
 });
@@ -71,26 +76,64 @@ router.route('/register')
           if(err){
             throw err;
           }
-            delete result.value.confirmationPassword;
-            result.value.password = hash;
 
-            let newUser = new User({
-              method: 'local',
-              local: result.value
-            });
+          //generate secretToken for email verification
+          const secretToken = randomstring.generate();
+          result.value.secretToken = secretToken;
 
-            newUser.save((err)=>{
-              if(err){
-                throw new Error("Something bad happened, please try again")
-              }
-              req.flash('success', 'You may now login.')
-              res.redirect('/login')
-            });
+          //flag the account as unverified
+          result.value.active = false;
+
+          delete result.value.confirmationPassword;
+          result.value.password = hash;
+
+          let newUser = new User({
+            method: 'local',
+            local: result.value
+          });
+
+          newUser.save((err)=>{
+            if(err){
+              throw new Error("Something bad happened, please try again")
+            }
+
+            const html = `Hi ${result.value.username}
+            <br/><br/>
+            Please click the link below to confirm your email address and activate your account.
+            <br/><br/>
+            <a href="http://localhost:5000/users/verify/${secretToken}">http://localhost:5000/users/verify/${secretToken}</a>`
+
+            mailer.sendEmail('workDeep.com','workDeep - please verify your email', result.value.email, html);
+
+            req.flash('success', 'Please check your email for a verification link.')
+            res.redirect('login');
+          });
         })
       }
     })
   })
 
+//VERIFY user email address
+router.route('/verify/:token')
+  .get((req, res)=>{
+    User.findOne({'local.secretToken': req.params.token},(err, user)=>{
+      if(!user){
+        req.flash('error', 'Looks like that link doesn\'t work.');
+        return res.redirect('/');
+      }
+
+      user.local.active = true;
+      user.save((err)=>{
+        if(err) console.log(err);
+        else{
+          req.flash('success','Verified! You may now sign in.')
+          res.redirect('/login');
+        }
+      });
+    });
+  })
+
+//LOGIN via passport
 router.route('/login')
   .get(isNotAuthenticated,(req, res) => {
     res.render('login');
@@ -102,6 +145,7 @@ router.route('/login')
     res.redirect('/users/'+req.user._id)
   });
 
+//REQUEST password reset
 router.route('/forgot')
   .get(isNotAuthenticated,(req,res) => {
     res.render('forgot', {layout: 'auth'});
@@ -138,6 +182,7 @@ router.route('/forgot')
     }
   });
 
+//VERIFY
 router.route('/reset/:token')
   .get((req,res) => {
     User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}},(err, user)=>{
@@ -156,7 +201,15 @@ router.route('/reset/:token')
         return res.redirect('/forgot');
       }
 
-      User.hashPassword(req.body.password, (err, hash)=>{
+      const result = Joi.validate(req.body, passwordSchema);
+
+      if(result.error){
+        req.flash('error', 'Data is not valid please try again');
+        res.redirect(`/users/reset/${req.params.token}`);
+        return;
+      }
+
+      User.hashPassword(result.value.password, (err, hash)=>{
         if(err) console.log(err);
         else{
           user.local.password = hash;
@@ -179,13 +232,13 @@ router.route('/reset/:token')
     }
   })
 
+//LOGOUT of app
 router.route('/logout')
   .get(isAuthenticated,(req,res)=>{
     req.logout();
     req.flash('success', 'Logged out successfully')
     res.redirect('/');
   });
-
 
 //GET and ADD LiveProjects
 router.route('/:id/liveProjects')
@@ -203,7 +256,7 @@ router.route('/:id/liveProjects')
   .post((req,res)=>{
     const newProject = req.body;
     const projectsArr = req.user[req.user.method].projects;
-    console.log(newProject);
+
     Project.create(newProject,(err,project)=>{
       if(err){
         console.log(err);
@@ -303,7 +356,6 @@ router.route('/:id')
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
   .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
-
 
 router.route('/auth/google/callback')
   .get(passport.authenticate('google', {

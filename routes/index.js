@@ -21,4 +21,8 @@ router.get('/reset',(req, res) => {
     res.render('reset', {layout: 'auth'});
 })
 
+router.get('/verify',(req,res)=> {
+    res.render('verify', {layout: 'auth'})
+})
+
 module.exports = router;

@@ -14,6 +14,8 @@ const userSchema = new Schema({
     email: String,
     username: String,
     password: String,
+    secretToken: String,
+    active: Boolean,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     projects: [{
