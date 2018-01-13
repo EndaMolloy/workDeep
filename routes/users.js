@@ -166,9 +166,11 @@ router.route('/forgot')
 
       await user.save();
 
-      const html = `Hi ${user.local.username} <br/></br>You are receiving this because you (or someone else) have requested the reset of the password for your account.<br/>
+      const html = `Hi ${user.local.username}S 
+          <br/></br>You have requested the reset of the password for your account.<br/>
           Please click on the following link, or paste this into your browser to complete the process:<br/><br/>
-          <a href ="http://${req.headers.host}/users/reset/${secretToken}">http://${req.headers.host}/reset/${secretToken}</a><br/></br>
+          <a href ="http://${req.headers.host}/users/reset/${secretToken}">http://${req.headers.host}/reset/${secretToken}</a>
+          <br/></br>
           If you did not request this, please ignore this email and your password will remain unchanged.`;
 
       //send the request email
@@ -218,7 +220,9 @@ router.route('/reset/:token')
 
           user.save();
 
-          const html = `Hi ${user.local.username} <br/></br>This is confirmation that the password for the account registered to this email address has be changed.`;
+          const html = `Hi ${user.local.username}
+          <br/></br>This is confirmation that the password for the account registered to this email address has be changed.
+          <br/></br>Have a nice day`;
 
           mailer.sendEmail('workDeep.com','workDeep - password reset confirmation', user.local.email, html);
 
@@ -343,14 +347,8 @@ router.route('/:id')
         username: req.user.google.username
       });
     }
-
   })
-  // .post((req,res,next)=>{
-  //   // console.log(req.body);
-  //   // console.log(req.user);
-  //   req.user.google.projects.push(req.body);
-  //   req.user.save();
-  // });
+
 
 
 //GOOGLE AUTH ROUTES
