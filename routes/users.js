@@ -165,11 +165,14 @@ router.route('/reset/:token')
 
           user.save();
 
-          req.flash('success','Your password has been changed');
-          res.redirect('/');
-        }
-      })
+          const html = `Hi ${user.local.username} <br/></br>This is confirmation that the password for the account registered to this email address has be changed.`;
 
+          mailer.sendEmail('workDeep.com','workDeep - password reset confirmation', user.local.email, html);
+
+          req.flash('success','Your password has been changed. You may now login with your new password');
+          res.redirect('/login');
+        }
+      });
 
     } catch (err) {
       next(err);
