@@ -41,30 +41,21 @@ const userSchema = new Schema({
 const User = mongoose.model('user', userSchema);
 module.exports = User;
 
-module.exports.hashPassword = (password, cb) =>{
-  bcrypt.genSalt(10, (err, salt) =>{
-    if(err){
-      throw new Error('Hashing failed',err);
-    }else{
-      bcrypt.hash(password, salt,(err,hash) =>{
-        if(err){
-          throw new Error('Hashing failed',err);
-        }else{
+module.exports.hashPassword = async(password) =>{
+  try{
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+  }catch(err){
+    next(err);
+  }
+};
 
-          return cb(null,hash);
 
-        }
-      });
-    }
-  });
-}
-
-module.exports.validPassword = (inputPassword, hashedPassword, cb) => {
-  bcrypt.compare(inputPassword, hashedPassword, (err,res)=>{
-    if(err){
-      throw new Error('Comparing failed', err);
-    }else{
-      return cb(null, res);
-    }
-  })
-}
+module.exports.validPassword = async (inputPassword, hashedPassword) => {
+  try{
+    return await bcrypt.compare(inputPassword, hashedPassword);
+  }
+  catch(err){
+    throw new Error('Comparing failed', err);
+  }
+};

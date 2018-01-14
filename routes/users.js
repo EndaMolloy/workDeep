@@ -17,7 +17,7 @@ const Project = require('../models/projects');
 const seedDB = require("../seeds");
 
 const userSchema = Joi.object().keys({
-  username: Joi.string().min(8).max(20).required(),
+  username: Joi.string().min(2).max(20).required(),
   email: Joi.string().email(),
   password: Joi.string().regex(/^[a-zA-Z0-9]{8,30}$/).required(),
   confirmationPassword: Joi.any().valid(Joi.ref('password')).required()
@@ -51,67 +51,63 @@ const isNotAuthenticated = (req, res, next)=> {
 
 //REGISTER A NEW USER
 router.route('/register')
-  .get(isNotAuthenticated,(req, res) => {
-    res.render('register');
-  })
-  .post((req, res, next)=>{
+  .post(async(req, res, next)=>{
 
-    const result = Joi.validate(req.body, userSchema);
+    try{
+      const result = Joi.validate(req.body, userSchema);
 
-    if(result.error){
-      req.flash('error', 'Data is not valid please try again');
-      res.redirect('/users/register');
-      return;
-    }
+      if(result.error){
+        req.flash('error', 'Data is not valid please try again');
+        res.redirect('/signup');
+        return;
+      }
 
-    //check if the email already exists
-    User.findOne({'local.email': result.value.email}, (err,user)=>{
+      //check if the email already exists, if it does redirect to signup page and notify
+      const user = await User.findOne({'local.email': result.value.email});
       if(user){
         req.flash('error', 'Email is already in use');
-        res.redirect('/users/register');
+        res.redirect('/signup');
         return;
-      }else{
-        //hash password before saving to DB
-        User.hashPassword(result.value.password, (err, hash)=>{
-          if(err){
-            throw err;
-          }
-
-          //generate secretToken for email verification
-          const secretToken = randomstring.generate();
-          result.value.secretToken = secretToken;
-
-          //flag the account as unverified
-          result.value.active = false;
-
-          delete result.value.confirmationPassword;
-          result.value.password = hash;
-
-          let newUser = new User({
-            method: 'local',
-            local: result.value
-          });
-
-          newUser.save((err)=>{
-            if(err){
-              throw new Error("Something bad happened, please try again")
-            }
-
-            const html = `Hi ${result.value.username}
-            <br/><br/>
-            Please click the link below to confirm your email address and activate your account.
-            <br/><br/>
-            <a href="http://localhost:5000/users/verify/${secretToken}">http://localhost:5000/users/verify/${secretToken}</a>`
-
-            mailer.sendEmail('workDeep.com','workDeep - please verify your email', result.value.email, html);
-
-            req.flash('success', 'Please check your email for a verification link.')
-            res.redirect('login');
-          });
-        })
       }
-    })
-  })
+      //hash password before saving to DB
+      const hash = await User.hashPassword(result.value.password);
+      delete result.value.confirmationPassword;
+      result.value.password = hash;
+
+      //generate secretToken for email verification
+      const secretToken = randomstring.generate();
+      result.value.secretToken = secretToken;
+
+      //flag the account as unverified
+      result.value.active = false;
+
+      //creat new user
+      const newUser = await new User({
+        method: 'local',
+        local: result.value
+      });
+
+      await newUser.save();
+
+      //generate and send verification email.
+      const html = `Hi ${result.value.username}
+      <br/><br/>
+      Please click the link below to confirm your email address and activate your account.
+      <br/><br/>
+      <a href="http://localhost:5000/users/verify/${secretToken}">http://localhost:5000/users/verify/${secretToken}</a>`
+
+      await mailer.sendEmail('workDeep.com','workDeep - please verify your email', result.value.email, html);
+
+      req.flash('success', 'Please check your email for a verification link.')
+      res.redirect('login');
+
+    }
+    catch(err){
+      next(err)
+    }
+
+  });
+
 
 //VERIFY user email address
 router.route('/verify/:token')
@@ -166,7 +162,7 @@ router.route('/forgot')
 
       await user.save();
 
-      const html = `Hi ${user.local.username}S 
+      const html = `Hi ${user.local.username}S
           <br/></br>You have requested the reset of the password for your account.<br/>
           Please click on the following link, or paste this into your browser to complete the process:<br/><br/>
           <a href ="http://${req.headers.host}/users/reset/${secretToken}">http://${req.headers.host}/reset/${secretToken}</a>
@@ -184,7 +180,7 @@ router.route('/forgot')
     }
   });
 
-//VERIFY
+//VERIFY and handle user password change
 router.route('/reset/:token')
   .get((req,res) => {
     User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}},(err, user)=>{
@@ -211,30 +207,29 @@ router.route('/reset/:token')
         return;
       }
 
-      User.hashPassword(result.value.password, (err, hash)=>{
-        if(err) console.log(err);
-        else{
-          user.local.password = hash;
-          user.local.resetPasswordToken = "";
-          user.local.resetPasswordExpires = "";
+      const hash = await User.hashPassword(result.value.password);
 
-          user.save();
+      //asign new password and clear password flags
+      user.local.password = hash;
+      user.local.resetPasswordToken = "";
+      user.local.resetPasswordExpires = "";
 
-          const html = `Hi ${user.local.username}
-          <br/></br>This is confirmation that the password for the account registered to this email address has be changed.
-          <br/></br>Have a nice day`;
+      await user.save();
 
-          mailer.sendEmail('workDeep.com','workDeep - password reset confirmation', user.local.email, html);
+      //send email to user to confirm password change
+      const html = `Hi ${user.local.username}
+      <br/></br>This is confirmation that the password for the account registered to this email address has be changed.
+      <br/></br>Have a nice day`;
 
-          req.flash('success','Your password has been changed. You may now login with your new password');
-          res.redirect('/login');
-        }
-      });
+      await mailer.sendEmail('workDeep.com','workDeep - password reset confirmation', user.local.email, html);
 
-    } catch (err) {
+      req.flash('success','Your password has been changed. You may now login with your new password');
+      res.redirect('/login');
+
+      } catch (err) {
       next(err);
     }
-  })
+  });
 
 //LOGOUT of app
 router.route('/logout')

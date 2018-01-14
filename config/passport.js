@@ -19,34 +19,36 @@ passport.use('local', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
   },
-  function(email, password, done) {
+  async(email, password, done)=> {
 
-    //check if the email already exists
-    User.findOne({ 'local.email': email }, (err, user)=> {
-      if (err) { return done(err); }
+    try{
+      //check if the email already exists
+      const user = await User.findOne({ 'local.email': email });
+
       if (!user) {
         return done(null, false, { message: 'No user with that email.' });
       }
+
       //check if password is valid
-      User.validPassword(password, user.local.password,(err, isValid)=>{
-          if(err){
-            throw new Error('Something went wrong')
-          }else{
-            if (!isValid) {
-              return done(null, false, { message: 'Incorrect password.' });
-            }
+      const isValid = await User.validPassword(password, user.local.password);
 
-            //check if the account has been verified
-            if(!user.local.active){
-              return done(null, false, {message: 'Please verify your email before logging in.'})
-            }
+      if (!isValid) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
 
-              return done(null, user);
-          }
-      });
-    });
+      //check if the account has been verified
+      if(!user.local.active){
+        return done(null, false, {message: 'Please verify your email before logging in.'})
+      }
+        return done(null, user);
+    }
+
+    catch(err){
+      next(err);
+    }
   }
 ));
+
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -57,33 +59,30 @@ passport.use('google', new GoogleStrategy({
     clientSecret: process.env.GOOGLE_SECRET,
     callbackURL: 'http://localhost:5000/users/auth/google/callback'
   },
-  (accessToken, refreshToken, profile, done)=> {
-    //find the user given the email
-    User.findOne({ 'google.googleId': profile.id }, function (err, user) {
-      if(err)
-        return done(err);
+  async (accessToken, refreshToken, profile, done)=> {
+
+    try{
+      //find the user given the email
+      const user = await User.findOne({ 'google.googleId': profile.id });
 
       if(user){
         return done(null, user);
-      }else{
+      }
+      //if new account, create new user
+      const newUser = await new User({
+        method: 'google',
+        google: {
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        username: profile.name.givenName
+        }
+      });
 
-        //if new account
-        let newUser = new User({
-          method: 'google',
-          google: {
-            googleId: profile.id,
-            email: profile.emails[0].value,
-            username: profile.name.givenName
-          }
-        });
+      await newUser.save();
+      done(null, newUser);
 
-        newUser.save((err)=>{
-          if(err){
-            done(err, false, err.message)
-          }
-            done(null, newUser)
-        })
-      };
-    });
+    }catch(err){
+      return done(err, false, err.message)
+    }
   }
 ));

@@ -13,9 +13,6 @@ router.get('/signup',(req, res) => {
     res.render('signup',{layout: 'auth'});
 });
 
-router.get('/forgot',(req, res) => {
-    res.render('forgot', {layout: 'auth'});
-})
 
 router.get('/reset',(req, res) => {
     res.render('reset', {layout: 'auth'});
