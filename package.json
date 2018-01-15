@@ -29,6 +29,7 @@
     "express-session": "^1.15.2",
     "joi": "^13.0.2",
     "moment": "^2.19.4",
+    "mongo-round": "^1.0.0",
     "mongoose": "^4.10.8",
     "mongoose-deep-populate": "^3.0.0",
     "morgan": "^1.8.1",

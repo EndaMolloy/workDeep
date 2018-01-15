@@ -6,6 +6,7 @@ const moment = require('moment');
 const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
 const mailer = require('../config/nodemailer');
+const round = require('mongo-round');
 const mongoose = require('mongoose');
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 
@@ -424,11 +425,11 @@ function getDailyData(user, cb){
       sortedResult = result.sort((a,b)=> {
         return b._id - a._id;
       });
-      console.log(sortedResult);
+      //console.log(sortedResult);
 
       const longestStreak = getLongestStreak(sortedResult);
       const currentStreak = getCurrentStreak(sortedResult);
-      const totalHours = getTotalHours(sortedResult);
+      const totalHours = Math.round(getTotalHours(sortedResult));
       dailyData.longestStreak = longestStreak;
       dailyData.currentStreak = currentStreak;
       dailyData.totalHours = totalHours;
@@ -528,14 +529,20 @@ function getPieData(user, cb){
     },{
       $group: {
       _id: "$project_docs.projectName",
-      total: { $sum: "$project_docs.time.sessionLength"  }
-        }
+      total: { $sum: "$project_docs.time.sessionLength" }
       }
+    },{
+      $project:{
+      _id: "$_id",
+      total: round("$total")
+      }
+    }
   ],
   (err,result)=> {
     if(err){
       console.log(err);
     }else{
+      //console.log(result);
 
       let pieChartData = result.map((project)=>{
         return Object.values(project);
@@ -553,7 +560,7 @@ function getPieData(user, cb){
 
 function getWeeklyData(user, diffWeek, cb){
 
-  const weeklyData = {}
+  const weeklyData = {};
   //AGGREGATION FOR WEEKLY DATA - BAR CHART
   User.aggregate([
     {
@@ -577,7 +584,8 @@ function getWeeklyData(user, diffWeek, cb){
     { $group: {
       _id: {year:{$year: "$project_docs.time.timestamp"},week:{$isoWeek: "$project_docs.time.timestamp"}},
       total: { $sum: "$project_docs.time.sessionLength"}
-  }}
+      }
+    }
   ], (err,result)=> {
         if(err){
           console.log(err);
@@ -617,9 +625,9 @@ function getWeeklyData(user, diffWeek, cb){
               return hrs;
           }
 
-          weeklyData.thisWeekHrs = thisWeekHrs;
-          weeklyData.lastWeekHrs = lastWeekHrs;
-          weeklyData.avgWeekHrs = avgWeekHrs;
+          weeklyData.thisWeekHrs = Math.round(thisWeekHrs);
+          weeklyData.lastWeekHrs = Math.round(lastWeekHrs);
+          weeklyData.avgWeekHrs = Math.round(avgWeekHrs);
           // console.log("This weeks (hrs): ",thisWeekHrs);
           // console.log("Last weeks (hrs): ",lastWeekHrs);
           // console.log("Average Week (hrs): ",avgWeekHrs);
@@ -665,7 +673,7 @@ function getWeeklyData(user, diffWeek, cb){
               }
                return {
                  "day": dayWord,
-                 "hours": day.total
+                 "hours": Number((day.total).toFixed(1))
                };
             });
             //Convert object to array of object values
@@ -740,7 +748,7 @@ function getTableData(user, cb){
 
         tableData.push({
           projectName: project.projectName,
-          hours: getHours(project.time),
+          hours: Math.round(getHours(project.time)),
           startDate: getFormattedDate(project.startDate),
           finishDate: getFinishDate(project.completed, dates)
         })
