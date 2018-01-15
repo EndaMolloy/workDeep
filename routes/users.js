@@ -58,7 +58,9 @@ router.route('/register')
       const result = Joi.validate(req.body, userSchema);
 
       if(result.error){
-        req.flash('error', 'Data is not valid please try again');
+        const errorMessage = result.error.details[0].message;
+        const message = displayUserError(errorMessage);
+        req.flash('error', message);
         res.redirect('/signup');
         return;
       }
@@ -344,8 +346,6 @@ router.route('/:id')
       });
     }
   })
-
-
 
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
@@ -783,6 +783,22 @@ function getTableData(user, cb){
         return a + b.sessionLength
       },0);
     }
+
+}
+
+function displayUserError(errorMessage){
+
+  if (errorMessage.includes("confirmationPassword")) {
+    return "Your passwords do not match";
+  }
+
+  if (errorMessage.includes("length")) {
+    return "Your name must be at least 2 characters long";
+  }
+
+  if(errorMessage.includes("pattern")) {
+    return "Your password must be at least 8 characters long";
+  }
 
 }
 
