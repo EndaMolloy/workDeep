@@ -2,14 +2,14 @@
 <nav id="menu">
   <div class="menu-container">
     <div class="menu-heading">
-      <h2>Deep Work</h2>
+      <h2>workDeep</h2>
       <div id="time"></div>
       <div id="projects" class="projects">
         <h4>Your Live Projects</h4>
         <ul>
         </ul>
         <div class="newProject">
-          <span><i class="fa fa-plus" aria-hidden="true"></i></span><input type="text" name="" value="" placeholder="Add New Project">
+          <span><i class="fa fa-plus" aria-hidden="true"></i></span><span><input type="text" name="" value="" maxlength="14" placeholder="Add New Project"></span>
         </div>
       </div>
     </div>
@@ -136,7 +136,7 @@
             <div class="col-md-4 col-xs-12 dash-section">
               <div id="pie-1">
                 <div class="pie-chart">
-                  <div class="dash-title"> Last 3 Months</div>
+                  <div class="dash-title"> My Time Breakdown</div>
                   <div class="dash-stage" id="google-pie"></div>
                 </div>
               </div>
@@ -176,24 +176,8 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
-    <script>
-      var slideout = new Slideout({
-        'panel': document.getElementById('panel'),
-        'menu': document.getElementById('menu'),
-        'padding': 256,
-        'tolerance': 70
-      });
-
-      // Toggle button
-      slideout.toggle();
-      document.querySelector('.toggle-button').addEventListener('click', function() {
-        slideout.toggle();
-      });
-
-  </script>
+    <script type="text/javascript" src="/js/slideout.js"></script>
     <script type="text/javascript" src= "/js/timer.js"></script>
     <script type="text/javascript" src="/js/project.js"></script>
     <script type="text/javascript" src= "/js/chart.js"></script>
-
-
   {{/section}}

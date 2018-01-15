@@ -1,37 +1,4 @@
-  //
-  // function sendDataToDb(){
-  //
-  //   const sessHrsTen2Mins = Number(sessHrsTen)*60;
-  //   const sessHrsOne2Mins = Number(sessHrsOne)*60;
-  //
-  //   const totalSessMins = sessHrsTen2Mins+sessHrsOne2Mins+Number(sessMinsTen)+Number(sessMinsOne);
-  //   const totalSessHrs = totalSessMins/60;
-  //
-  //   const projectName = document.getElementById('taskInput').textContent
-  //
-  //   const userUrl = window.location.pathname;
-  //   console.log(userUrl);
-  //   const test = 1;
-  //
-  //   const projectData = {
-  //     projectName: projectName,
-  //     sessionLength: totalSessMins,
-  //     timestamp: Date.now()
-  //   }
-  //
-  //   console.log(projectData);
-  //
-  //
-  //   $.ajax({
-  //     type: "POST",
-  //     url: userUrl,
-  //     data: projectData,
-  //     success: function() {
-  //         alert('It worked');
-  //     }
-  //   });
-  //
-  // }
+
 const time = moment().format('dddd') +", "+moment().format('LL');
 document.getElementById('time').textContent = time;
 

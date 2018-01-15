@@ -63,9 +63,8 @@ body{
 		padding-top: 3%;
 }
 
-textarea:focus, input:focus{
-    outline: none;
-}
+
+
 
 #main{
   padding-top: 20%;
@@ -143,6 +142,7 @@ span.timeBox  {
 }
 .custom-icon:hover {
   border: 0.75px solid white;
+  cursor:pointer;
 }
 
 
@@ -155,18 +155,19 @@ span.timeBox  {
 
 #projects h4{
   padding: 5px;
+  padding-left: 10px;
   background: grey;
   color: white;
   margin-bottom: 0;
 }
 
 #time {
-  padding-left: 5px;
+  padding-left: 10px;
 }
 
 .menu-heading h2{
   margin-top: 10px;
-  padding-left: 5px;
+  padding-left: 10px;
 }
 
 
@@ -258,6 +259,8 @@ span.timeBox  {
   font-size: 12px;
 }
 
+
+
 #proj-table {
   height: 200px;
 }
@@ -269,6 +272,10 @@ span.timeBox  {
 
 
 .dash-title{
+  background-color: #21272d;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
   padding: 8px;
   border-bottom: inherit;
   text-align: left;
@@ -419,14 +426,27 @@ legend {
   display: inline-block;
 }
 
+.projects li .complete:hover{
+  cursor: pointer;
+}
+
+.projects li .projectName:hover{
+  cursor: pointer;
+}
+
 .projects li .delete{
   display: inline-block;
+}
+
+.projects li .delete:hover{
+  cursor: pointer;
 }
 
 .projects .newProject{
   height: 40px;
   line-height: 40px;
 }
+
 
 .projects .complete{
   margin: 0 5px;
@@ -449,15 +469,17 @@ legend {
 
 .projects span{
   margin-right: 5px;
-  margin-left: 5px
+  margin-left: 10px
 }
+
 
 .projects input{
-  background-color: inherit;
-  border: none;
+  border: 0;
+  outline: none;
 }
 
-.custom-icon-list {
+
+.projects .custom-icon-list {
   background: inherit;
   border-radius: 100%;
   color: black;
@@ -466,13 +488,14 @@ legend {
   height: 30px;
   width: 30px;
   text-align: center;
-  transition: 2s linear;
+  transition: 0.2s linear;
   vertical-align: middle;
+  border: 0.75px solid inherit;
+}
+
+.projects .custom-icon-list:hover {
   border: 0.75px solid black;
 }
-/*.custom-icon-list:hover {
-  border: 0.75px solid white;
-}*/
 
 .icon-wrapper-list {
   padding-top: 5px;
