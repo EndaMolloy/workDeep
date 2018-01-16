@@ -242,6 +242,52 @@ router.route('/logout')
     res.redirect('/');
   });
 
+
+//SOCIAL MEDIA ROUTES
+
+//GOOGLE AUTH ROUTES
+router.route('/auth/google')
+  .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
+router.route('/auth/google/callback')
+  .get(passport.authenticate('google', {
+    failureRedirect : '/users/login',
+    failureFlash: true
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id);
+  });
+
+//TWITTER AUTH ROUTES
+router.route('/auth/twitter')
+  .get(passport.authenticate('twitter'));
+router.route('/auth/twitter/callback')
+  .get(passport.authenticate('twitter', {
+    failureRedirect : '/users/login',
+    failureFlash: true
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id);
+  });
+
+//GITHUB AUTH ROUTES
+router.route('/auth/github')
+  .get(passport.authenticate('github', { scope : ['user:email'] }));
+router.route('/auth/github/callback')
+  .get(passport.authenticate('github', {
+    failureRedirect : '/users/login',
+    failureFlash: true
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id);
+  });
+
+//LOAD USER'S HOMEPAGE
+router.route('/:id')
+  .get(isAuthenticated,(req,res)=>{
+    const method = req.user.method;
+
+    res.render('galaxy',{
+      username: req.user[method].username
+    });
+  });
+
 //GET and ADD LiveProjects
 router.route('/:id/liveProjects')
   .get(isAuthenticated,(req,res)=>{
@@ -275,117 +321,66 @@ router.route('/:id/liveProjects')
     });
   })
 
-//DELETE LiveProjects or UPDATE as complete
-router.route('/:id/liveprojects/:project_id')
-  .delete((req,res)=>{
-    const projectsArr = req.user[req.user.method].projects;
-    Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
-      if(err){
-        console.log(err);
-      }else{
-        //Remove objectID from User model
-        const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
-        projectsArr.splice(arrIndex,1);
-        req.user.save((err)=>{
-          if(err){
-            console.log(err);
-          }else{
-            res.json(deletedProject)
-          }
-        });
-      }
-    });
-  })
-  .put((req,res)=>{
-    const compProject = req.body;
-    const projectsArr = req.user[req.user.method].projects;
-    Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
-      res.json(updatedProj);
-    })
-  });
-
-//SAVE Logged time to database
-router.route('/:id/logtime/:project_id')
-  .post(isAuthenticated,(req,res)=>{
-    Project.findById(req.params.project_id,(err, project)=>{
-      project.time.push(req.body);
-      project.save((err, updatedProj)=>{
-        if(err)
-          res.json("Something bad went wrong")
-        else{
-          res.json("Your time has been successfully logged");
+  //DELETE LiveProjects or UPDATE as complete
+  router.route('/:id/liveprojects/:project_id')
+    .delete((req,res)=>{
+      const projectsArr = req.user[req.user.method].projects;
+      Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
+        if(err){
+          console.log(err);
+        }else{
+          //Remove objectID from User model
+          const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
+          projectsArr.splice(arrIndex,1);
+          req.user.save((err)=>{
+            if(err){
+              console.log(err);
+            }else{
+              res.json(deletedProject)
+            }
+          });
         }
-      })
+      });
     })
-  });
-
-//GET CHART DATA
-router.route('/:id/logtime')
-  .get(isAuthenticated,(req,res)=>{
-      //  seedDB(req.user, (msg)=>{
-      //    res.json(msg);
-      //  });
-
-    getUserChartData(req.user, (chartData)=>{
-      res.send(chartData);
+    .put((req,res)=>{
+      const compProject = req.body;
+      const projectsArr = req.user[req.user.method].projects;
+      Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
+        res.json(updatedProj);
+      })
     });
-  });
 
-//LOAD USER'S HOMEPAGE
-router.route('/:id')
-  .get(isAuthenticated,(req,res)=>{
-    const method = req.user.method;
-
-    res.render('galaxy',{
-      username: req.user[method].username
+  //SAVE Logged time to database
+  router.route('/:id/logtime/:project_id')
+    .post(isAuthenticated,(req,res)=>{
+      Project.findById(req.params.project_id,(err, project)=>{
+        project.time.push(req.body);
+        project.save((err, updatedProj)=>{
+          if(err)
+            res.json("Something bad went wrong")
+          else{
+            res.json("Your time has been successfully logged");
+          }
+        })
+      })
     });
-  });
 
+  //GET CHART DATA
+  router.route('/:id/logtime')
+    .get(isAuthenticated,(req,res)=>{
+        //  seedDB(req.user, (msg)=>{
+        //    res.json(msg);
+        //  });
 
-//SOCIAL MEDIA ROUTES
-
-//GOOGLE AUTH ROUTES
-router.route('/auth/google')
-  .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
-
-router.route('/auth/google/callback')
-  .get(passport.authenticate('google', {
-    failureRedirect : '/users/login',
-    failureFlash: true
-  }), (req,res)=> {
-    res.redirect('/users/'+req.user._id);
-  });
-
-//TWITTER AUTH ROUTES
-router.route('/auth/twitter')
-  .get(passport.authenticate('twitter'));
-
-router.route('/auth/twitter/callback')
-  .get(passport.authenticate('twitter', {
-    failureRedirect : '/users/login',
-    failureFlash: true
-  }), (req,res)=> {
-    res.redirect('/users/'+req.user._id);
-  });
-
-
-//GITHUB AUTH ROUTES
-router.route('/auth/github')
-  .get(passport.authenticate('github', { scope : ['user:email'] }));
-
-router.route('/auth/github/callback')
-  .get(passport.authenticate('github', {
-    failureRedirect : '/users/login',
-    failureFlash: true
-  }), (req,res)=> {
-    res.redirect('/users/'+req.user._id);
-  });
+      getUserChartData(req.user, (chartData)=>{
+        res.send(chartData);
+      });
+    });
 
 
 
 //DASHBOARD FUNCTIONS FOR GETTING CHART DATA
 //TODO Convert to promises
-
 function getUserChartData(user, cb){
 
   const chartData = {};

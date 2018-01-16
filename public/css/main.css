@@ -161,6 +161,14 @@ span.timeBox  {
   margin-bottom: 0;
 }
 
+#projects h6{
+  padding: 5px;
+  padding-left: 10px;
+  background: #d3d3d3;
+  color: #757575;
+  margin: 0;
+}
+
 #time {
   padding-left: 10px;
 }
@@ -257,13 +265,14 @@ span.timeBox  {
   text-align: left;
   border: 1px solid #dddddd;
   font-size: 12px;
-}
-
-
-
-#proj-table {
   height: 200px;
 }
+
+
+
+/*#proj-table {
+  height: 200px;
+}*/
 
 .google-visualization-table-td {
   text-align: left !important;
@@ -272,10 +281,10 @@ span.timeBox  {
 
 
 .dash-title{
-  background-color: #21272d;
+  background-color: white;
   font-size: 12px;
   font-weight: bold;
-  color: white;
+  color: #21272d;
   padding: 8px;
   border-bottom: inherit;
   text-align: left;
@@ -549,6 +558,7 @@ and (min-width : 1224px) {
     background: transparent;
     text-align: center  ;
     border: none;
+    outline: none;
     border-bottom: 1.5px solid white;
     transition: all 0.6s;
   }

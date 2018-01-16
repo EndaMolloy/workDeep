@@ -66,7 +66,7 @@ $(document).scroll(function(e){
                     .data(chartData.dailyData.heatmap)
                     .selector('#cal-heatmap')
                     .tooltipEnabled(true)
-                    .colorRange(['#f4f7f7', '#79a8a9'])
+                    .colorRange(['#D8E6E7', '#218380'])
                     .onClick(function (data) {
                       console.log('data', data);
                     });

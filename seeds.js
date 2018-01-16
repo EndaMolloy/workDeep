@@ -7,7 +7,7 @@ const Project = require('./models/projects')
 
 function seedDB(profile, callback){
   const now = moment().endOf('day').toDate();
-  const yearAgo = moment().startOf('day').subtract(1, 'week').toDate();
+  const yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
 
   createSeedData(yearAgo, now, (projectData)=>{
 
@@ -36,7 +36,7 @@ function seedDB(profile, callback){
     const timelog = d3.timeDays(yearAgo, now).map((dateElement)=> {
       return {
         timestamp: dateElement,
-        sessionLength: (dateElement.getDay() !== 0 && dateElement.getDay() !== 6) ? Math.floor(Math.random() * 6) : Math.floor(Math.random() * 10)
+        sessionLength: (dateElement.getDay() !== 0 && dateElement.getDay() !== 6) ? Math.floor(Math.random() * 6) : Math.floor(Math.random() * 2)
       };
     });
 
