@@ -132,7 +132,7 @@ router.route('/verify/:token')
     });
   })
 
-//LOGIN via passport
+//LOCAL LOGIN
 router.route('/login')
   .get(isNotAuthenticated,(req, res) => {
     res.render('login');
@@ -334,18 +334,15 @@ router.route('/:id/logtime')
 //LOAD USER'S HOMEPAGE
 router.route('/:id')
   .get(isAuthenticated,(req,res)=>{
-    if(req.user.method === 'local'){
-      res.render('galaxy',{
-        username: req.user.local.username
-      });
-    }
+    const method = req.user.method;
 
-    if(req.user.method === 'google'){
-      res.render('galaxy',{
-        username: req.user.google.username
-      });
-    }
-  })
+    res.render('galaxy',{
+      username: req.user[method].username
+    });
+  });
+
+
+//SOCIAL MEDIA ROUTES
 
 //GOOGLE AUTH ROUTES
 router.route('/auth/google')
@@ -356,9 +353,38 @@ router.route('/auth/google/callback')
     failureRedirect : '/users/login',
     failureFlash: true
   }), (req,res)=> {
-    res.redirect('/users/'+req.user._id)
+    res.redirect('/users/'+req.user._id);
   });
 
+//TWITTER AUTH ROUTES
+router.route('/auth/twitter')
+  .get(passport.authenticate('twitter'));
+
+router.route('/auth/twitter/callback')
+  .get(passport.authenticate('twitter', {
+    failureRedirect : '/users/login',
+    failureFlash: true
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id);
+  });
+
+
+//GITHUB AUTH ROUTES
+router.route('/auth/github')
+  .get(passport.authenticate('github', { scope : ['user:email'] }));
+
+router.route('/auth/github/callback')
+  .get(passport.authenticate('github', {
+    failureRedirect : '/users/login',
+    failureFlash: true
+  }), (req,res)=> {
+    res.redirect('/users/'+req.user._id);
+  });
+
+
+
+//DASHBOARD FUNCTIONS FOR GETTING CHART DATA
+//TODO Convert to promises
 
 function getUserChartData(user, cb){
 

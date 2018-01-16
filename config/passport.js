@@ -1,13 +1,16 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GithubStrategy = require('passport-github2').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/users');
 
-
+// used to serialize the user for the session
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
+// used to deserialize the user
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
@@ -62,7 +65,7 @@ passport.use('google', new GoogleStrategy({
   async (accessToken, refreshToken, profile, done)=> {
 
     try{
-      //find the user given the email
+      //find the user given the id
       const user = await User.findOne({ 'google.googleId': profile.id });
 
       if(user){
@@ -86,3 +89,80 @@ passport.use('google', new GoogleStrategy({
     }
   }
 ));
+
+//Use the GithubStrategy within Passport.
+passport.use('github', new GithubStrategy({
+  clientID: process.env.GITHUB_ID,
+  clientSecret: process.env.GITHUB_SECRET,
+  callbackURL: 'http://localhost:5000/users/auth/github/callback'
+  },
+  async (accessToken, refreshToken, profile, done) =>{
+    try{
+
+      //find the user given the email
+      const user = await User.findOne({ 'github.githubId': profile.id });
+
+      if(user){
+        return done(null, user);
+      }
+
+      //if new account, create new user
+      const newUser = await new User({
+       method: 'github',
+       github: {
+       githubId: profile.id,
+       username: profile.displayName
+      }
+      });
+
+      await newUser.save();
+
+      done(null, newUser);
+    }
+    catch(err){
+      return done(err, false, err.message)
+    }
+  }
+));
+
+//Use the TwitterStrategy within Passport
+passport.use('twitter', new TwitterStrategy({
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: "http://localhost:5000/users/auth/twitter/callback"
+  },
+  async (accessToken, refreshToken, profile, done) =>{
+    try{
+      console.log(profile);
+      //find the user given the email
+      const user = await User.findOne({ 'twitter.twitterId': profile.id });
+
+      if(user){
+        return done(null, user);
+      }
+
+      //if new account, create new user
+      const newUser = await new User({
+       method: 'twitter',
+       twitter: {
+       twitterId: profile.id,
+       username: getFirstName(profile.displayName)
+      }
+      });
+
+      await newUser.save();
+
+      done(null, newUser);
+    }
+    catch(err){
+      return done(err, false, err.message)
+    }
+  }
+));
+
+//Twitter display Name is in the format "Joe Bloggs"
+//Fucntion to extract the first name entered
+function getFirstName(displayName){
+  const names = displayName.split(" ");
+  return names[0];
+}

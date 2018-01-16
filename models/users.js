@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   method :{
     type: String,
-    enum: ['local', 'google', 'twitter'],
+    enum: ['local', 'google', 'twitter', 'github'],
     required: true
   },
   local: {
@@ -27,6 +27,22 @@ const userSchema = new Schema({
   google: {
     googleId: String,
     email: String,
+    username: String,
+    projects: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project'
+    }]
+  },
+  github: {
+    githubId: String,
+    username: String,
+    projects: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project'
+    }]
+  },
+  twitter: {
+    twitterId: String,
     username: String,
     projects: [{
       type: mongoose.Schema.Types.ObjectId,
