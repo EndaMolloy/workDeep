@@ -34,11 +34,10 @@ html{
   z-index: 9;
   display: inline-block;
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   font-family: 'ProximaNova-Bold';
   text-decoration: none;
   color: #fff;
-  text-transform: uppercase;
   height: 50px;
   line-height: 50px;
   border: 1px solid #fff;
@@ -49,11 +48,10 @@ html{
   z-index: 9;
   display: inline-block;
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   font-family: 'ProximaNova-Light';
   text-decoration: none;
   color: #de4f4f;
-  text-transform: uppercase;
   height: 50px;
   line-height: 50px;
   border: 1px solid #de4f4f;
@@ -70,6 +68,7 @@ html{
   color: #fff;
   background-color: #a83636;
   border-color: #a83636;
+  cursor: pointer;
 }
 
 #content .buttons #learn:hover {
@@ -86,8 +85,7 @@ a{
 h1{
   font-weight: 600;
   letter-spacing: 2px;
-  font-size: 3em;
-  text-transform: uppercase;
+  font-size: 4em;
   margin-bottom: 15px;
 }
 
