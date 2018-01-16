@@ -432,6 +432,11 @@ function getDailyData(user, cb){
       _id: "$project_docs.time.timestamp",
       total: { $sum: "$project_docs.time.sessionLength"  }
         }
+    },{
+      $project: {
+        _id: "$_id",
+        total: round("$total", 1)
+        }
       }
     ], (err,result)=> {
     if(err){

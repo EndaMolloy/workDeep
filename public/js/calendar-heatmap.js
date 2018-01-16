@@ -9,7 +9,7 @@ function calendarHeatmap() {
   var MONTH_LABEL_PADDING = 6;
   var now = moment().endOf('day').toDate();
   var yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
-  var startDate = null;
+  var startDate = moment().startOf('day').subtract(1, 'year').toDate();
   var data = [];
   var max = null;
   var colorRange = ['#D8E6E7', '#218380'];
@@ -94,7 +94,7 @@ function calendarHeatmap() {
     d3.select(chart.selector()).selectAll('svg.calendar-heatmap').remove(); // remove the existing chart, if it exists
 
     var dateRange = d3.time.days(yearAgo, now); // generates an array of date objects within the specified range
-    var monthRange = d3.time.months(moment(yearAgo).startOf('month').toDate(), now); // it ignores the first month if the 1st date is after the start of the month
+    var monthRange = d3.time.months(moment(startDate).toDate(), now); // it ignores the first month if the 1st date is after the start of the month
     var firstDate = moment(dateRange[0]);
     if (chart.data().length == 0) {
       max = 0;
