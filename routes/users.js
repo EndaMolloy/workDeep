@@ -373,7 +373,11 @@ router.route('/:id/liveProjects')
         //  });
 
       getUserChartData(req.user, (chartData)=>{
-        res.send(chartData);
+        if(typeof chartData === 'string' && chartData.length>50){
+          res.send("Someting went wrong while trying to retrive your data");
+        }else{
+          res.send(chartData);
+        }
       });
     });
 
