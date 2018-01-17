@@ -8,6 +8,9 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const compression = require('compression');
+const helmet = require('helmet');
+
 const dotenv = require('dotenv').config()
 
 require('./config/passport');
@@ -25,10 +28,17 @@ const handlebars = expressHandlebars.create({
 });
 
 mongoose.promise = global.Promise;
-mongoose.connect('mongodb://localhost/deepworkauth');
+const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/deepworkauth';
+mongoose.connect(mongoDB);
 
 const app = express();
-app.use(morgan('dev'));
+//  app.use(morgan('dev'));
+
+//compress the HTTP response sent back to a client
+app.use(compression()); //Compress all routes
+
+//protect against vulnerabilities by setting appropriate HTTP headers
+app.use(helmet());
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
