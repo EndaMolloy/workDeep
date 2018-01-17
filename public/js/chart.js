@@ -30,7 +30,7 @@ $(document).scroll(function(e){
     if(scrollPercent > 50) {
       loaded = true;
 
-      $.get('http://localhost:5000'+userUrl+'/logtime',(chartData)=> {
+      $.get('https://workdeep.herokuapp.com'+userUrl+'/logtime',(chartData)=> {
 
         if(typeof chartData === 'string'){
           $('#spinner').hide();

@@ -211,7 +211,7 @@ function parseTimeValues(){
   mins = minsTen.toString() + minsOne.toString();
   secs = secsTen.toString() + secsOne.toString();
 
-  console.log("mins:" ,mins);
+  //console.log("mins:" ,mins);
 }
 
 function sessionValuesToHrs(){
