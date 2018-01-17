@@ -97,7 +97,7 @@ router.route('/register')
       <br/><br/>
       Please click the link below to confirm your email address and activate your account.
       <br/><br/>
-      <a href="http://localhost:5000/users/verify/${secretToken}">http://localhost:5000/users/verify/${secretToken}</a>`
+      <a href="https://workdeep.herokuapp.com/users/verify/${secretToken}">https://workdeep.herokuapp.com/users/verify/${secretToken}</a>`
 
       await mailer.sendEmail('workDeep.com','workDeep - please verify your email', result.value.email, html);
 
