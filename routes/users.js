@@ -387,7 +387,7 @@ function getUserChartData(user, cb){
 
   getDailyData(user, (dailyData, diffWeek)=>{
     if(dailyData === 'error'){
-      cb("Looks you haven't logged anytime yet :(")
+      cb("Looks you haven't logged anytime yet ¯\\(°_o)/¯")
     }else{
       chartData.dailyData = dailyData;
       getPieData(user, (pieData)=>{
