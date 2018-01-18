@@ -1,35 +1,62 @@
-<div class="container-signin">
-  <div class="signin-header">
-      <h1>Create Account</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="signin-header">Sign Up</h2>
+      </div>
+    </div>
+    <div class="row vertical-center">
+      <div class="col-xs-12 col-md-5">
+        <div class="container-signin col-left">
+          <div class="btn-social-signin">
+            <a class="btn btn-block btn-social btn-google" href="/users/auth/google">
+              <span class="fa fa-google"></span> Sign up with Google
+            </a>
+            <a class="btn btn-block btn-social btn-twitter" href="/users/auth/twitter">
+              <span class="fa fa-twitter"></span>
+              Sign up with Twitter
+            </a>
+            <a class="btn btn-block btn-social btn-github" href="/users/auth/github">
+              <span class="fa fa-github"></span>
+              Sign up with GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-2 col-center">
+        <h3 class="signin-header ">or</h3>
+      </div>
+      <div class="col-xs-12 col-md-5 ">
+        <form class=" form-signin" action="/users/register" method="POST">
+          <div class="container-signin col-right">
+            <div class="form-group">
+              <label for="inputEmail" class="sr-only">Email Address</label>
+              <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email Address" required autofocus>
+            </div>
+
+            <div class="form-group">
+              <label for="inputUsername" class="sr-only">First Name</label>
+              <input type="text" id="inputUsername" name="username" class="form-control" placeholder="First Name" maxlength="10" required>
+            </div>
+
+            <div class="form-group">
+              <label for="inputPassword" class="sr-only">Password</label>
+              <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <div class="form-group">
+              <label for="inputConfirmPassword" class="sr-only">Confirm Password</label>
+              <input type="password" id="inputConfirmPassword" name="confirmationPassword" class="form-control" placeholder="Confirm Password" required>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account</button>
+            </div>
+          </form>
+          <div class="signin-more btn-group-justified">
+            <a class="btn-forgot btn-link" href="/login">Go back</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
-
-  <form class="form-signin" action="/users/register" method="POST">
-    <div class="form-group">
-      <label for="inputEmail" class="sr-only">Email Address</label>
-      <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email Address" required autofocus>
-    </div>
-
-    <div class="form-group">
-      <label for="inputUsername" class="sr-only">First Name</label>
-      <input type="text" id="inputUsername" name="username" class="form-control" placeholder="First Name" maxlength="10" required>
-    </div>
-
-    <div class="form-group">
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-    </div>
-
-    <div class="form-group">
-      <label for="inputConfirmPassword" class="sr-only">Confirm Password</label>
-      <input type="password" id="inputConfirmPassword" name="confirmationPassword" class="form-control" placeholder="Confirm Password" required>
-    </div>
-
-    <div class="form-group">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
-    </div>
-  </form>
-  <div class="signin-more btn-group-justified">
-    <a class="btn-forgot btn-link" href="/login">Go back</a>
-  </div>
-
-</div>
