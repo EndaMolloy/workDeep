@@ -5,24 +5,25 @@ $(document).ready(function () {
   let inFocusIndex = 0;
   const userUrl = window.location.pathname;
 
-  if(projectList.length < 1)
-    document.getElementById('taskInput').textContent = "Add a project";
 
 
   //GET LIVE PROJECTS FROM THE DATABASE
     $.get('http://localhost:5000'+userUrl+'/liveprojects', function(projects){
-      projects.forEach((project,index)=> {
+      if(projects.length == 0){
+        document.getElementById("tooltipButton").style.display = 'inline-block';
+      }else{
+        projects.forEach((project,index)=> {
 
-        if(inFocusIndex === index){
-          $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
-          document.getElementById('taskInput').textContent = project.projectName;
+          if(inFocusIndex === index){
+            $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+            document.getElementById('taskInput').textContent = project.projectName;
 
-        }else{
-          $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
-        }
-        projectList.push(project);
-      });
-
+          }else{
+            $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle-thin" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
+          }
+          projectList.push(project);
+        });
+      }
     });
 
 
@@ -145,7 +146,8 @@ $(document).ready(function () {
       inFocusIndex --;
     else {
       if(projectList<1){
-        document.getElementById('taskInput').textContent = "Add a project";
+        //document.getElementById("tooltipButton").style.display = 'inline-block';
+        document.getElementById("taskInput").textContent = '';
       }else{
         if(inFocusIndex == deletedIndex && deletedIndex > 0){
           $("#bullet i",prevProject).removeClass('fa-circle-thin').addClass('fa-circle');
@@ -163,6 +165,10 @@ $(document).ready(function () {
 
   //Adds the newly added projects to the project list
   function addToLiveProjects(project){
+
+    if(document.getElementById("tooltipButton").style.display = 'inline-block')
+      document.getElementById("tooltipButton").style.display = 'none';
+
     projectList.push(project);
     if(projectList.length === 5){
       $(".newProject").hide();

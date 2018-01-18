@@ -5,8 +5,7 @@ const slideout = new Slideout({
   'tolerance': 70
 });
 
-// Toggle button
-slideout.toggle();
+
 document.querySelector('.toggle-button').addEventListener('click', function() {
   slideout.toggle();
 });

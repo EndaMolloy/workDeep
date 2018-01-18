@@ -67,3 +67,103 @@ body {
 .slideout-open .slideout-menu {
   display: block;
 }
+
+#tooltipButton {
+  font-size: 12px;
+  line-height: 15px;
+  display: none;
+  background-color: #de4f4f;
+  color: #fff;
+  padding: 7px 15px 7px 15px;
+  border-radius: 2px;
+  position: relative;
+  left: 20px;
+  transition: all 0.5s linear;
+}
+
+#tooltipButton:hover{
+  background-color: #a83636;
+}
+
+
+#tooltipButton:before {
+  content: '';
+  display:inline-block;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #de4f4f;
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  margin-top: -6px;
+  transition: all 0.5s linear;
+}
+
+#tooltipButton:hover::before{
+  border-right: 6px solid #a83636;
+}
+
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 1224px) {
+
+
+  #tooltipButton {
+    font-size: 17px;
+    line-height: 19px;
+    display: none;
+    background-color: #de4f4f;
+    color: #fff;
+    padding: 10px 20px 10px 20px;
+    border-radius: 4px;
+    position: relative;
+    left: 30px;
+  }
+  #tooltipButton:before {
+    content: '';
+    display:inline-block;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #de4f4f;
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    margin-top: -6px;
+  }
+
+  /* Animation
+  ---------------------------------- */
+  @-webkit-keyframes shake {
+    0%, 100% {
+      -webkit-transform:translate3d(0, 0, 0);
+      transform:translate3d(0, 0, 0);
+    }
+
+    50% {
+      -webkit-transform:translate3d(-10px, 0, 0);
+      transform:translate3d(-10px, 0, 0);
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% {
+      -webkit-transform:translate3d(0, 0, 0);
+      transform:translate3d(0, 0, 0);
+    }
+
+    50% {
+      -webkit-transform:translate3d(-10px, 0, 0);
+      transform:translate3d(-10px, 0, 0);
+    }
+  }
+
+  .shake {
+    -webkit-animation-name:shake;
+    animation-name:shake;
+    -webkit-animation-duration:2s;
+    animation-duration:2s;
+    -webkit-animation-iteration-count: 2;
+    animation-iteration-count: 2;
+  }
+
+}
