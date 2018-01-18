@@ -60,7 +60,7 @@ passport.use('local', new LocalStrategy({
 passport.use('google', new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: 'https://workdeep.herokuapp.com/users/auth/google/callback'
+    callbackURL: 'http://localhost:5000/users/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done)=> {
 
