@@ -35,7 +35,7 @@ body{
   display: none;
 }
 
-#button-clear{
+#button-delete{
   display: none;
 }
 
@@ -225,6 +225,15 @@ span.timeBox  {
   background-color: white;
 }
 
+
+#button-updateCharts{
+  visibility: hidden;
+  color: #fff;
+  margin: 0;
+  background-color: #a83636;
+  border-color: #a83636;
+}
+
 #chartArea{
   display: none;
 }
@@ -249,7 +258,7 @@ span.timeBox  {
 
 .content-section h3 {
   text-align: left;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
   margin: 0;
 }
 
@@ -609,6 +618,21 @@ and (min-width : 1224px) {
 
   #heatmap{
     display: block;
+  }
+
+  #button-updateCharts{
+    color: #21272d;
+    border-color: #21272d;
+    margin: 0;
+    background-color: inherit;
+    transition: all 0.2s linear;
+    float: right;
+  }
+
+  #button-updateCharts:hover{
+    color: #fff;
+    background-color: #a83636;
+    border-color: #a83636;
   }
 
 }

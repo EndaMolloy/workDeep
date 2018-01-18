@@ -61,7 +61,7 @@ html{
   display: block;
   max-width: 330px;
   width: 100%;
-  margin: 25px auto;
+  margin: 50px auto;
 }
 
 #content .buttons #signup:hover {
@@ -85,10 +85,13 @@ a{
 h1{
   font-weight: 600;
   letter-spacing: 2px;
-  font-size: 4em;
+  font-size: 3em;
   margin-bottom: 15px;
 }
 
+h4{
+  font-size: 1em;
+}
 
 .navbar-collapse.collapse {
   display: block!important;
@@ -156,6 +159,13 @@ h1{
 /* Desktops and laptops ----------- */
 @media only screen
 and (min-width : 1224px) {
+
+  h1{
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 4em;
+    margin-bottom: 15px;
+  }
 
   #content{
     padding-top: 15%;

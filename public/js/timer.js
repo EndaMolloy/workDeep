@@ -13,11 +13,10 @@ function sendToMongo(time){
       console.log('Something bad happened');
     }else{
       alert(message);
+      isCounting = false;
       timerClear();
-      document.getElementById('button-reset').style.display = 'none';
-      document.getElementById('button-clear').style.display = 'none';
-      document.getElementById('button-finish').style.visibility = 'hidden';
-      document.getElementById('toggle').style.visibility = 'visible';
+      if(loaded)
+        document.getElementById('button-updateCharts').style.visibility = 'visible';
     }
   });
 }
@@ -87,7 +86,7 @@ $("#button-start").on('click',()=>{
     document.getElementById('play').classList.remove('fa-pause');
     document.getElementById('play').classList.add('fa-play');
     document.getElementById('button-reset').style.display = 'inline-block';
-    document.getElementById('button-clear').style.display = 'inline-block';
+    document.getElementById('button-delete').style.display = 'inline-block';
     document.getElementById('button-finish').style.visibility = 'visible';
   }
   else{
@@ -101,9 +100,9 @@ $("#button-start").on('click',()=>{
       document.getElementById('play').classList.remove('fa-play');
       document.getElementById('play').classList.add('fa-pause');
       document.getElementById('button-reset').style.display = 'none';
-      document.getElementById('button-clear').style.display = 'none';
+      document.getElementById('button-delete').style.display = 'none';
       document.getElementById('button-finish').style.visibility = 'hidden';
-      document.getElementById('toggle').style.visibility = 'hidden';
+
 
       getTimeValues();
       parseTimeValues();
@@ -121,7 +120,7 @@ $("#button-reset").on('click',()=>{
   timerReset();
 });
 
-$("#button-clear").on('click',()=>{
+$("#button-delete").on('click',()=>{
   timerClear();
 });
 
@@ -151,7 +150,6 @@ function timerReset(){
   clearInterval(Interval);
   resetValues()
   setDisplay()
-  document.getElementById('toggle').style.visibility = 'visible';
   document.getElementById('button-finish').style.visibility = 'hidden';
 }
 
@@ -164,7 +162,8 @@ function timerClear(){
   addLabels()
   modifyInputField()
   reset = false;
-  document.getElementById('toggle').style.visibility = 'visible';
+  document.getElementById('play').classList.remove('fa-pause');
+  document.getElementById('play').classList.add('fa-play');
   document.getElementById('button-finish').style.visibility = 'hidden';
 }
 
