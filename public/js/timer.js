@@ -50,16 +50,10 @@ var isCounting = false;
 const inputBoxes = document.getElementById('main').getElementsByTagName('input');
 const labelDiv = document.getElementById('labels');
 
+//load localStorage values
+initalSetup();
 
-//get inital time values from html input
-getTimeValues();
 
-//store the values in session variables
-saveSessionLength();
-
-//shorthand values
-//e.g hrs = 5 mins=13 secs=42
-parseTimeValues();
 
 
 //listen for user inputs to change countdown timer value
@@ -72,6 +66,17 @@ for(let i=0; i<inputBoxes.length; i++){
   })
 }
 
+
+
+$("#main").on('keydown','input', function(event){
+  //If number
+  if (event.keyCode >= 48 && event.keyCode <= 57)
+    $(this).val(event.key);
+
+    getTimeValues();
+    saveSessionLength();
+    parseTimeValues();
+});
 
 
 $("#button-start").on('click',()=>{
@@ -182,13 +187,12 @@ function getSelectedProjectId(li){
 }
 
 function getTimeValues(){
-  hrsTen = document.getElementById("hoursTen").value || '0'
-  hrsOne = document.getElementById("hoursOne").value || '0'
-  minsTen = document.getElementById("minutesTen").value || '0'
-  minsOne = document.getElementById("minutesOne").value || '0'
-  secsTen = document.getElementById("secondsTen").value || '0'
-  secsOne = document.getElementById("secondsOne").value || '0'
-
+  hrsTen = document.getElementById("hoursTen").value || '0';
+  hrsOne = document.getElementById("hoursOne").value || '0';
+  minsTen = document.getElementById("minutesTen").value || '0';
+  minsOne = document.getElementById("minutesOne").value || '0';
+  secsTen = document.getElementById("secondsTen").value || '0';
+  secsOne = document.getElementById("secondsOne").value || '0';
 }
 
 function saveSessionLength(){
@@ -199,11 +203,46 @@ function saveSessionLength(){
   sessSecsTen = secsTen;
   sessSecsOne = secsOne;
 
+  const sessionLength = {
+    sessHrsTen,
+    sessHrsOne,
+    sessMinsTen,
+    sessMinsOne,
+    sessSecsTen,
+    sessSecsOne
+  };
+
+  localStorage.setItem('sessionLength',JSON.stringify(sessionLength));
+  console.log(JSON.parse(localStorage.getItem('sessionLength')));
   //all values in seconds
   sessHrs = Number(sessHrsTen+sessHrsOne)*60*60;
   sessMins = Number(sessMinsTen+sessMinsOne)*60;
   sessSecs = Number(sessSecsTen+sessMinsOne);
 }
+
+
+function initalSetup(){
+
+  //check to see if there is any values in the sessionvariable
+  const sessionLength = JSON.parse(localStorage.getItem('sessionLength'));
+  if(sessionLength){
+    hrsTen = sessionLength.sessHrsTen;
+    hrsOne = sessionLength.sessHrsOne;
+    minsTen = sessionLength.sessMinsTen;
+    minsOne = sessionLength.sessMinsOne;
+    secsTen = sessionLength.sessSecsTen;
+    secsOne = sessionLength.sessSecsOne;
+    setDisplay();
+  }
+  else{
+    //use the default values from html inputBoxes
+    getTimeValues();
+  }
+  //shorthand values
+  //e.g hrs = 5 mins=13 secs=42 rather than units i.e. secsTens secsOnes...
+  parseTimeValues();
+}
+
 
 function parseTimeValues(){
   hrs =  hrsTen.toString() + hrsOne.toString();
@@ -252,7 +291,7 @@ function resetValues(){
 
 function convertToHrs(hrs,mins,secs){
   let totalSecs = hrs+mins+secs;
-  console.log("hrs: ", totalSecs/3600);
+  // console.log("hrs: ", totalSecs/3600);
   return totalSecs/3600;
 }
 

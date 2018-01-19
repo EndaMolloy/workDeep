@@ -1,3 +1,5 @@
+//create instance of slideout
+
 const slideout = new Slideout({
   'panel': document.getElementById('panel'),
   'menu': document.getElementById('menu'),
@@ -5,10 +7,14 @@ const slideout = new Slideout({
   'tolerance': 70
 });
 
-
+//toggle slidout menu
 document.querySelector('.toggle-button').addEventListener('click', function() {
   slideout.toggle();
 });
+
+
+//overlay to close the menu on click
+//https://github.com/mango/slideout
 
 function close(eve) {
   eve.preventDefault();

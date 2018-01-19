@@ -573,12 +573,13 @@ and (min-width : 1224px) {
   }
 
   #taskInput {
-      background: transparent;
-      font-size: 3em;
-      border: none;
-  		color: inherit;
-  		text-align: center;
-  		padding-top: 3%;
+    background: transparent;
+    font-size: 3em;
+    border: none;
+		color: inherit;
+		text-align: center;
+		padding-top: 3%;
+    transition: all 0.5s linear;
   }
 
   #main{
@@ -593,7 +594,19 @@ and (min-width : 1224px) {
     border: none;
     outline: none;
     border-bottom: 1.5px solid white;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
+
+  }
+
+  #main input:focus{
+    color: red;
+    border-bottom: 1.5px solid red;
+    caret-color: #21272d;
+  }
+
+  #main input:hover:not(:focus){
+    cursor: pointer;
+    border-bottom: 1.5px solid red;
   }
 
   #labels span{
