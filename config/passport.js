@@ -60,7 +60,7 @@ passport.use('local', new LocalStrategy({
 passport.use('google', new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: 'http://localhost:5000/users/auth/google/callback'
+    callbackURL: process.env.URL+'/users/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done)=> {
 
@@ -94,7 +94,7 @@ passport.use('google', new GoogleStrategy({
 passport.use('github', new GithubStrategy({
   clientID: process.env.GITHUB_ID,
   clientSecret: process.env.GITHUB_SECRET,
-  callbackURL: 'https://workdeep.herokuapp.com/users/auth/github/callback'
+  callbackURL: process.env.URL+'/users/auth/github/callback'
   },
   async (accessToken, refreshToken, profile, done) =>{
     try{
@@ -129,11 +129,11 @@ passport.use('github', new GithubStrategy({
 passport.use('twitter', new TwitterStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: "https://workdeep.herokuapp.com/users/auth/twitter/callback"
+  callbackURL: process.env.URL+'/users/auth/twitter/callback'
   },
   async (accessToken, refreshToken, profile, done) =>{
     try{
-      console.log(profile);
+      //console.log(profile);
       //find the user given the email
       const user = await User.findOne({ 'twitter.twitterId': profile.id });
 
