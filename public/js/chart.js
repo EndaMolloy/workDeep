@@ -36,7 +36,7 @@ $(document).scroll(function(e){
 });
 
 function getChartData(){
-  $.get('http://localhost:5000'+userUrl+'/logtime',(chartData)=> {
+  $.get('https://workdeep.herokuapp.com'+userUrl+'/logtime',(chartData)=> {
 
     if(typeof chartData === 'string'){
       $('#spinner').hide();
