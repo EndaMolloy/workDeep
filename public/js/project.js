@@ -2,9 +2,10 @@ $(document).ready(function () {
 
   let projectList = [];
   let completedList = [];
-  let inFocusIndex = 0;
   const userUrl = window.location.pathname;
 
+  if(!localStorage.inFocusIndex)
+    localStorage.inFocusIndex = 0;
 
 
   //GET LIVE PROJECTS FROM THE DATABASE
@@ -14,7 +15,7 @@ $(document).ready(function () {
     }else{
       projects.forEach((project,index)=> {
 
-        if(inFocusIndex === index){
+        if(localStorage.inFocusIndex == index){
           $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
           document.getElementById('taskInput').textContent = project.projectName;
 
@@ -101,7 +102,7 @@ $(document).ready(function () {
     $("#bullet i",this).removeClass('fa-circle-thin').addClass('fa-circle');
     document.getElementById('taskInput').textContent = $(".projectName",this).text();
 
-    inFocusIndex = projectList.findIndex(x => x.projectName === $(".projectName",this).text());
+    localStorage.inFocusIndex = projectList.findIndex(x => x.projectName === $(".projectName",this).text());
     //console.log(inFocusIndex);
   });
 
@@ -142,17 +143,17 @@ $(document).ready(function () {
     //else if the projectList is now 0 then give user option to add projectList
     //else if the deleted project is in focus and not the first project in the list, then the previous project becomes the infocus project
     // else the deleted project is the first project in the list so the next project becomes the infocus project
-    if(inFocusIndex > deletedIndex)
-      inFocusIndex --;
+    if(localStorage.inFocusIndex > deletedIndex)
+      localStorage.inFocusIndex --;
     else {
       if(projectList<1){
         //document.getElementById("tooltipButton").style.display = 'inline-block';
         document.getElementById("taskInput").textContent = '';
       }else{
-        if(inFocusIndex == deletedIndex && deletedIndex > 0){
+        if(localStorage.inFocusIndex == deletedIndex && deletedIndex > 0){
           $("#bullet i",prevProject).removeClass('fa-circle-thin').addClass('fa-circle');
           document.getElementById('taskInput').textContent = $(".projectName",prevProject).text();
-          inFocusIndex--;
+          localStorage.inFocusIndex--;
         }else{
           $("#bullet i",nextProject).removeClass('fa-circle-thin').addClass('fa-circle');
           document.getElementById('taskInput').textContent = $(".projectName",nextProject).text();
@@ -176,7 +177,7 @@ $(document).ready(function () {
 
     if(projectList.length === 1){
       document.getElementById('taskInput').textContent = projectList[0]['projectName'];
-      inFocusIndex = 0;
+      localStorage.inFocusIndex = 0;
       $(".projects ul").append('<li class="list-project"><span id="bullet"><i class="fa fa-circle" aria-hidden="true"></i></span><span class="projectName">'+project.projectName+ '</span><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="complete icon-wrapper-list"><i class="fa fa-check custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form><form class="project-list-form" action="/liveprojects/' + project._id + '" method="POST"><span class="delete icon-wrapper-list"><i class="fa fa-times custom-icon-list" aria-hidden="true"><span class="fix-editor">&nbsp;</span></i></span></form></li>');
 
     }else{
@@ -190,7 +191,7 @@ $(document).ready(function () {
   function addtoCompletedProjects(project){
 
     completedList.push(project);
-    console.log(completedList);
+    //console.log(completedList);
     deleteThisproject(project);
   }
 
