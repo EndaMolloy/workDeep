@@ -1,45 +1,23 @@
 
-const time = moment().format('dddd') +", "+moment().format('LL');
-document.getElementById('time').textContent = time;
-
-function sendToMongo(time){
-  const timeLog = {
-    sessionLength: time,
-    timestamp: new Date().setHours(0,0,0,0)
-  }
-
-  $.post('http://localhost:5000'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
-    if(message.error){
-      console.log('Something bad happened');
-    }else{
-      alert(message);
-      isCounting = false;
-      timerClear();
-      if(loaded)
-        document.getElementById('button-updateCharts').style.visibility = 'visible';
-    }
-  });
-}
-
-
-let hrs = 0
-let mins=0
-let secs =0
+let hrs = 0;
+let mins=0;
+let secs =0;
 let hrsTen  = 0;
 let hrsOne  = 0;
 let minsOne = 0;
 let minsTen = 0;
 let secsTen = 0;
 let secsOne = 0;
-let sessHrsTen;
-let sessHrsOne;
-let sessMinsTen;
-let sessMinsOne;
-let sessSecsTen;
-let sessSecsOne;
-let sessHrs;
-let sessMins;
-let sessSecs;
+let sessionHrsTen;
+let sessionHrsOne;
+let sessionMinsTen;
+let sessionMinsOne;
+let sessionSecsTen;
+let sessionSecsOne;
+let sessionHrs;
+let sessionMins;
+let sessionSecs;
+let totalSessionSecs = 0;
 let count = 0;
 
 let Interval;
@@ -51,9 +29,10 @@ const inputBoxes = document.getElementById('main').getElementsByTagName('input')
 const labelDiv = document.getElementById('labels');
 
 //load localStorage values
-initalSetup();
+initialSetup();
 
-
+const time = moment().format('dddd') +", "+moment().format('LL');
+document.getElementById('time').textContent = time;
 
 
 //listen for user inputs to change countdown timer value
@@ -133,45 +112,87 @@ $("#button-finish").on('click',()=>{
   timerFinish();
 });
 
+
+function initialSetup(){
+
+  //check to see if there is any values in the sessionvariable
+  const sessionLength = JSON.parse(localStorage.getItem('sessionLength'));
+  if(sessionLength){
+    hrsTen = sessionLength.sessionHrsTen;
+    hrsOne = sessionLength.sessionHrsOne;
+    minsTen = sessionLength.sessionMinsTen;
+    minsOne = sessionLength.sessionMinsOne;
+    secsTen = sessionLength.sessionSecsTen;
+    secsOne = sessionLength.sessionSecsOne;
+    setDisplay();
+  }
+  else{
+    //use the default values from html inputBoxes
+    getTimeValues();
+  }
+  //shorthand values
+  //e.g hrs = 5 mins=13 secs=42 rather than units i.e. secsTens secsOnes...
+  parseTimeValues();
+  saveSessionLength();
+}
+
+function sendToMongo(time){
+  const timeLog = {
+    sessionLength: time,
+    timestamp: new Date().setHours(0,0,0,0)
+  }
+
+  $.post('http://localhost:5000'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
+    if(message.error){
+      console.log('Something bad happened');
+    }else{
+      alert(message);
+      isCounting = false;
+      timerReset();
+      if(loaded)
+        document.getElementById('button-updateCharts').style.visibility = 'visible';
+    }
+  });
+};
+
+
 function timerFinish(){
   const confirm = window.confirm("Finish your current session and log your time?")
 
   if(confirm){
 
     parseTimeValues();
-    //get values in seconds
-    let diffHrs = (sessHrs - hrs)*60*60;
-    let diffMins= (sessMins - mins)*60;
-    let diffSecs = sessSecs - secs;
 
-    sendToMongo(convertToHrs(diffHrs,diffMins,diffSecs));
+    //convert all in seconds
+    const stoppedHrs = Number(hrs)*60*60;
+    const stoppedMins = Number(mins)*60;
+    const stoppedSecs = Number(secs);
+
+    const totalStoppedSecs = stoppedHrs+stoppedMins+stoppedSecs;
+
+    //console.log("totalStoppedSecs", totalStoppedSecs);
+    //console.log("diffInHrs :", diffInHrs(totalStoppedSecs));
+    sendToMongo(diffInHrs(totalStoppedSecs));
     clearInterval(Interval);
   }
 }
 
 function timerReset(){
-  reset = true;
   count = 0;
   clearInterval(Interval);
-  resetValues()
-  setDisplay()
-  document.getElementById('button-finish').style.visibility = 'hidden';
+  resetValues();
+  setDisplay();
+  modifyInputField();
+  setButtons();
 }
 
 function timerClear(){
-  reset = true;
   clearInterval(Interval);
-
-  resetValues()
-  setDisplay()
-  addLabels()
-  modifyInputField()
-  reset = false;
-  document.getElementById('play').classList.remove('fa-pause');
-  document.getElementById('play').classList.add('fa-play');
-  document.getElementById('button-finish').style.visibility = 'hidden';
+  clearValues();
+  setDisplay();
+  modifyInputField();
+  setButtons();
 }
-
 
 
 function getSelectedProjectId(li){
@@ -193,56 +214,49 @@ function getTimeValues(){
   minsOne = document.getElementById("minutesOne").value || '0';
   secsTen = document.getElementById("secondsTen").value || '0';
   secsOne = document.getElementById("secondsOne").value || '0';
+
+  if(minsTen>5){
+    minsTen = minsTen - 6;
+    hrsOne = 1;
+  }
 }
 
 function saveSessionLength(){
-  sessHrsTen  = hrsTen;
-  sessHrsOne  = hrsOne;
-  sessMinsTen = minsTen;
-  sessMinsOne = minsOne;
-  sessSecsTen = secsTen;
-  sessSecsOne = secsOne;
+  sessionHrsTen  = hrsTen;
+  sessionHrsOne  = hrsOne;
+  sessionMinsTen = minsTen;
+  sessionMinsOne = minsOne;
+  sessionSecsTen = secsTen;
+  sessionSecsOne = secsOne;
 
   const sessionLength = {
-    sessHrsTen,
-    sessHrsOne,
-    sessMinsTen,
-    sessMinsOne,
-    sessSecsTen,
-    sessSecsOne
+    sessionHrsTen,
+    sessionHrsOne,
+    sessionMinsTen,
+    sessionMinsOne,
+    sessionSecsTen,
+    sessionSecsOne
   };
 
   localStorage.setItem('sessionLength',JSON.stringify(sessionLength));
-  console.log(JSON.parse(localStorage.getItem('sessionLength')));
+  //console.log(JSON.parse(localStorage.getItem('sessionLength')));
   //all values in seconds
-  sessHrs = Number(sessHrsTen+sessHrsOne)*60*60;
-  sessMins = Number(sessMinsTen+sessMinsOne)*60;
-  sessSecs = Number(sessSecsTen+sessMinsOne);
+  sessionHrs = Number(sessionHrsTen+sessionHrsOne)*60*60;
+  sessionMins = Number(sessionMinsTen+sessionMinsOne)*60;
+  sessionSecs = Number(sessionSecsTen+sessionMinsOne);
+
+  // console.log("totalSessionSecs", totalSessionSecs);
+  totalSessionSecs = sessionHrs+sessionMins+sessionSecs;
 }
 
-
-function initalSetup(){
-
-  //check to see if there is any values in the sessionvariable
-  const sessionLength = JSON.parse(localStorage.getItem('sessionLength'));
-  if(sessionLength){
-    hrsTen = sessionLength.sessHrsTen;
-    hrsOne = sessionLength.sessHrsOne;
-    minsTen = sessionLength.sessMinsTen;
-    minsOne = sessionLength.sessMinsOne;
-    secsTen = sessionLength.sessSecsTen;
-    secsOne = sessionLength.sessSecsOne;
-    setDisplay();
-  }
-  else{
-    //use the default values from html inputBoxes
-    getTimeValues();
-  }
-  //shorthand values
-  //e.g hrs = 5 mins=13 secs=42 rather than units i.e. secsTens secsOnes...
-  parseTimeValues();
+function clearValues(){
+  hrsTen =  '0';
+  hrsOne =  '0';
+  minsTen = '0';
+  minsOne = '0';
+  secsTen = '0';
+  secsOne = '0';
 }
-
 
 function parseTimeValues(){
   hrs =  hrsTen.toString() + hrsOne.toString();
@@ -253,20 +267,12 @@ function parseTimeValues(){
 }
 
 function sessionValuesToHrs(){
-  return (sessHrs+sessMins+sessSecs)/3600;
+  return (totalSessionSecs)/3600;
 }
 
 function modifyInputField(){
 
-  if(reset){
-    labelDiv.style.color = 'white';
-
-    for(let i=0; i<inputBoxes.length; i++){
-      inputBoxes[i].style['border-bottom']='1.5px solid white';
-      inputBoxes[i].disabled = false;
-    }
-  }
-  else{
+  if(isCounting){
     labelDiv.style.color = '#21272d';
 
     for(let i=0; i<inputBoxes.length; i++){
@@ -274,24 +280,34 @@ function modifyInputField(){
       inputBoxes[i].disabled = true;
     }
   }
+  else{
+    labelDiv.style.color = 'white';
+
+    for(let i=0; i<inputBoxes.length; i++){
+      inputBoxes[i].style['border-bottom']='1.5px solid white';
+      inputBoxes[i].disabled = false;
+    }
+  }
 }
 
-function addLabels(){
-    labelDiv.style.color = 'white';
+function setButtons(){
+  document.getElementById('play').classList.remove('fa-pause');
+  document.getElementById('play').classList.add('fa-play');
+  document.getElementById('button-finish').style.visibility = 'hidden';
 }
 
 function resetValues(){
-  hrsTen = sessHrsTen
-  hrsOne =  sessHrsOne
-  minsTen = sessMinsTen
-  minsOne = sessMinsOne
-  secsTen = sessSecsTen
-  secsOne = sessSecsOne
+  hrsTen = sessionHrsTen
+  hrsOne =  sessionHrsOne
+  minsTen = sessionMinsTen
+  minsOne = sessionMinsOne
+  secsTen = sessionSecsTen
+  secsOne = sessionSecsOne
 }
 
-function convertToHrs(hrs,mins,secs){
-  let totalSecs = hrs+mins+secs;
-  // console.log("hrs: ", totalSecs/3600);
+function diffInHrs(stoppedSecs){
+  const totalSecs = totalSessionSecs - stoppedSecs;
+  console.log("hrs: ", totalSecs/3600);
   return totalSecs/3600;
 }
 
@@ -358,11 +374,11 @@ function startTimer () {
 
 function setDisplay(){
 
-    document.getElementById('secondsOne').value = secsOne;
-    document.getElementById('secondsTen').value = secsTen;
-    document.getElementById("minutesTen").value = minsTen;
-    document.getElementById("minutesOne").value = minsOne;
-    document.getElementById("hoursTen").value = hrsTen;
-    document.getElementById("hoursOne").value = hrsOne;
+  document.getElementById('secondsOne').value = secsOne;
+  document.getElementById('secondsTen').value = secsTen;
+  document.getElementById("minutesTen").value = minsTen;
+  document.getElementById("minutesOne").value = minsOne;
+  document.getElementById("hoursTen").value = hrsTen;
+  document.getElementById("hoursOne").value = hrsOne;
 
 }
