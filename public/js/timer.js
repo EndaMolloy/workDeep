@@ -92,13 +92,16 @@ $("#button-start").on('click',()=>{
       parseTimeValues();
       setDisplay();
       modifyInputField();
-
-      Interval = setInterval(startTimer, 1000);
+      let startedTime = moment();
+      let endtime = moment().add(hrs,'h').add(mins,'m').add(secs,'s');
+      console.log("startedTime: ", startedTime.format());
+      console.log("endtime: ",endtime.format());
+      Interval = setInterval(startTimer, 250, startedTime, endtime);
     }
 
   }
-
-})
+  console.log("isCounting:", isCounting);
+});
 
 $("#button-reset").on('click',()=>{
   timerReset();
@@ -131,7 +134,7 @@ function initialSetup(){
     getTimeValues();
   }
   //shorthand values
-  //e.g hrs = 5 mins=13 secs=42 rather than units i.e. secsTens secsOnes...
+  //e.g hrs = 5 mins=13 secs=42 rather than units i.e. secsTen secsOne...
   parseTimeValues();
   saveSessionLength();
 }
@@ -294,8 +297,8 @@ function setButtons(){
   document.getElementById('play').classList.remove('fa-pause');
   document.getElementById('play').classList.add('fa-play');
   document.getElementById('button-finish').style.visibility = 'hidden';
-  document.getElementById('button-delete').style.visibility = 'hidden';
-  document.getElementById('button-reset').style.visibility = 'hidden';
+  document.getElementById('button-delete').style.display = 'none';
+  document.getElementById('button-reset').style.display = 'none';
 }
 
 function resetValues(){
@@ -313,7 +316,7 @@ function diffInHrs(stoppedSecs){
   return totalSecs/3600;
 }
 
-function startTimer () {
+function startTimer (startedTime, endtime) {
 
     parseTimeValues();
 
@@ -325,53 +328,66 @@ function startTimer () {
     }
 
     else{
-      if(secsOne>'0'){
-        secsOne --;
-      }
-      else{
-        if(secsTen>'0'){
-          secsOne='9';
-          secsTen--;
-        }
-        else{
-          if(minsOne>'0'){
-            secsOne='9';
-            secsTen='5';
-            minsOne--;
-          }
-          else{
-            if(minsTen>'0'){
-              secsOne='9';
-              secsTen='5';
-              minsOne='9';
-              minsTen--;
-            }
-            else{
-              if(hrsOne>'0'){
-                secsOne='9';
-                secsTen='5';
-                minsOne='9';
-                minsTen='5';
-                hrsOne--;
-              }
-              else{
-                if(hrsTen>'0'){
-                  secsOne='9';
-                  secsTen='5';
-                  minsOne='9';
-                  minsTen='5';
-                  hrsOne='9';
-                  hrsTen--;
-                }
-              }
-            }
-          }
-        }
+
+      //const tempTimer = Math.floor((moment()-startedTime)/1000);
+      const timeRemaining = moment.duration(endtime.diff(moment()));
+      const timeRemainingSeconds = Math.floor(timeRemaining.asSeconds());
+
+      //convert seconds to hours / 3600
+      const hours = Math.floor(timeRemainingSeconds / 3600);
+      const minutes = Math.floor((timeRemainingSeconds % 3600)/60);
+      const seconds = timeRemainingSeconds % 60;
+
+
+      if(timeRemainingSeconds>0){
+        updateSeconds(seconds);
+        updateMinutes(minutes);
+        updateHours(hours);
+        setDisplay();
+      }else{
+        console.log("FINISHED");
+        clearInterval(Interval);
       }
     }
 
-  setDisplay();
+}
 
+
+//Basic calculation to get time in correct format
+//if 24 seconds then the 10 unit is found by dividing by 10. Math.floor(24/10) = 2
+//the 1 unit is found by getting the remainder. 24 % 20 = 4
+function updateSeconds(seconds){
+  if(seconds>=10){
+    secsTen = Math.floor(seconds/10);
+    secsOne = seconds % (secsTen*10);
+  }
+  else {
+    secsTen = 0;
+    secsOne = seconds;
+  }
+
+}
+
+function updateMinutes(minutes){
+  if(minutes>=10){
+    minsTen = Math.floor(minutes/10);
+    minsOne = minutes % (minsTen*10)
+  }
+  else{
+    minsTen = 0;
+    minsOne = minutes;
+  }
+}
+
+function updateHours(hours){
+  if(hours>=10){
+    hrsTen = Math.floor(hours/10);
+    hrsOne = hours % (hrsTen*10)
+  }
+  else{
+    hrsTen = 0;
+    hrsOne = hours;
+  }
 }
 
 function setDisplay(){
