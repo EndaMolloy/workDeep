@@ -53,6 +53,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: process.env.SESSION_SECRET,
+  duration: process.env.SESSION_DURATION,
   saveUninitialized: false,
   resave: false
 }));
