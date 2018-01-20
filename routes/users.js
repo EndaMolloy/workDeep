@@ -359,9 +359,8 @@ router.route('/:id/logtime/:project_id')
       project.time.push(req.body);
       project.save((err, updatedProj)=>{
         if(err)
-          res.json("Something bad went wrong")
+          res.json("Something bad went wrong");
         else{
-          req.flash('success','Your time has been logged');
           res.json("Your time has been successfully logged");
         }
       })
@@ -461,10 +460,6 @@ function getDailyData(user, cb){
       //console.log(sortedResult);
 
       const totalHours = Math.round(getTotalHours(sortedResult));
-      if(totalHours<0.5)
-        cb('error');
-      else{
-
       const longestStreak = getLongestStreak(sortedResult);
       const currentStreak = getCurrentStreak(sortedResult);
 
@@ -522,9 +517,9 @@ function getDailyData(user, cb){
       }
 
       function getTotalHours(sortedResult){
-          return sortedResult.reduce((a,b)=>{
-            return a+b.total;
-          },0);
+        return sortedResult.reduce((a,b)=>{
+          return a+b.total;
+        },0);
       }
 
       //FINAL HEATMAP DATA
@@ -536,11 +531,15 @@ function getDailyData(user, cb){
       });
       dailyData.heatmap = heatmapData;
 
-      //console.log(dailyData);
-      cb(dailyData,diffWeek);
-
+      if(dailyData.totalHours<0.5){
+        cb('error')
+      }else{
+        cb(dailyData,diffWeek);
       }
+
+
     }
+
   });
 };
 

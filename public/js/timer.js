@@ -294,6 +294,8 @@ function setButtons(){
   document.getElementById('play').classList.remove('fa-pause');
   document.getElementById('play').classList.add('fa-play');
   document.getElementById('button-finish').style.visibility = 'hidden';
+  document.getElementById('button-delete').style.visibility = 'hidden';
+  document.getElementById('button-reset').style.visibility = 'hidden';
 }
 
 function resetValues(){

@@ -12,7 +12,9 @@ $(document).ready(function () {
   $.get('http://localhost:5000'+userUrl+'/liveprojects', function(projects){
     if(projects.length == 0){
       document.getElementById("tooltipButton").style.display = 'inline-block';
+      document.getElementById("play").style.visibility = 'hidden';
     }else{
+      document.getElementById("play").style.visibility = 'visible';
       projects.forEach((project,index)=> {
 
         if(localStorage.inFocusIndex == index){
@@ -142,13 +144,14 @@ $(document).ready(function () {
     //if inFocusIndex > deletedIndex => then the inFocusIndex is reduced by 1
     //else if the projectList is now 0 then give user option to add projectList
     //else if the deleted project is in focus and not the first project in the list, then the previous project becomes the infocus project
-    // else the deleted project is the first project in the list so the next project becomes the infocus project
+    //else the deleted project is the first project in the list so the next project becomes the infocus project
     if(localStorage.inFocusIndex > deletedIndex)
       localStorage.inFocusIndex --;
     else {
       if(projectList<1){
-        //document.getElementById("tooltipButton").style.display = 'inline-block';
+        document.getElementById("tooltipButton").style.display = 'inline-block';
         document.getElementById("taskInput").textContent = '';
+        document.getElementById('play').style.visibility = 'hidden';
       }else{
         if(localStorage.inFocusIndex == deletedIndex && deletedIndex > 0){
           $("#bullet i",prevProject).removeClass('fa-circle-thin').addClass('fa-circle');
@@ -167,8 +170,11 @@ $(document).ready(function () {
   //Adds the newly added projects to the project list
   function addToLiveProjects(project){
 
-    if(document.getElementById("tooltipButton").style.display = 'inline-block')
+    if(document.getElementById("tooltipButton").style.display = 'inline-block'){
       document.getElementById("tooltipButton").style.display = 'none';
+      document.getElementById("play").style.visibility = 'visible';
+    }
+
 
     projectList.push(project);
     if(projectList.length === 5){
