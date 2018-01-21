@@ -323,65 +323,65 @@ router.route('/:id/liveProjects')
     });
   })
 
-  //DELETE LiveProjects or UPDATE as complete
-  router.route('/:id/liveprojects/:project_id')
-    .delete((req,res)=>{
-      const projectsArr = req.user[req.user.method].projects;
-      Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
-        if(err){
-          console.log(err);
-        }else{
-          //Remove objectID from User model
-          const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
-          projectsArr.splice(arrIndex,1);
-          req.user.save((err)=>{
-            if(err){
-              console.log(err);
-            }else{
-              res.json(deletedProject)
-            }
-          });
-        }
-      });
-    })
-    .put((req,res)=>{
-      const compProject = req.body;
-      const projectsArr = req.user[req.user.method].projects;
-      Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
-        res.json(updatedProj);
-      })
-    });
-
-  //SAVE Logged time to database
-  router.route('/:id/logtime/:project_id')
-    .post(isAuthenticated,(req,res)=>{
-      Project.findById(req.params.project_id,(err, project)=>{
-        project.time.push(req.body);
-        project.save((err, updatedProj)=>{
-          if(err)
-            res.json("Something bad went wrong")
-          else{
-            res.json("Your time has been successfully logged");
+//DELETE LiveProjects or UPDATE as complete
+router.route('/:id/liveprojects/:project_id')
+  .delete((req,res)=>{
+    const projectsArr = req.user[req.user.method].projects;
+    Project.findByIdAndRemove(req.params.project_id,(err, deletedProject)=>{
+      if(err){
+        console.log(err);
+      }else{
+        //Remove objectID from User model
+        const arrIndex = projectsArr.findIndex(ObjId => ObjId == req.params.project_id);
+        projectsArr.splice(arrIndex,1);
+        req.user.save((err)=>{
+          if(err){
+            console.log(err);
+          }else{
+            res.json(deletedProject)
           }
-        })
-      })
+        });
+      }
     });
+  })
+  .put((req,res)=>{
+    const compProject = req.body;
+    const projectsArr = req.user[req.user.method].projects;
+    Project.findByIdAndUpdate(req.params.project_id, {$set: compProject}, {new: true} ,(err,updatedProj)=>{
+      res.json(updatedProj);
+    })
+  });
 
-  //GET CHART DATA
-  router.route('/:id/logtime')
-    .get(isAuthenticated,(req,res)=>{
-        //  seedDB(req.user, (msg)=>{
-        //    res.json(msg);
-        //  });
-
-      getUserChartData(req.user, (chartData)=>{
-        if(typeof chartData === 'string' && chartData.length>50){
-          res.send("Someting went wrong while trying to retrive your data");
-        }else{
-          res.send(chartData);
+//SAVE Logged time to database
+router.route('/:id/logtime/:project_id')
+  .post(isAuthenticated,(req,res)=>{
+    Project.findById(req.params.project_id,(err, project)=>{
+      project.time.push(req.body);
+      project.save((err, updatedProj)=>{
+        if(err)
+          res.json("Something bad went wrong");
+        else{
+          res.json("Your time has been successfully logged");
         }
-      });
+      })
+    })
+  });
+
+//GET CHART DATA
+router.route('/:id/logtime')
+  .get(isAuthenticated,(req,res)=>{
+      //  seedDB(req.user, (msg)=>{
+      //    res.json(msg);
+      //  });
+
+    getUserChartData(req.user, (chartData)=>{
+      if(typeof chartData === 'string' && chartData.length>50){
+        res.send("Someting went wrong while trying to retrive your data");
+      }else{
+        res.send(chartData);
+      }
     });
+  });
 
 
 
@@ -393,7 +393,7 @@ function getUserChartData(user, cb){
 
   getDailyData(user, (dailyData, diffWeek)=>{
     if(dailyData === 'error'){
-      cb("Looks you haven't logged anytime yet ¯\\(°_o)/¯")
+      cb("You need to log at least 30mins... ¯\\(°_o)/¯")
     }else{
       chartData.dailyData = dailyData;
       getPieData(user, (pieData)=>{
@@ -459,12 +459,14 @@ function getDailyData(user, cb){
       });
       //console.log(sortedResult);
 
+      const totalHours = Math.round(getTotalHours(sortedResult));
       const longestStreak = getLongestStreak(sortedResult);
       const currentStreak = getCurrentStreak(sortedResult);
-      const totalHours = Math.round(getTotalHours(sortedResult));
+
+      dailyData.totalHours = totalHours;
       dailyData.longestStreak = longestStreak;
       dailyData.currentStreak = currentStreak;
-      dailyData.totalHours = totalHours;
+
 
       //get the difference between the current week and the week of the
       //last user's entry to the database
@@ -515,9 +517,9 @@ function getDailyData(user, cb){
       }
 
       function getTotalHours(sortedResult){
-          return sortedResult.reduce((a,b)=>{
-            return a+b.total;
-          },0);
+        return sortedResult.reduce((a,b)=>{
+          return a+b.total;
+        },0);
       }
 
       //FINAL HEATMAP DATA
@@ -529,8 +531,13 @@ function getDailyData(user, cb){
       });
       dailyData.heatmap = heatmapData;
 
-      //console.log(dailyData);
-      cb(dailyData,diffWeek);
+      if(dailyData.totalHours<0.5){
+        cb('error')
+      }else{
+        cb(dailyData,diffWeek);
+      }
+
+
     }
 
   });
@@ -587,7 +594,7 @@ function getPieData(user, cb){
       cb(pieChartData)
     }
   });
-}
+};
 
 
 function getWeeklyData(user, diffWeek, cb){
@@ -621,7 +628,8 @@ function getWeeklyData(user, diffWeek, cb){
   ], (err,result)=> {
         if(err){
           console.log(err);
-        }else{
+        }
+        else{
 
           const avgWeekHrs = Math.round(result.reduce((acc,obj)=> {return acc + obj.total},0)/(result.length + diffWeek));
 
@@ -752,7 +760,7 @@ function getWeeklyData(user, diffWeek, cb){
         }
       });
 
-}
+};
 
 
 function getTableData(user, cb){
@@ -773,50 +781,50 @@ function getTableData(user, cb){
       });
     });
 
-    function getData(projects, cb){
-      const tableData = [];
-      projects.forEach(project=>{
-        const dates = getDates(project.time);
+  function getData(projects, cb){
+    const tableData = [];
+    projects.forEach(project=>{
+      const dates = getDates(project.time);
 
-        tableData.push({
-          projectName: project.projectName,
-          hours: Math.round(getHours(project.time)),
-          startDate: getFormattedDate(project.startDate),
-          finishDate: getFinishDate(project.completed, dates)
-        })
-      });
-      //console.log(tableData);
-      cb(tableData);
-    }
+      tableData.push({
+        projectName: project.projectName,
+        hours: Math.round(getHours(project.time)),
+        startDate: getFormattedDate(project.startDate),
+        finishDate: getFinishDate(project.completed, dates)
+      })
+    });
+    //console.log(tableData);
+    cb(tableData);
+  }
 
-    function getFormattedDate(date){
-      const year = moment(date).year();
-      const month = moment(date).month();
-      const day = moment(date).date();
+  function getFormattedDate(date){
+    const year = moment(date).year();
+    const month = moment(date).month();
+    const day = moment(date).date();
 
-      return "Date("+year+","+month+","+day+")"
-    }
+    return "Date("+year+","+month+","+day+")"
+  }
 
-    function getDates(time){
-      return time.sort((a,b)=>{
-        return Date.parse(a.timestamp) < Date.parse(b.timestamp);
-      });
-    }
+  function getDates(time){
+    return time.sort((a,b)=>{
+      return Date.parse(a.timestamp) < Date.parse(b.timestamp);
+    });
+  }
 
-    function getFinishDate(complete, dates){
-      if(complete)
-        return getFormattedDate(dates[0].timestamp);
-      else
-        return null;
-    }
+  function getFinishDate(complete, dates){
+    if(complete)
+      return getFormattedDate(dates[0].timestamp);
+    else
+      return null;
+  }
 
-    function getHours(project){
-      return project.reduce((a,b)=>{
-        return a + b.sessionLength
-      },0);
-    }
+  function getHours(project){
+    return project.reduce((a,b)=>{
+      return a + b.sessionLength
+    },0);
+  }
 
-}
+};
 
 function displayUserError(errorMessage){
 
@@ -832,6 +840,6 @@ function displayUserError(errorMessage){
     return "Your password must be at least 8 characters long";
   }
 
-}
+};
 
 module.exports = router;
