@@ -14,6 +14,7 @@ body{
 
 #greeting h1{
   font-size: 2.5em;
+  margin-top: 0;
 }
 
 .wrapper{
@@ -130,8 +131,12 @@ span.timeBox  {
 }
 
 .quote{
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 0 15px;
+}
+
+.quote h5{
+  margin-top: 0;
 }
 
 .custom-icon {
@@ -603,6 +608,7 @@ legend{
 /*TIMER----------------------------*/
   #greeting h1{
     font-size: 3.5em;
+    margin-top: 20px;
   }
 
   #taskInput {
