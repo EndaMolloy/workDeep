@@ -145,7 +145,7 @@ $(document).ready(function () {
       timestamp: new Date().setHours(0,0,0,0)
     }
 
-    $.post('http://localhost:5000'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
+    $.post('https://workdeep.herokuapp.com'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
       if(message.error){
         console.log('Something bad happened');
       }else{
@@ -204,7 +204,7 @@ $(document).ready(function () {
     const selector = 'fa-circle-thin';
     for(let i=0; i<li.length; i++){
       if(li[i].innerHTML.indexOf(selector) === -1){
-        let projectId = li[i].lastElementChild.action.replace("http://localhost:5000/liveprojects/","");
+        let projectId = li[i].lastElementChild.action.replace("https://workdeep.herokuapp.com/liveprojects/","");
         return projectId;
       }
     }
