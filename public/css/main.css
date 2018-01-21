@@ -672,6 +672,11 @@ legend{
     border-color: #a83636;
   }
 
+  .quote{
+    margin-top: 10px;
+    padding: 0 15px;
+  }
+
 /*DASH----------------------------*/
 
   #heatmap{
