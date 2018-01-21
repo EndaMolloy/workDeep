@@ -49,8 +49,9 @@ $(document).ready(function () {
 
 
   $("#main").on('keydown','input', function(event){
+
     //If number
-    if (event.keyCode >= 48 && event.keyCode <= 57)
+    if (event.which >= 48 && event.which <= 57)
       $(this).val(event.key);
 
       getTimeValues();
