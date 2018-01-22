@@ -60,6 +60,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
+    secure: true,
     httpOnly: true,
     expires: new Date(Date.now() + (100 * 365 * 86400 * 1000))
   }
