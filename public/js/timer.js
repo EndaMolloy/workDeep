@@ -49,9 +49,9 @@ $(document).ready(function () {
 
 
   $("#main").on('keydown','input', function(event){
-
+    const num = /[0-9]/g;
     //If number
-    if (event.which >= 48 && event.which <= 57)
+    if(num.test(event.key))
       $(this).val(event.key);
 
       getTimeValues();
@@ -146,7 +146,7 @@ $(document).ready(function () {
       timestamp: new Date().setHours(0,0,0,0)
     }
 
-    $.post('https://workdeep.herokuapp.com'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
+    $.post('http://localhost:5000'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
       if(message.error){
         console.log('Something bad happened');
       }else{
@@ -205,7 +205,7 @@ $(document).ready(function () {
     const selector = 'fa-circle-thin';
     for(let i=0; i<li.length; i++){
       if(li[i].innerHTML.indexOf(selector) === -1){
-        let projectId = li[i].lastElementChild.action.replace("https://workdeep.herokuapp.com/liveprojects/","");
+        let projectId = li[i].lastElementChild.action.replace("http://localhost:5000/liveprojects/","");
         return projectId;
       }
     }

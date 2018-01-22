@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const compression = require('compression');
 const helmet = require('helmet');
-
+const MongoStore = require('connect-mongo')(session);
 const dotenv = require('dotenv').config()
 
 require('./config/passport');
@@ -52,10 +52,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+  }),
+  cookieName: "workDeep_session",
   secret: process.env.SESSION_SECRET,
-  duration: process.env.SESSION_DURATION,
-  saveUninitialized: false,
-  resave: false
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: new Date(Date.now() + (100 * 365 * 86400 * 1000))
+  }
 }));
 
 app.use(passport.initialize());
@@ -68,6 +75,11 @@ app.use((req, res, next)=>{
   res.locals.error_messages = req.flash('error');
   res.locals.authenticated = req.user ? true : false;
   res.locals.username = 'You';
+  next();
+});
+
+app.use((req,res,next)=>{
+  console.log("REQ.SESSION :", req.session);
   next();
 });
 
