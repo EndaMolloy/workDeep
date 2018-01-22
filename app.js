@@ -69,18 +69,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use(flash());
 app.use((req, res, next)=>{
   res.locals.success_messages = req.flash('success');
   res.locals.error_messages = req.flash('error');
   res.locals.authenticated = req.user ? true : false;
   res.locals.username = 'You';
-  next();
-});
-
-app.use((req,res,next)=>{
-  console.log("REQ.SESSION :", req.session);
   next();
 });
 
