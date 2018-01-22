@@ -78,10 +78,6 @@ app.use((req, res, next)=>{
   next();
 });
 
-app.use((req,res,next)=>{
-  console.log("REQ.SESSION :", req.session);
-  next();
-});
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
