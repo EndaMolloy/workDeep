@@ -1,20 +1,19 @@
 
 body{
-  background-color: #21272d;
+  background-color: #2B2B2B;
 	text-align: left;
-	color: white;
-  /*background: url(https://s17.postimg.org/9vcwy27un/patrick-hendry-181408.jpg)
-    no-repeat
-    center;
-  background-size: cover;
+	color: #F6F6F6;
+  font-family: 'Roboto', sans-serif !important;
 
-  width: 100vw;*/
 }
 
 
 #greeting h1{
   font-size: 2.5em;
-  margin-top: 0;
+  margin: 10px;
+  margin-bottom: 0;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0.75px;
 }
 
 .wrapper{
@@ -58,6 +57,7 @@ body{
 		color: inherit;
 		text-align: center;
 		padding-top: 10%;
+    letter-spacing: 1.5px;
 }
 
 
@@ -73,7 +73,7 @@ body{
   text-align: center  ;
   border: none;
   outline: none;
-  border-bottom: 1.5px solid white;
+  border-bottom: 1.5px solid #F6F6F6;
   transition: all 0.6s;
 }
 
@@ -82,14 +82,14 @@ body{
 }
 
 #main input:focus{
-  color: red;
-  border-bottom: 1.5px solid red;
-  caret-color: #21272d;
+  color: #DE1B1B;
+  border-bottom: 1.5px solid #DE1B1B;
+  caret-color: #2B2B2B;
 }
 
 #main input:hover:not(:focus){
   cursor: pointer;
-  border-bottom: 1.5px solid red;
+  border-bottom: 1.5px solid #DE1B1B;
 }
 
 
@@ -136,20 +136,22 @@ span.timeBox  {
 }
 
 .quote h5{
+  margin: 10px;
   margin-top: 0;
+  letter-spacing: 0.75px;
 }
 
 .custom-icon {
   background: inherit;
   border-radius: 100%;
-  color: white;
+  color: #F6F6F6;
   display: table-cell;
   font-size: 15px;
   height: 35px;
   width: 35px;
   text-align: center;
   vertical-align: middle;
-  border: 0.75px solid white;
+  border: 0.75px solid #F6F6F6;
 }
 
 
@@ -165,7 +167,7 @@ span.timeBox  {
   padding: 5px;
   padding-left: 10px;
   background: grey;
-  color: white;
+  color: #F6F6F6;
   margin-bottom: 0;
 }
 
@@ -208,7 +210,7 @@ span.timeBox  {
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: white;
+    color: #F6F6F6;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
@@ -234,7 +236,7 @@ span.timeBox  {
 
 /* ----- DASHBOARD ----- */
 #dash{
-  background-color: white;
+  background-color: #F6F6F6;
 }
 
 
@@ -264,8 +266,8 @@ span.timeBox  {
   min-height: 100vh;
   padding-top: 20px;
   padding-bottom: 0px;
-  background-color: white;
-  color: #21272d;
+  background-color: #F6F6F6;
+  color: #2B2B2B;
 }
 
 .content-section h3 {
@@ -298,10 +300,10 @@ span.timeBox  {
 
 
 .dash-title{
-  background-color: white;
+  background-color: #F6F6F6;
   font-size: 12px;
   font-weight: bold;
-  color: #21272d;
+  color: #2B2B2B;
   padding: 8px;
   border-bottom: inherit;
   text-align: left;
@@ -370,7 +372,7 @@ span.timeBox  {
 }
 
 .btn-link:hover{
-  color: white;
+  color: #F6F6F6;
 }
 
 .btn-signup{
@@ -391,7 +393,7 @@ span.timeBox  {
 }
 
 .text-muted{
-  color: white;
+  color: #F6F6F6;
 }
 
 
@@ -632,14 +634,14 @@ legend{
     text-align: center  ;
     border: none;
     outline: none;
-    border-bottom: 1.5px solid white;
+    border-bottom: 1.5px solid #F6F6F6;
     transition: all 0.2s linear;
   }
 
   .custom-icon {
     background: inherit;
     border-radius: 100%;
-    color: white;
+    color: #F6F6F6;
     display: table-cell;
     font-size: 15px;
     height: 35px;
@@ -650,7 +652,7 @@ legend{
 
   }
   .custom-icon:hover {
-    border: 0.75px solid white;
+    border: 0.75px solid #F6F6F6;
     cursor:pointer;
   }
 
@@ -667,7 +669,7 @@ legend{
 
   #button-finish{
     visibility: hidden;
-    border-color: white;
+    border-color: #F6F6F6;
     background-color: inherit;
     transition: all 0.2s linear;
   }
@@ -681,7 +683,12 @@ legend{
   .quote{
     margin-top: 10px;
     padding: 0 15px;
+    width: 550px;
+    margin-left: auto;
+    margin-right: auto;
   }
+
+
 
 /*DASH----------------------------*/
 
@@ -690,8 +697,8 @@ legend{
   }
 
   #button-updateCharts{
-    color: #21272d;
-    border-color: #21272d;
+    color: #2B2B2B;
+    border-color: #2B2B2B;
     margin: 0;
     background-color: inherit;
     transition: all 0.2s linear;
