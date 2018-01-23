@@ -10,7 +10,7 @@ This would be a lag indicator as you would only be able to determine how many ap
 
 ## Technologies?
 
-NodeJS, MongoDB, Javascript (some JQuery)
+NodeJS, ExpressJS, MongoDB, Javascript (some JQuery)
 
 ## Preview
 
