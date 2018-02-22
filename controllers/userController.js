@@ -7,21 +7,12 @@ module.exports = {
   localSignup: async(req, res, next)=>{
 
     try{
-      // const result = Joi.validate(req.body, userSchema);
-      //
-      // if(result.error){
-      //   const errorMessage = result.error.details[0].message;
-      //   const message = displayUserError(errorMessage);
-      //   req.flash('error', message);
-      //   res.redirect('/signup');
-      //   return;
-      // }
 
       //check if the email already exists, if it does redirect to signup page and notify
       const user = await User.findOne({'local.email': req.value.body.email});
       if(user){
         req.flash('error', 'Email is already in use');
-        res.redirect('/signup');
+        res.redirect('/users/signup');
         return;
       }
       //hash password before saving to DB
@@ -49,14 +40,14 @@ module.exports = {
       <br/><br/>
       Please click the link below to confirm your email address and activate your account.
       <br/><br/>
-      <a href="${process.env.URL}/users2/verify/${secretToken}">Click here</a>
+      <a href="${process.env.URL}/users/verify/${secretToken}">Click here</a>
       <br/><br/>
       Thank you.`
 
       await mailer.sendEmail('workDeep.com','workDeep - please verify your email', req.value.body.email, html);
 
       req.flash('success', `A verification email has been sent to ${req.value.body.email}.`)
-      res.redirect('login');
+      res.redirect('/users/signin');
 
     }
     catch(err){
@@ -64,9 +55,8 @@ module.exports = {
     }
   },
 
-  localSignin: async (req,res,next)=> {
-    // res.redirect('/galaxy/'+req.user._id)
-    res.status(200).json({error: 'message'})
+  signin: (req,res)=> {
+    res.redirect('/galaxy/'+req.user._id)
   },
 
   verifyToken: (req,res,next)=> {
@@ -81,7 +71,7 @@ module.exports = {
         if(err) console.log(err);
         else{
           req.flash('success','Verified! You may now sign in.')
-          res.redirect('/login');
+          res.redirect('/users/signin');
         }
       });
     });
@@ -96,7 +86,7 @@ module.exports = {
 
       if(!user){
         req.flash('error', 'No account with that email address exists.');
-        return res.redirect('/forgot');
+        return res.redirect('/users/forgot');
       }
 
 
@@ -108,7 +98,7 @@ module.exports = {
       const html = `Hi ${user.local.username}
           <br/></br>You have requested the reset of the password for your account.<br/>
           Please click on the following link, or paste this into your browser to complete the process:<br/><br/>
-          <a href ="http://${process.env.URL}/users2/resetpassword/${secretToken}">http://${process.env.URL}/users2/resetpassword/${secretToken}</a>
+          <a href ="http://${process.env.URL}/users/resetpassword/${secretToken}">${process.env.URL}/users/resetpassword/${secretToken}</a>
           <br/></br>
           If you did not request this, please ignore this email and your password will remain unchanged.`;
 
@@ -116,7 +106,7 @@ module.exports = {
       await mailer.sendEmail('workDeep.com','workDeep password reset', req.body.email, html);
 
       req.flash('success', `An e-mail has been sent to ${req.body.email} with further instructions.`);
-      res.redirect('/forgot');
+      res.redirect('/users/forgot');
     }
     catch(err){
       next(err);
@@ -127,16 +117,8 @@ module.exports = {
       const user = await User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}});
       if(!user){
         req.flash('error', 'Your link has expired');
-        return res.redirect('/forgot');
+        return res.redirect('/users/forgot');
       }
-
-      // const result = Joi.validate(req.body, passwordSchema);
-      //
-      // if(result.error){
-      //   req.flash('error', 'Data is not valid please try again');
-      //   res.redirect(`/users/reset/${req.params.token}`);
-      //   return;
-      // }
 
       const hash = await User.hashPassword(req.value.body.password);
 
@@ -154,21 +136,26 @@ module.exports = {
 
       await mailer.sendEmail('workDeep.com','workDeep - password reset confirmation', user.local.email, html);
 
-      req.flash('success','Your password has been changed. You may now login with your new password');
-      res.redirect('/login');
+      req.flash('success','Your password has been changed. You may now sign in with your new password');
+      res.redirect('/users/signin');
 
       } catch (err) {
       next(err);
     }
   },
-  validateToken : (req, res, next) => {
+  validateToken: (req, res, next) => {
     User.findOne({'local.resetPasswordToken': req.params.token, 'local.resetPasswordExpires': {$gt: Date.now()}},(err, user)=>{
       if(!user){
         req.flash('error', 'Your link has expired');
-        return res.redirect('/forgot');
+        return res.redirect('/users/forgot');
       }
       res.render('reset' ,{layout: 'auth', token: req.params.token});
     });
+  },
+  logout: (req,res)=> {
+    req.logout();
+    req.flash('success', 'Logged out successfully')
+    res.redirect('/');
   }
 
 }

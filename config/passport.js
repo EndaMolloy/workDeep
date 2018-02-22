@@ -4,6 +4,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const GithubStrategy = require('passport-github2').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/users');
+const settings = require('../settings');
 
 // used to serialize the user for the session
 passport.serializeUser((user, done) => {
@@ -58,9 +59,9 @@ passport.use('local', new LocalStrategy({
 //   credentials (in this case, an accessToken, refreshToken, and Google
 //   profile), and invoke a callback with a user object.
 passport.use('google', new GoogleStrategy({
-    clientID: process.env.GOOGLE_ID,
-    clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: process.env.URL+'/users2/auth/google/callback'
+    clientID: settings.GOOGLE_ID,
+    clientSecret: settings.GOOGLE_SECRET,
+    callbackURL: process.env.URL+'/users/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done)=> {
 
@@ -92,8 +93,8 @@ passport.use('google', new GoogleStrategy({
 
 //Use the GithubStrategy within Passport.
 passport.use('github', new GithubStrategy({
-  clientID: process.env.GITHUB_ID,
-  clientSecret: process.env.GITHUB_SECRET,
+  clientID: settings.GITHUB_ID,
+  clientSecret: settings.GITHUB_SECRET,
   callbackURL: process.env.URL+'/users/auth/github/callback'
   },
   async (accessToken, refreshToken, profile, done) =>{
@@ -127,8 +128,8 @@ passport.use('github', new GithubStrategy({
 
 //Use the TwitterStrategy within Passport
 passport.use('twitter', new TwitterStrategy({
-  consumerKey: process.env.TWITTER_CONSUMER_KEY,
-  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  consumerKey: settings.TWITTER_CONSUMER_KEY,
+  consumerSecret: settings.TWITTER_CONSUMER_SECRET,
   callbackURL: process.env.URL+'/users/auth/twitter/callback'
   },
   async (accessToken, refreshToken, profile, done) =>{

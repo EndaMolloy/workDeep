@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 module.exports = {
 
-  validateBody: (schema)=> {
+  validateBody: (schema, type)=> {
     return (req, res, next) => {
       const result = Joi.validate(req.body, schema);
 
@@ -10,12 +10,35 @@ module.exports = {
         const errorMessage = result.error.details[0].message;
         const message = displayUserError(errorMessage);
         req.flash('error', message);
-        res.redirect('/signup');
+
+        if(type == 'password')
+          res.redirect('/users/reset')
+        else
+          res.redirect('/users/signup');
         return;
       }
 
       if(!req.value){req.value = {};}
       req.value['body'] = result.value;
+      next();
+    }
+  },
+
+  isAuthenticated: (req, res, next)=> {
+    //passportjs function
+    if(req.isAuthenticated()){
+      return next();
+    }else{
+      req.flash('error', 'Oops, looks like you\'re not allowed to go there');
+      res.redirect('/');
+    }
+  },
+
+  isNotAuthenticated: (req, res, next)=> {
+    //passportjs function
+    if(req.isAuthenticated()){
+      res.redirect('/galaxy/'+req.user._id);
+    }else{
       next();
     }
   },
@@ -35,7 +58,7 @@ module.exports = {
 
 }
 
-function displayUserError(errorMessage){
+function displayUserError(errorMessage) {
 
   if (errorMessage.includes("confirmationPassword")) {
     return "Your passwords do not match";

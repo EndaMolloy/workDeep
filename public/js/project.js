@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 
   //GET LIVE PROJECTS FROM THE DATABASE
-  $.get('https://workdeep.herokuapp.com'+userUrl+'/liveprojects', function(projects){
+  $.get('http://localhost:5000'+userUrl+'/liveprojects', function(projects){
     if(projects.length == 0){
       document.getElementById("tooltipButton").style.display = 'inline-block';
       document.getElementById("play").style.visibility = 'hidden';
@@ -39,7 +39,7 @@ $(document).ready(function () {
     if (confirm){
       $(this).parent().fadeOut(500, function(){
 
-        const actionUrl = 'https://workdeep.herokuapp.com'+userUrl + $(this).attr('action');
+        const actionUrl = 'http://localhost:5000'+userUrl + $(this).attr('action');
         const $itemToDelete = $(this).parent('.list-project');
         const prevProject = $itemToDelete.prev();
         const nextProject = $itemToDelete.next();
@@ -69,7 +69,7 @@ $(document).ready(function () {
     if (confirm){
       $(this).parent().fadeOut(500, function(){
 
-        const actionUrl = 'https://workdeep.herokuapp.com'+userUrl + $(this).attr('action');
+        const actionUrl = 'http://localhost:5000'+userUrl + $(this).attr('action');
         const $itemToUpdate = $(this).parent('.list-project');
         const prevProject = $itemToUpdate.prev();
         const nextProject = $itemToUpdate.next();
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
     let userInput = $(this).val().trim();
     if((event.which === 13)&&(userInput.length>0)){
-      $.post('https://workdeep.herokuapp.com'+userUrl+'/liveprojects',{projectName:userInput}, function(project){
+      $.post('http://localhost:5000'+userUrl+'/liveprojects',{projectName:userInput}, function(project){
         if(project.error){
           console.log('Something bad happened');
         }else{

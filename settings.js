@@ -1,4 +1,17 @@
 module.exports = {
+
+  GOOGLE_ID: process.env.GOOGLE_ID,
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+
+  GITHUB_ID: process.env.GITHUB_ID,
+  GITHUB_SECRET: process.env.GITHUB_SECRET,
+
+  TWITTER_CONSUMER_KEY: process.env.TWITTER_CONSUMER_KEY,
+  TWITTER_CONSUMER_SECRET: process.env.TWITTER_CONSUMER_SECRET,
+
+  SESSION_SECRET: process.env.SESSION_SECRET,
+
   MAILGUN_USER: process.env.MAILGUN_USER,
   MAILGUN_PASS: process.env.MAILGUN_PASS
+
 };

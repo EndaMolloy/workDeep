@@ -1,5 +1,5 @@
 const express = require('express');
-//const morgan = require('morgan')
+const morgan = require('morgan')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -12,22 +12,11 @@ const compression = require('compression');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo')(session);
 const dotenv = require('dotenv').config()
-
+const settings = require('./settings');
 require('./config/passport');
 
-const handlebars = expressHandlebars.create({
-  defaultLayout: 'layout',
-  extname: '.handlebars',
-  helpers: {
-    section: function(name, options) {
-      if (!this._sections) this._sections = {};
-        this._sections[name] = options.fn(this);
-        return null;
-      }
-  }
-});
 
-mongoose.promise = global.Promise;
+mongoose.Promise = require('bluebird');
 const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/deepworkauth';
 mongoose.connect(mongoDB);
 
@@ -40,13 +29,7 @@ app.use(compression()); //Compress all routes
 //protect against vulnerabilities by setting appropriate HTTP headers
 app.use(helmet());
 
-// View Engine
-app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
-
-
-//cookie: { maxAge: 600000 },
+//middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -56,7 +39,7 @@ app.use(session({
     mongooseConnection: mongoose.connection,
   }),
   cookieName: "workDeep_session",
-  secret: process.env.SESSION_SECRET,
+  secret: settings.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -73,13 +56,23 @@ app.use((req, res, next)=>{
   res.locals.success_messages = req.flash('success');
   res.locals.error_messages = req.flash('error');
   res.locals.authenticated = req.user ? true : false;
-  res.locals.username = 'You';
   next();
 });
 
+// View Engine
+app.set('views', path.join(__dirname, 'views'));
+const hbsHelpers = expressHandlebars.create({
+  defaultLayout: 'layout',
+  extname: '.handlebars',
+  helpers: require('./helpers/hbsHelpers.js')
+});
+app.engine('handlebars', hbsHelpers.engine);
+app.set('view engine', 'handlebars');
 
+
+//routes
 app.use('/', require('./routes/index'));
-app.use('/users2', require('./routes/users2'));
+app.use('/users', require('./routes/users'));
 app.use('/galaxy', require('./routes/galaxy'));
 
 
@@ -87,5 +80,6 @@ app.use('/galaxy', require('./routes/galaxy'));
 app.use((req, res, next) => {
   res.render('notFound');
 });
+
 const port = process.env.PORT || 5000
 app.listen(port, () => console.log(`Server started listening on port ${port}!`));
