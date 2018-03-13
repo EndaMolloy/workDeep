@@ -22,6 +22,13 @@ body{
   overflow-x: hidden;
 }
 
+#logStatus {
+  visibility: hidden;
+}
+
+#loganimimation{
+  padding: 0 10px;
+}
 
 #buttons{
   padding-top: 15%;
@@ -139,6 +146,7 @@ span.timeBox  {
   margin: 10px;
   margin-top: 0;
   letter-spacing: 0.75px;
+  text-transform: uppercase;
 }
 
 .custom-icon {
@@ -195,6 +203,7 @@ span.timeBox  {
     background-color: transparent;
     border-color: #E7E7E7;
     border: none;
+    margin-bottom: 10px;
 }
 /* Title */
 .navbar-default .navbar-brand {

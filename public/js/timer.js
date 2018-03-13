@@ -146,15 +146,23 @@ $(document).ready(function () {
       timestamp: new Date().setHours(0,0,0,0)
     }
 
+
     $.post('https://workdeep.herokuapp.com'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
+
+    document.getElementById('logStatus').style.visibility = 'visible';
+
       if(message.error){
         console.log('Something bad happened');
       }else{
-        alert(message);
+        document.getElementById('logStatus').textContent = 'Logged.';
         isCounting = false;
         timerReset();
         if(loaded)
           document.getElementById('button-updateCharts').style.visibility = 'visible';
+
+        setTimeout(function(){
+          document.getElementById('logStatus').style.visibility = 'hidden';
+        }, 5000);
       }
     });
   };
