@@ -146,10 +146,9 @@ $(document).ready(function () {
       timestamp: new Date().setHours(0,0,0,0)
     }
 
+    document.getElementById('logStatus').style.visibility = 'visible';
 
     $.post('https://workdeep.herokuapp.com'+userUrl+'/logtime/'+selectedProj, timeLog, function(message){
-
-    document.getElementById('logStatus').style.visibility = 'visible';
 
       if(message.error){
         console.log('Something bad happened');
