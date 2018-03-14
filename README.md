@@ -1,5 +1,34 @@
 # workDeep
 
+RESTful Node.js webapp using the express framework that reads from and writes to a MongoDB database. The webapp is designed to allow users to record and view the time they have spent on their projects. 
+
+## Demo
+
+A working demo is available: https://workdeep.herokuapp.com 
+
+## Technologies
+
+* Node.js
+* MongoDB
+* Express
+* JQuery
+* Bootstrap
+
+## Screenshots
+
+The user can signup/login via a number of different social network platforms or locally by providing email and password.
+
+![screenshot from social login](https://user-images.githubusercontent.com/24863798/37415836-43e1f0e8-27a4-11e8-9316-c2a6a0e81443.png)
+
+The logged in page of a user, displays the currently selected project and modifiable countdown timer, along with inspirational quote.
+
+![screenshot from user logged in page](https://user-images.githubusercontent.com/24863798/37415392-3cdf96e8-27a3-11e8-9699-73ffd9154ab2.png)
+
+The user dashboard displays the users statistics and a graphical view of time spent. Charts are created using the [Google charts API](https://developers.google.com/chart/interactive/docs/quick_start) and heatmap by [DKirwin](https://github.com/DKirwan/calendar-heatmap).
+
+![screenshot from dashboard](https://user-images.githubusercontent.com/24863798/37416179-048b5a6e-27a5-11e8-9efe-0bf56b78a24d.png)
+
+
 ## Why
 
 We live in a world of endless distraction with media, social networks, messaging apps all fighting for our time. Time, itself, is our most valuable resource and yet we waste so much of it rather than work on those personal projects which in the long term will fill us with pride.
@@ -8,20 +37,5 @@ workDeep was built so that you can track the time you spend on your projects. It
 
 This would be a lag indicator as you would only be able to determine how many apps you built at the end of the year when its too late to do anything about it. Lead indicators happen early in the process so that you can adjust your process. Instead of focusing on the end goal of building apps you can focus on spending a certain number of hours per week in deep concentration developing/building/making and the apps will follow. This allows you to see empirically if you are commiting to your goals. Also it is a well known fact that we play differently when we keep score.  
 
-## Technologies
-
-NodeJS, ExpressJS, MongoDB, Javascript (some JQuery)
-
-## Screenshots
 
 
-![screenshot from 2018-01-16 15-38-35](https://user-images.githubusercontent.com/24863798/35281338-9a93ce56-004a-11e8-80c8-16a3b8c7d785.png)
-
-
-![screenshot from 2018-01-16 14-57-11](https://user-images.githubusercontent.com/24863798/35281344-9f37fe96-004a-11e8-9aa4-b1050b6d9b6b.png)
-
-
-![screenshot from 2018-01-16 15-27-45](https://user-images.githubusercontent.com/24863798/35281360-a61ced3e-004a-11e8-94bc-fee11804a789.png)
-
-
-![screenshot from 2018-01-16 14-58-28](https://user-images.githubusercontent.com/24863798/35281309-81850650-004a-11e8-8c7c-9727e5083610.png)
