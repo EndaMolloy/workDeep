@@ -6,13 +6,15 @@ RESTful Node.js webapp using the express framework that reads from and writes to
 
 A working demo is available: https://workdeep.herokuapp.com 
 
-## Technologies
+## Build Technologies
 
 * Node.js
 * MongoDB
-* Express
+* Express.js
 * JQuery
+* Ajax
 * Bootstrap
+* Handlebars.js
 
 ## Screenshots
 
